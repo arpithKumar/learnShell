@@ -1,0 +1,50 @@
+---
+slug: ping
+name: ping
+category: ["networking"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Test whether a remote host is reachable and measure round-trip latency.
+syntax: "ping [OPTIONS] HOST"
+flags:
+  - flag: "-c"
+    description: Send a fixed number of pings and then stop (default is to run forever).
+    example: "ping -c 4 example.com"
+  - flag: "-i"
+    description: Set the interval, in seconds, between each ping.
+    example: "ping -i 2 example.com"
+examples:
+  - description: Check if a host is reachable, sending just 4 pings
+    input: "ping -c 4 example.com"
+    output: "64 bytes from 93.184.216.34: icmp_seq=0 ttl=56 time=12.3 ms"
+shortcuts:
+  - keys: "Ctrl+C"
+    description: Stop ping if it's running without -c (continuously).
+    context: readline
+tips:
+  - "If pinging a hostname fails but pinging its raw IP address succeeds, the problem is almost always DNS, not actual network connectivity — that's a useful first diagnostic split."
+  - "Always pass -c when scripting with ping, since without it the command runs forever and a script that calls it will simply hang."
+related: ["curl", "netstat"]
+pitfalls:
+  - "Without -c, ping runs indefinitely until you stop it manually — beginners sometimes think it's frozen when it's actually just continuing exactly as designed."
+  - "Some networks and firewalls deliberately block ICMP (the protocol ping relies on), so a failed ping doesn't always mean the host is actually down — it might just be configured to ignore pings specifically while still serving normal traffic."
+---
+
+`ping` sends small packets to a remote host and measures how long they
+take to come back, making it the fastest first check when something
+"isn't working": is the network even reaching this host at all? A
+handful of quick, successful replies generally means the network path
+itself is fine, and any remaining problem is further up the stack — in
+the application, a specific port, or a firewall rule rather than basic
+connectivity.
+
+By default `ping` keeps running forever, printing a new result line
+every second until you stop it — which is exactly why scripts almost
+always pass `-c` to cap it at a fixed number of attempts, so the script
+doesn't hang waiting for a command that was never going to stop on its
+own.
+
+A genuinely useful diagnostic trick: if pinging a domain name fails but
+pinging its numeric IP address succeeds, the issue is almost certainly
+DNS resolution rather than the network connection itself — a distinct
+and much narrower problem to chase down.

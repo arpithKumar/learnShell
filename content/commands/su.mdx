@@ -1,0 +1,30 @@
+---
+slug: su
+name: su
+category: ["system", "security"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Switch to another user's identity in the current terminal session.
+syntax: "su [USERNAME]"
+flags:
+  - flag: "-"
+    description: Start a login shell for the target user, loading their environment as if they'd logged in directly.
+    example: "su - alice"
+examples:
+  - description: Switch to the root user (prompts for root's password)
+    input: "su -"
+    output: "Password: "
+  - description: Switch to a specific user
+    input: "su - alice"
+    output: ""
+shortcuts: []
+tips:
+  - "su without a username defaults to switching to root, which is why su - is commonly seen on its own — it's shorthand for becoming root with a fresh login environment."
+related: ["sudo", "passwd"]
+pitfalls:
+  - "su requires knowing the target user's password, unlike sudo which uses the current user's own password and a permission list — this is a meaningful difference in how each is typically deployed on a shared system."
+---
+
+`su` switches the current terminal session to another user's identity, prompting for that target user's password to do so. Without an argument it defaults to switching to root, making `su -` (with the trailing dash for a full login shell) a common shorthand for becoming root.
+
+It's a meaningfully different model from `sudo`: `su` requires knowing the target account's own password, while `sudo` runs a single command as another user using the current user's own password, checked against a permission list. Many systems favor `sudo` for that reason — it doesn't require sharing or knowing root's password directly.

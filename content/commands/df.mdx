@@ -1,0 +1,40 @@
+---
+slug: df
+name: df
+category: ["filesystem"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Report free and used disk space across mounted filesystems.
+syntax: "df [OPTIONS] [PATH...]"
+flags:
+  - flag: "-h"
+    description: Print sizes in human-readable form (KB, MB, GB).
+    example: "df -h"
+  - flag: "-T"
+    description: Include the filesystem type column in the output.
+    example: "df -hT"
+examples:
+  - description: See free space on every mounted drive, human-readable
+    input: "df -h"
+    output: "Filesystem      Size  Used Avail Use% Mounted on\n/dev/disk1s1   460G  210G  240G  47% /"
+shortcuts: []
+tips:
+  - "Check df -h before a big install or download if you're unsure whether you have enough free space."
+  - "The 'Use%' column is usually the fastest thing to scan when you're triaging a 'disk full' alert across several drives or partitions."
+related: ["du", "ls"]
+pitfalls:
+  - "df reports space at the filesystem (whole drive/partition) level — if your real question is 'why is this one specific folder so big', du answers that instead."
+---
+
+Where `du` answers "how much space does this particular folder use,"
+`df` answers a different, bigger-picture question: "how much space is
+left on this entire drive?" Run with no arguments, it lists every
+mounted filesystem along with its total size, how much is used, how
+much is free, and the percentage full.
+
+`df -h` is the version almost everyone actually types — the `-h` makes
+sizes human-readable (gigabytes instead of raw block counts), which is
+the difference between an instantly scannable table and a column of
+numbers you'd have to do mental math on. It's the fastest first check
+when something starts failing with a vague "no space left on device"
+error.

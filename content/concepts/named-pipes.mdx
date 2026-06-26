@@ -1,0 +1,26 @@
+---
+slug: named-pipes
+title: Named Pipes (FIFOs)
+category: io-and-pipelines
+difficulty: advanced
+summary: A pipe that exists as a real filesystem entry, letting two unrelated processes communicate without a shell pipeline connecting them directly.
+examples:
+  - description: Create a named pipe and use it to connect two separate processes
+    input: "mkfifo mypipe\ncat mypipe &\necho \"hello through the pipe\" > mypipe"
+    output: "hello through the pipe"
+  - description: A named pipe shows up in a directory listing with a p type
+    input: "mkfifo mypipe; ls -l mypipe"
+    output: "prw-r--r--  1 alice  staff  0 Jan  1 12:00 mypipe"
+tips:
+  - "Writing to a named pipe with nothing currently reading from it blocks indefinitely — always make sure a reader (cat, or your own script) is already running and waiting before writing to a FIFO, or the write will just hang."
+pitfalls:
+  - "A named pipe needs to be removed explicitly with rm once you're done with it — mkfifo creates a persistent filesystem entry, it doesn't clean itself up automatically the way an anonymous | pipe disappears once its command finishes."
+funFacts:
+  - "FIFO stands for First In, First Out — the same queue-ordering term used in caching, scheduling, and inventory management, repurposed here for the order data flows through the pipe."
+relatedConcepts: ["pipes", "redirection"]
+relatedCommands: []
+---
+
+A named pipe, created with `mkfifo`, is a FIFO (first-in-first-out) special file that behaves like an anonymous shell pipe (`|`) but exists as a real entry in the filesystem with its own name, rather than connecting only two commands written on the same command line. Anything written to it by one process can be read by another, even if those two processes weren't started together and have no direct parent-child relationship.
+
+This makes named pipes useful for connecting separate, independently-started processes — one script writing data, another reading it whenever it happens to run — without either one knowing where the other lives, only the shared pipe's path. Unlike a regular file, a named pipe doesn't actually store data on disk; reading from it blocks until something writes, and writing to it blocks until something reads, the same blocking behavior an ordinary pipe has.

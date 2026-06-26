@@ -1,0 +1,51 @@
+---
+slug: mv
+name: mv
+category: ["filesystem"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Move or rename files and directories.
+syntax: "mv [OPTIONS] SOURCE DEST"
+flags:
+  - flag: "-i"
+    description: Ask for confirmation before overwriting an existing file.
+    example: "mv -i draft.txt final.txt"
+  - flag: "-n"
+    description: Never overwrite an existing destination file.
+    example: "mv -n report.csv ./archive/"
+  - flag: "-v"
+    description: Print each move as it happens (verbose).
+    example: "mv -v *.jpg ./images"
+examples:
+  - description: Rename a file in place
+    input: "mv draft.txt final.txt"
+    output: ""
+  - description: Move several files into a folder
+    input: "mv report.csv summary.csv ./archive/"
+    output: ""
+shortcuts: []
+tips:
+  - "mv -n is a safer default when moving many files at once, since it won't silently overwrite anything already sitting at the destination."
+  - "You can rename and relocate in the same step: mv old/name.txt new/renamed.txt moves the file and gives it a new name simultaneously."
+related: ["cp", "rm", "ls"]
+pitfalls:
+  - "There's no dedicated 'rename' command on most systems — mv handles both moving and renaming, since renaming is really just 'moving' a file to a new name within the same folder."
+  - "Like cp, mv overwrites the destination silently by default — use -i if you want a confirmation prompt first."
+---
+
+`mv` does two jobs that turn out to be the exact same operation under
+the hood: moving a file to a new location, and renaming it. Both are
+just `mv SOURCE DEST` — the only difference is whether the destination
+path changes the file's folder, its name, or both at once.
+
+Moving `report.csv` into an `./archive/` folder and renaming
+`draft.txt` to `final.txt` look like different tasks conceptually, but
+to the filesystem they're identical: update where a name points to.
+That's also why `mv` is essentially instant even for huge files — unlike
+`cp`, it doesn't duplicate any data, it just relabels it (as long as the
+source and destination are on the same filesystem/drive).
+
+Because there's no confirmation by default, accidentally moving a file
+on top of an existing one with the same name will overwrite it
+permanently. If you're scripting a bulk move and want a safety net,
+prefer `-n` (never overwrite) or `-i` (ask first) over the bare command.

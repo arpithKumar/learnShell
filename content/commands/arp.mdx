@@ -1,0 +1,27 @@
+---
+slug: arp
+name: arp
+category: ["networking"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Show the local cache mapping IP addresses to hardware (MAC) addresses on your network.
+syntax: "arp [OPTIONS]"
+flags:
+  - flag: "-a"
+    description: Display the entire ARP cache.
+    example: "arp -a"
+examples:
+  - description: List every known device on the local network
+    input: "arp -a"
+    output: "router.local (192.168.1.1) at a4:5e:60:xx:xx:xx on en0"
+shortcuts: []
+tips:
+  - "arp -a is a quick way to see what devices your machine has actually communicated with on the local network recently, each shown with both its IP and hardware address."
+related: ["ifconfig", "ping"]
+pitfalls:
+  - "ARP only operates within a single local network segment — it has no concept of anything beyond your immediate local network, unlike DNS or routing tools that work across the wider internet."
+---
+
+`arp` shows the Address Resolution Protocol cache — the local mapping your machine maintains between IP addresses and the physical hardware (MAC) addresses of devices on the same local network. Every device on a local network needs this translation to actually deliver data at the hardware level, beneath IP addressing.
+
+`arp -a` is the practical, everyday use: a quick list of every device your machine has recently talked to on the local network, by IP and hardware address. It's strictly local-network-scoped — it has nothing to say about anything beyond your immediate network segment, which is exactly the boundary DNS and routing exist to handle instead.

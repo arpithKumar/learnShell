@@ -1,0 +1,26 @@
+---
+slug: loops
+title: Loops
+category: control-flow
+difficulty: beginner
+summary: Repeat a block of commands over a list of values, or while a condition holds.
+examples:
+  - description: "for loop over a fixed list"
+    input: 'for n in 1 2 3; do echo "Number: $n"; done'
+    output: "Number: 1\nNumber: 2\nNumber: 3"
+  - description: "while loop driven by a condition"
+    input: 'i=0; while [ $i -lt 3 ]; do echo $i; i=$((i + 1)); done'
+    output: "0\n1\n2"
+tips:
+  - "for var in $(command) loops over a command's output split by whitespace — but while read -r line; do ...; done < <(command) is the safer pattern when lines might contain spaces, since it preserves each line intact instead of splitting it."
+pitfalls:
+  - "for n in $(seq 1 10) breaks if any value contains a space, since the unquoted command substitution gets word-split — for n in {1..10} (brace expansion) or a C-style for ((i=1;i<=10;i++)) loop avoids that entirely for numeric ranges."
+funFacts:
+  - "The C-style for ((i=0; i<n; i++)) loop is a bash extension borrowed from C syntax — it doesn't exist in the original POSIX/Bourne shell, which only has the in-list form of for."
+relatedConcepts: ["conditionals", "arrays", "variables", "until-loop", "break-and-continue"]
+relatedCommands: ["seq", "read", "find"]
+---
+
+A `for` loop iterates over a fixed list of values — words typed directly, a glob expansion, or a command's output — running its body once per item, with the current item available as the loop variable. A `while` loop instead repeats as long as a test condition keeps succeeding, which is the right shape when you don't know in advance how many iterations you need, like reading a file line by line until it runs out.
+
+The most common loop-related bug is iterating over unquoted command output or a glob that might match nothing or contain spaces — `for line in $(cat file)` silently splits on every space and newline, mangling any line with more than one word in it. The standard fix for "read a file line by line" specifically is `while read -r line; do ...; done < file`, which preserves each line exactly as written instead of word-splitting it.

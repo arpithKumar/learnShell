@@ -1,0 +1,56 @@
+---
+slug: sed
+name: sed
+category: ["text-processing"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Stream editor for find-and-replace and line-based text transformations.
+syntax: "sed [OPTIONS] 'SCRIPT' [FILE...]"
+flags:
+  - flag: "-i"
+    description: Edit files in place instead of printing to the terminal.
+    example: "sed -i 's/foo/bar/' file.txt"
+  - flag: "-e"
+    description: Add an additional script/command (lets you chain multiple edits).
+    example: "sed -e 's/foo/bar/' -e 's/baz/qux/' file.txt"
+  - flag: "-n"
+    description: Suppress automatic printing — useful with the p command to print only matched lines.
+    example: "sed -n '2p' file.txt"
+examples:
+  - description: Replace the first occurrence of a word on each line
+    input: "sed 's/foo/bar/' file.txt"
+    output: "bar appears once per line, foo is gone"
+  - description: Replace every occurrence, and edit the file directly
+    input: "sed -i 's/foo/bar/g' file.txt"
+    output: ""
+shortcuts: []
+tips:
+  - "Always run a substitution without -i first to see the output before committing to an in-place edit — once -i runs, the original content is gone."
+  - "Use a different delimiter when your find/replace text contains slashes, e.g. s|/path/one|/path/two| instead of s/\\/path\\/one/\\/path\\/two/, to avoid a wall of escape characters."
+  - "sed -n '/start/,/end/p' prints everything between two matching lines — a handy way to extract just one section out of a larger file."
+related: ["grep", "awk", "tr"]
+pitfalls:
+  - "Without a trailing /g, sed's substitute command only replaces the first match on each line, not every match — a very common beginner gotcha when a 'replace' doesn't seem to fully work."
+  - "sed -i behaves differently between GNU (Linux) and BSD (macOS) sed — on macOS you typically need sed -i '' 's/.../.../' with an explicit, even if empty, backup-extension argument, while GNU sed accepts sed -i directly."
+---
+
+`sed` ("stream editor") processes text one line at a time, applying a
+small built-in scripting language to transform it as it goes — without
+ever opening an interactive editor. The overwhelming majority of real
+`sed` usage boils down to one pattern: `sed 's/find/replace/g'`,
+substituting every occurrence of "find" with "replace" across a stream
+of text or a file.
+
+The syntax `s/pattern/replacement/flags` is worth memorizing as a unit:
+`s` for substitute, the pattern and replacement separated by a
+delimiter (conventionally `/`, though any character works), and
+optional trailing flags — `g` for "global," meaning replace every match
+on a line, not just the first one. Leaving off `g` is the single most
+common reason a `sed` substitution seems to only "half work."
+
+By default `sed` prints its transformed output to the terminal without
+touching the original file, which is a safe way to preview a change.
+Adding `-i` switches it to editing the file directly, in place — a
+genuinely destructive operation with no built-in undo, so it's good
+practice to run the command without `-i` first, confirm the output
+looks right, and only then add `-i` to commit the change for real.

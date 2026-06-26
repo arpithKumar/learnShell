@@ -1,0 +1,29 @@
+---
+slug: exec
+name: exec
+category: ["scripting", "process-system"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Replace the current shell process with another command, instead of starting a new one.
+syntax: "exec COMMAND [ARGS...]"
+flags: []
+examples:
+  - description: Replace the current shell with a new bash process
+    input: "exec bash"
+    output: ""
+  - description: Redirect a script's entire output to a log file from that point on
+    input: "exec > script.log"
+    output: ""
+shortcuts: []
+tips:
+  - "exec > file.log redirects all subsequent output in the current shell or script to that file, without needing to redirect every individual command separately — a genuinely useful trick in logging scripts."
+related: ["nohup", "jobs"]
+pitfalls:
+  - "exec COMMAND doesn't return — it replaces the current process entirely, so anything written after it in a script never runs (unless the replaced command itself exits, ending the whole shell with it)."
+---
+
+`exec` replaces the currently running shell process with whatever command you give it, rather than launching that command as a new child process. The original shell is gone — there's no "coming back" to it, because it no longer exists; the new command has taken over its process ID entirely.
+
+This sounds destructive, and used directly it usually is exactly that intentional — `exec bash` swaps your current shell for a fresh one, useful after a major environment change. The more common everyday use, though, is `exec` without a command, just redirecting: `exec > logfile.txt` redirects all of a script's subsequent output to a file in one line, instead of adding `>> logfile.txt` to every single command.
+
+Because it replaces rather than spawns, any code written after a bare `exec COMMAND` in a script is unreachable — the script's own process has been entirely replaced before reaching that point.

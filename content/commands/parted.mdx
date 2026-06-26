@@ -1,0 +1,27 @@
+---
+slug: parted
+name: parted
+category: ["system"]
+difficulty: advanced
+shells: ["bash", "zsh"]
+summary: Create, resize, and inspect disk partitions, with full support for modern GPT disks.
+syntax: "parted [DEVICE] [COMMAND]"
+flags:
+  - flag: "print"
+    description: Show the partition table of the current device, without modifying anything.
+    example: "parted /dev/sda print"
+examples:
+  - description: View the partition table for a disk
+    input: "sudo parted /dev/sda print"
+    output: "Number  Start   End    Size   File system  Name  Flags\n 1      1049kB  538MB  537MB  fat32              boot"
+shortcuts: []
+tips:
+  - "parted print is the safe, read-only first step before any partitioning operation — confirming the exact device and existing layout before issuing a command that actually changes it."
+related: ["fdisk", "lsblk", "mount"]
+pitfalls:
+  - "Many parted commands take effect immediately upon entry, without a separate confirmation or write step like fdisk has — there's less of a safety buffer between issuing a command and it actually modifying the disk."
+---
+
+`parted` manages disk partitions with full support for the modern GPT partition table format, alongside the older MBR style that tools like `fdisk` are limited to. Its `print` command, run without changing anything, shows the current partition layout — the safe first step before any real modification.
+
+One meaningful difference from `fdisk` is that many `parted` operations apply immediately as soon as they're entered, rather than being staged and requiring an explicit final write step — which means there's less of a built-in pause to double-check before a change actually takes effect on the disk.

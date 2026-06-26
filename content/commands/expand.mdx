@@ -1,0 +1,27 @@
+---
+slug: expand
+name: expand
+category: ["text-processing"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Convert tab characters into the equivalent number of spaces.
+syntax: "expand [OPTIONS] [FILE]"
+flags:
+  - flag: "-t"
+    description: Set the tab width in spaces (default is 8).
+    example: "expand -t 4 file.txt"
+examples:
+  - description: Convert tabs to spaces using a 4-space tab width
+    input: "expand -t 4 file.txt"
+    output: ""
+shortcuts: []
+tips:
+  - "Mixed tabs and spaces in a file can make indentation look inconsistent depending on the viewer's tab width — expand normalizes everything to actual spaces, removing that ambiguity."
+related: ["cat", "tr"]
+pitfalls:
+  - "The default tab width is 8 spaces, which is wider than many editors' default display — set -t explicitly to match your project's actual convention (often 2 or 4)."
+---
+
+`expand` converts tab characters in a file into an equivalent number of literal space characters. It exists because tabs render differently depending on the viewer or editor's configured tab width, which can make code or text look correctly indented in one tool and misaligned in another.
+
+Running text through `expand` removes that ambiguity by replacing every tab with a fixed, explicit number of spaces — set with `-t` to match whatever convention your project actually uses, since the default of 8 is wider than most modern code style guides.

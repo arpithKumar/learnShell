@@ -1,0 +1,24 @@
+---
+slug: passwd
+name: passwd
+category: ["system", "security"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Change a user's login password.
+syntax: "passwd [USERNAME]"
+flags: []
+examples:
+  - description: Change your own password interactively
+    input: "passwd"
+    output: "Changing password for alice.\nNew password: "
+shortcuts: []
+tips:
+  - "Running passwd with no argument changes your own password; changing another user's password requires root privileges via sudo."
+related: ["useradd", "sudo", "su"]
+pitfalls:
+  - "passwd prompts for the new password interactively and doesn't echo it back to the terminal, which is intentional — there's no visible feedback while typing, which can look like the terminal has frozen if you're not expecting it."
+---
+
+`passwd` sets or changes a user's login password, prompting interactively for the new value without echoing it to the terminal. Run with no arguments, it changes the current user's own password; changing someone else's requires root privileges via `sudo`.
+
+It's typically the second step after creating an account with `useradd`, since a freshly created account has no usable password until `passwd` is run for it.

@@ -1,0 +1,53 @@
+---
+slug: sort
+name: sort
+category: ["text-processing"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Sort the lines of a file or input stream.
+syntax: "sort [OPTIONS] [FILE...]"
+flags:
+  - flag: "-n"
+    description: Sort numerically instead of alphabetically (so 9 comes before 10).
+    example: "sort -n scores.txt"
+  - flag: "-r"
+    description: Reverse the sort order.
+    example: "sort -r names.txt"
+  - flag: "-u"
+    description: Remove duplicate lines from the sorted output.
+    example: "sort -u emails.txt"
+  - flag: "-k"
+    description: Sort by a specific column/field instead of the whole line.
+    example: "sort -k 2 data.csv"
+examples:
+  - description: Sort lines alphabetically
+    input: "sort names.txt"
+    output: "Alice\nBob\nCarol"
+  - description: Sort numbers correctly (not as text)
+    input: "sort -n scores.txt"
+    output: "7\n42\n100"
+shortcuts: []
+tips:
+  - "sort -k 2,2 sorts by exactly the second field — leaving off the second number means the sort continues comparing the rest of the line as a tiebreaker, which can produce surprising results."
+  - "sort -h sorts human-readable sizes like '2K', '1M', and '3G' in the order a person would expect, rather than alphabetically."
+related: ["uniq", "wc", "cut"]
+pitfalls:
+  - "Without -n, sort treats everything as plain text — so '10' sorts before '9', because the character '1' comes before '9'. This is a very common first surprise for beginners sorting numeric data."
+---
+
+`sort` reorders the lines of whatever you give it. Left to its
+defaults, it sorts alphabetically — more precisely, byte by byte —
+which works perfectly for names and words but produces confusing
+results for numbers: text sorting puts `"10"` before `"9"`, because as
+characters, `'1'` simply comes before `'9'`.
+
+That's exactly what the `-n` flag fixes: it tells `sort` to compare
+values numerically instead of as raw text, so `9` correctly sorts
+before `10`. Beyond plain ascending order, `-r` reverses it, and `-u`
+removes duplicate lines as part of the same pass, instead of needing a
+separate step.
+
+`sort` is frequently the first half of a two-step pipeline with `uniq`,
+since `uniq` can only catch duplicate lines that are directly adjacent
+to each other — sorting first guarantees that any duplicates end up
+next to one another, ready to be deduplicated or counted.

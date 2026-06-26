@@ -1,0 +1,43 @@
+---
+slug: alias
+name: alias
+category: ["process-system"]
+difficulty: beginner
+shells: ["bash", "zsh"]
+summary: Create a shortcut name for a longer command.
+syntax: "alias NAME='COMMAND'"
+flags: []
+examples:
+  - description: Create a shortcut for a common long command
+    input: "alias ll='ls -lah'"
+    output: ""
+  - description: List every alias currently defined
+    input: "alias"
+    output: "alias ll='ls -lah'\nalias gs='git status'"
+shortcuts: []
+tips:
+  - "Run 'alias' with no arguments any time to remind yourself what shortcuts you've already defined in this session."
+  - "Keep your aliases in a dedicated file (like ~/.aliases) and source it from your main shell config — that keeps them easy to find and edit later, instead of buried inline in a long .zshrc."
+related: ["export", "env"]
+pitfalls:
+  - "Aliases set directly at the prompt only last for that one terminal session — close it, and they're gone. To make one permanent, add the alias line to your shell's startup file (~/.zshrc or ~/.bashrc)."
+  - "fish doesn't use a direct alias builtin with identical syntax — it favors abbreviations (abbr) or functions instead, which is worth knowing if you switch shells."
+---
+
+`alias` lets you define a shorter name for a command you find yourself
+typing often. The classic examples are things like `alias ll='ls -lah'`
+or `alias gs='git status'` — both save real keystrokes on commands used
+dozens of times a day.
+
+Typed directly at the prompt, an alias exists only for that one
+terminal session; close the window, and it's gone. To have your
+shortcuts available automatically every time you open a new terminal,
+the alias definitions need to live in your shell's startup file instead
+— typically `~/.zshrc` for zsh or `~/.bashrc` for bash — so they get
+re-run every time a new shell starts.
+
+Aliases are intentionally simple: they're a straight text substitution,
+not a function with parameters or logic. For anything more elaborate
+than "replace this short name with this fixed command," a shell
+function is usually the better tool, while `alias` stays the quick,
+low-ceremony option for everyday shortcuts.

@@ -1,0 +1,26 @@
+---
+slug: command-hashing
+title: Command Hashing
+category: shell-environment
+difficulty: advanced
+summary: Bash remembers where it found a command last time, in a hash table, so it doesn't have to search the entire $PATH again on every call.
+examples:
+  - description: See the cached locations bash has already looked up
+    input: "hash"
+    output: "hits\tcommand\n3\t/usr/bin/git\n1\t/usr/local/bin/node"
+  - description: Clear the cache after installing a new version somewhere earlier in PATH
+    input: "hash -r"
+    output: ""
+tips:
+  - "If you install a new version of a command earlier in $PATH but the shell stubbornly keeps running the old one, hash -r (clear the whole cache) or hash -d name (drop just that one entry) is almost always the fix — bash is still using its cached location from before."
+pitfalls:
+  - "The hash cache only gets invalidated automatically for some kinds of $PATH changes, not all — installing a new binary in a directory already in PATH can leave a stale cached entry pointing at an old version until hash -r runs, even though a fresh shell would find it correctly."
+funFacts:
+  - "This caching exists purely for performance — searching every directory in $PATH for a match is real work, and a frequently-run command benefits from skipping that search on every single subsequent invocation within the same shell session."
+relatedConcepts: ["builtins-vs-external", "environment-variables"]
+relatedCommands: ["type", "which"]
+---
+
+Once bash locates an external command by searching `$PATH`, it remembers that location in an internal hash table, so future calls to the same command name skip the search entirely and jump straight there. `hash` with no arguments shows what's currently cached; `hash -r` clears the whole table, forcing a fresh `$PATH` search the next time any command runs.
+
+This caching is invisible almost all the time, but it surfaces as a genuinely confusing bug in one specific scenario: installing a new version of a command somewhere already on `$PATH` (replacing an old binary, or adding a new one earlier in the search order) doesn't always invalidate the stale cached entry automatically — the shell keeps confidently running the old, cached location until `hash -r` clears it out.

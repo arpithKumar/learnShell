@@ -1,0 +1,30 @@
+---
+slug: htop
+name: htop
+category: ["system"]
+difficulty: beginner
+shells: ["bash", "zsh"]
+summary: An interactive, color process viewer — a friendlier alternative to top.
+syntax: "htop"
+flags: []
+examples:
+  - description: Launch the interactive process viewer
+    input: "htop"
+    output: ""
+shortcuts:
+  - keys: "F9"
+    description: Kill the currently selected process.
+    context: vi
+  - keys: "F6"
+    description: Sort the process list by a chosen column.
+    context: vi
+tips:
+  - "htop supports scrolling, mouse clicks, and killing a process directly from the list with a function key, all of which top's plainer interface lacks."
+related: ["top", "ps", "kill"]
+pitfalls:
+  - "htop isn't installed by default on as many systems as top is — when working on an unfamiliar or minimal server, top may be the only one available."
+---
+
+`htop` is an interactive process viewer, functionally similar to `top` but with a friendlier, colorized interface: scrollable process lists, mouse support, and the ability to sort columns or kill a process directly from a function-key menu rather than typing a PID manually.
+
+It's a popular upgrade over `top` for everyday interactive use, though `top` remains more universally available out of the box — on a minimal or unfamiliar server, `top` may be the only one of the two actually installed.

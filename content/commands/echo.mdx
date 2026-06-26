@@ -1,0 +1,39 @@
+---
+slug: echo
+name: echo
+category: ["scripting", "text-processing"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Print text to the terminal — the simplest way to display output or build a string.
+syntax: "echo [OPTIONS] [TEXT...]"
+flags:
+  - flag: "-n"
+    description: Don't print the trailing newline.
+    example: "echo -n 'no newline'"
+  - flag: "-e"
+    description: Interpret backslash escape sequences like \\n (newline) and \\t (tab).
+    example: "echo -e 'line one\\nline two'"
+examples:
+  - description: Print a simple message
+    input: "echo 'hello world'"
+    output: "hello world"
+  - description: Print the value of a variable
+    input: "echo $HOME"
+    output: "/Users/you"
+  - description: Write text to a file instead of the terminal
+    input: "echo 'hello' > notes.txt"
+    output: ""
+shortcuts: []
+tips:
+  - "echo \"$variable\" > file.txt is the simplest way to create a file with specific content directly from the command line, no editor needed."
+  - "Quoting matters: echo $var and echo \"$var\" can behave differently if the variable contains spaces or special characters — quoting is the safer default habit."
+related: ["printf", "cat"]
+pitfalls:
+  - "echo's exact behavior around escape sequences (\\n, \\t) varies slightly between shells and systems — for output that needs to be precisely predictable, printf is the more reliable choice."
+---
+
+`echo` prints text to the terminal, and it's usually the very first command anyone runs when learning a shell — `echo "hello world"` is the universal first example for a reason: it's about as simple as a command can be.
+
+Beyond just printing a fixed message, `echo` is constantly used to display the value of a variable (`echo $HOME`) or to write content into a file via redirection (`echo "some text" > file.txt`), which is the quickest way to create a small file with known content without opening an editor at all.
+
+For anything needing precise, guaranteed formatting — exact control over newlines, padding, number formatting — `printf` is the more predictable tool, since `echo`'s handling of things like escape sequences isn't perfectly consistent across every shell and system. For everyday quick output, though, `echo` remains the simpler, faster choice.

@@ -1,0 +1,26 @@
+---
+slug: locale-settings
+title: Locale Settings
+category: shell-environment
+difficulty: advanced
+summary: Environment variables like LANG and LC_ALL that affect sort order, number formatting, and character handling — and a common source of inconsistent script behavior.
+examples:
+  - description: Sort order can change depending on the active locale
+    input: "export LC_ALL=C\nsort <<< $'banana\\nApple\\ncherry'"
+    output: "Apple\nbanana\ncherry"
+  - description: Check which locale-related variables are currently set
+    input: "locale"
+    output: "LANG=en_US.UTF-8\nLC_ALL="
+tips:
+  - "Setting LC_ALL=C (the plain, locale-independent \"C\" locale) at the top of a script before sorting or comparing strings is a common, deliberate way to force consistent, predictable byte-order behavior regardless of whatever locale the machine running it happens to have configured."
+pitfalls:
+  - "The exact same sort or string-comparison command can genuinely produce different output on two machines (or even two user accounts on the same machine) if their locale settings differ — a script that 'works on my machine' but sorts differently elsewhere is a classic locale-related bug."
+funFacts:
+  - "Under most locales, sort treats uppercase and lowercase letters as interleaved (Apple before banana before cherry, case mostly ignored for ordering) — under the plain C locale, it instead sorts by raw byte value, which puts every uppercase letter before any lowercase one, producing a noticeably different order for the same input."
+relatedConcepts: ["environment-variables", "shell-differences"]
+relatedCommands: ["sort"]
+---
+
+Locale settings — `LANG`, `LC_ALL`, and several more specific `LC_*` variables — control how a shell and the programs it runs interpret things like sort order, number formatting, and character classification, based on regional and language conventions rather than purely the literal byte values involved. They're ordinary environment variables, but with system-wide reach into otherwise "deterministic-looking" commands like `sort` and string comparisons.
+
+This is a genuine, recurring source of "works on my machine" bugs: the exact same `sort` command can order the same input differently depending on the active locale, since most locales sort case-insensitively and alphabetically by language convention, while the plain `C` locale sorts strictly by raw byte value instead. Explicitly setting `LC_ALL=C` at the top of a script that needs predictable, portable sorting or comparison behavior sidesteps this inconsistency entirely, regardless of whatever locale happens to be configured on the machine actually running it.

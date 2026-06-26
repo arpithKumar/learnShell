@@ -1,0 +1,40 @@
+---
+slug: xargs
+name: xargs
+category: ["scripting", "filesystem"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Build and run commands from a stream of input, turning piped text into command arguments.
+syntax: "COMMAND | xargs [OPTIONS] TARGET_COMMAND"
+flags:
+  - flag: "-n"
+    description: Pass at most N arguments to each invocation of the target command.
+    example: "echo a b c | xargs -n 1 echo"
+  - flag: "-I"
+    description: Define a placeholder to substitute each input item into a custom position.
+    example: "find . -name '*.log' | xargs -I {} mv {} ./archive/"
+  - flag: "-0"
+    description: Expect input separated by null bytes instead of whitespace (pairs with find -print0).
+    example: "find . -name '*.tmp' -print0 | xargs -0 rm"
+examples:
+  - description: Delete every file found by find, in batches instead of one-by-one
+    input: "find . -name '*.log' | xargs rm"
+    output: ""
+  - description: Run a command once per input line, with the item in a specific position
+    input: "cat hosts.txt | xargs -I {} ping -c 1 {}"
+    output: ""
+shortcuts: []
+tips:
+  - "xargs exists largely because find -exec runs a separate process per match by default — piping into xargs instead batches many items into fewer command invocations, which is often noticeably faster on large result sets."
+  - "Combine find -print0 with xargs -0 when filenames might contain spaces or unusual characters — that null-byte pairing handles them correctly where plain whitespace splitting would break."
+related: ["find", "grep"]
+pitfalls:
+  - "Without -I, xargs appends each input item to the END of the target command — if you need it somewhere else (the middle of an argument, for instance), you need -I to define an explicit placeholder."
+  - "Piping a command's output directly into xargs rm (or anything destructive) without first checking what that output actually contains is a common way to delete more than intended — preview the input list first."
+---
+
+`xargs` takes a stream of input — usually piped from another command — and turns each item into an argument for a target command, running that command (potentially multiple times, in batches) on the whole list. It's the standard way to act on a list of things that another command, like `find`, just printed out.
+
+The simplest pattern is `find . -name '*.log' | xargs rm`, which deletes every file `find` matched. Without `xargs`, you'd need `find`'s own `-exec` flag instead, which by default runs the target command once per file; `xargs` batches many filenames into fewer command invocations, which scales much better when there are thousands of matches.
+
+For cases where the input needs to land somewhere other than the very end of the command — building a more complex command around each item — `-I` lets you define a placeholder and put it exactly where you need it. And because plain whitespace splitting breaks on filenames containing spaces, the `find -print0` / `xargs -0` pairing exists specifically to handle that safely.

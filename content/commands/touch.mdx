@@ -1,0 +1,42 @@
+---
+slug: touch
+name: touch
+category: ["filesystem"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Create empty files, or update a file's modification timestamp.
+syntax: "touch [OPTIONS] FILE..."
+flags:
+  - flag: "-a"
+    description: Only update the access time, not the modification time.
+    example: "touch -a notes.txt"
+  - flag: "-c"
+    description: Don't create the file if it doesn't already exist.
+    example: "touch -c maybe-exists.txt"
+examples:
+  - description: Create a new empty file
+    input: "touch index.ts"
+    output: ""
+  - description: Refresh a file's timestamp to right now
+    input: "touch existing-file.txt"
+    output: ""
+shortcuts: []
+tips:
+  - "Brace expansion creates several files in one command: touch {a,b,c}.txt makes a.txt, b.txt, and c.txt."
+  - "Pair with 'find . -newer reference-file' to locate everything modified after you touched a known reference point in time."
+related: ["mkdir", "ls", "find"]
+pitfalls:
+  - "If the file already exists, touch doesn't erase its contents — it only updates the timestamp. Beginners sometimes expect it to reset or clear the file, but the data is left completely untouched."
+---
+
+`touch` has two uses that both follow from the same underlying idea: it
+updates a file's "last modified" timestamp to the current time. If the
+file doesn't already exist, that update has nowhere to apply, so it
+creates a new, empty file instead — which is why `touch` is the
+standard quick way to make an empty placeholder file.
+
+If the file *does* already exist, `touch` leaves its contents
+completely alone — only the timestamp changes. That's genuinely useful
+on its own: some build tools and `make`-style systems decide whether to
+rebuild something based on file timestamps, so `touch`-ing a file is a
+quick way to force a rebuild without actually editing it.

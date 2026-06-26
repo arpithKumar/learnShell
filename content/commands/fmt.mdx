@@ -1,0 +1,27 @@
+---
+slug: fmt
+name: fmt
+category: ["text-processing"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Reflow paragraphs of text to a consistent width, respecting sentence and paragraph structure.
+syntax: "fmt [OPTIONS] [FILE]"
+flags:
+  - flag: "-w"
+    description: Set the maximum line width (default is usually 75).
+    example: "fmt -w 60 paragraph.txt"
+examples:
+  - description: Reflow a paragraph to a consistent 60-character width
+    input: "fmt -w 60 paragraph.txt"
+    output: ""
+shortcuts: []
+tips:
+  - "fmt is the better choice over fold specifically for actual prose — it reflows whole paragraphs intelligently, keeping words intact and respecting blank lines between paragraphs, rather than fold's blunt character-count wrapping."
+related: ["fold", "cat"]
+pitfalls:
+  - "fmt is meant for natural-language prose, not structured data or code — running it on something like a CSV or a config file will mangle the structure rather than improve readability."
+---
+
+`fmt` reflows paragraphs of plain text to a consistent line width, the same basic idea as a word processor's "justify" or "wrap text" feature, but from the command line. Where `fold` wraps at a hard character count even mid-word, `fmt` is paragraph-aware — it reflows whole blocks of text while keeping words intact and respecting blank lines as paragraph breaks.
+
+It's the right tool specifically for actual written prose — reformatting a block of text to a narrower or wider column, for instance — and the wrong tool for anything structured, like code or tabular data, where reflowing would break the format rather than improve it.

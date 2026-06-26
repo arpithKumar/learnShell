@@ -1,0 +1,26 @@
+---
+slug: case-statement
+title: Case Statement
+category: control-flow
+difficulty: beginner
+summary: Branch based on matching a value against several glob-style patterns, instead of a chain of if/elif checks.
+examples:
+  - description: Match against several literal patterns
+    input: 'fruit="apple"; case $fruit in apple) echo "red";; banana) echo "yellow";; *) echo "unknown";; esac'
+    output: "red"
+  - description: Patterns support globbing, not just exact matches
+    input: 'file="report.txt"; case $file in *.txt) echo "text file";; *.jpg) echo "image";; esac'
+    output: "text file"
+tips:
+  - "The final *) pattern acts as a catch-all default, the same role as else in an if chain — it's good practice to always include one, even if just to print an error for unexpected input."
+pitfalls:
+  - "Each branch must end with ;; (or ;& / ;;& in bash for fallthrough) — forgetting it is a common syntax mistake, and the error message bash gives often points at the wrong line."
+funFacts:
+  - "case predates if/elif chains in popularity for multi-way branching in shell history — it was specifically designed for pattern-matching dispatch (like parsing a single flag value), which is why its patterns use globbing syntax rather than string equality."
+relatedConcepts: ["conditionals", "globbing", "regex-matching", "select-menu"]
+relatedCommands: ["test"]
+---
+
+`case` matches one value against a series of patterns, running the commands under the first pattern that matches — a cleaner alternative to a long `if`/`elif` chain when you're checking one value against several possibilities, especially when those possibilities are naturally expressed as glob patterns (`*.txt`, `img-*`) rather than exact string equality.
+
+Each pattern is followed by `)`, then the commands to run, ending with `;;` to mark the end of that branch. A final `*)` branch, matching anything not caught earlier, serves the same role `else` plays in an `if` chain, and including one is good defensive practice so unexpected input doesn't silently fall through with no action taken at all.

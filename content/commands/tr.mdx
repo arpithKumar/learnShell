@@ -1,0 +1,49 @@
+---
+slug: tr
+name: tr
+category: ["text-processing"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Translate or delete characters from input, one-to-one.
+syntax: "tr [OPTIONS] SET1 [SET2]"
+flags:
+  - flag: "-d"
+    description: Delete characters in SET1 instead of translating them.
+    example: "tr -d '\\n' < file.txt"
+  - flag: "-s"
+    description: Squeeze repeated characters in SET1 down to a single instance.
+    example: "tr -s ' ' < spaced.txt"
+examples:
+  - description: Convert lowercase to uppercase
+    input: "echo 'hello' | tr 'a-z' 'A-Z'"
+    output: "HELLO"
+  - description: Strip all newlines from a file
+    input: "tr -d '\\n' < file.txt"
+    output: ""
+shortcuts: []
+tips:
+  - "tr -d '[:punct:]' strips all punctuation using a POSIX character class, instead of listing every punctuation character individually."
+  - "tr -cd keeps only the characters listed in SET1 and deletes everything else — handy for reducing a messy string down to just digits, for example."
+related: ["sed", "cut", "cat"]
+pitfalls:
+  - "tr only operates on single characters, not whole strings or patterns — for anything more structured than character-by-character substitution, sed is the right tool instead."
+  - "tr reads only from standard input — it doesn't accept a filename argument directly, so you need to redirect a file in with < or pipe it from another command."
+---
+
+`tr` ("translate") performs simple, character-by-character
+substitution or deletion: every character that appears in SET1 gets
+replaced by the character in the same position in SET2. It's much more
+limited than `sed`, which can match whole patterns, but for quick jobs —
+uppercasing text, stripping a specific character, collapsing repeated
+spaces — it's often faster to type than reaching for a heavier tool.
+
+A defining quirk is that `tr` only reads from standard input, never
+directly from a file path. That means you'll usually see it at the end
+of a pipe (`cat file | tr ...`) or paired with input redirection
+(`tr ... < file.txt`), rather than written as `tr ... file.txt` the way
+most other text tools accept a filename argument.
+
+Character classes like `[:punct:]`, `[:digit:]`, and `[:alpha:]` let you
+target whole categories of characters without spelling each one out,
+which keeps `tr` commands readable even when the set of characters
+you're targeting is large.

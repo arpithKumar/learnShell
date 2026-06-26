@@ -1,0 +1,36 @@
+---
+slug: xz
+name: xz
+category: ["archives"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Compress a single file using the xz algorithm, usually the tightest compression of the common formats.
+syntax: "xz [OPTIONS] FILE"
+flags:
+  - flag: "-d"
+    description: Decompress instead of compress.
+    example: "xz -d file.txt.xz"
+  - flag: "-k"
+    description: Keep the original file instead of deleting it after compressing.
+    example: "xz -k file.txt"
+  - flag: "-9"
+    description: Use the highest (slowest) compression level.
+    example: "xz -9 file.txt"
+examples:
+  - description: Compress a file
+    input: "xz file.txt"
+    output: "file.txt.xz"
+  - description: Decompress it back
+    input: "xz -d file.txt.xz"
+    output: "file.txt"
+shortcuts: []
+tips:
+  - "tar -cJf archive.tar.xz ./folder uses xz (capital -J) for the bundle-and-compress combo — typically the smallest output of tar's gzip/bzip2/xz options, at the cost of being the slowest."
+related: ["gzip", "bzip2", "tar"]
+pitfalls:
+  - "xz compression at high levels can be noticeably slow and memory-hungry on large files — for quick, everyday compression, gzip is usually the more practical default."
+---
+
+`xz` is the newest of the common single-file compression tools, and generally achieves the smallest output of the three — smaller than both `gzip` and `bzip2` — at the cost of being the slowest to compress. It's a reasonable default when distributing software for download, where a smaller file matters more than the compression step being fast.
+
+Usage follows the same pattern as `gzip` and `bzip2`: compress in place, `-d` to decompress, `-k` to keep the original. With `tar`, it's selected via the capital `-J` flag (`tar -cJf archive.tar.xz ./folder`).

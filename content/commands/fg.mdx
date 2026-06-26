@@ -1,0 +1,37 @@
+---
+slug: fg
+name: fg
+category: ["process-system"]
+difficulty: intermediate
+shells: ["bash", "zsh", "fish"]
+summary: Bring a background or stopped job back to the foreground.
+syntax: "fg [%JOB_ID]"
+flags: []
+examples:
+  - description: Bring the most recent background job to the foreground
+    input: "fg"
+    output: "npm run dev"
+  - description: Bring a specific job to the foreground by number
+    input: "fg %2"
+    output: "./long-script.sh"
+shortcuts: []
+tips:
+  - "fg with no argument always resumes the most recently backgrounded or stopped job, so you rarely need to look up its number unless you have several running at once."
+related: ["bg", "jobs", "kill"]
+pitfalls:
+  - "Once a job is back in the foreground, it takes over your terminal input again — you can't type other commands until it finishes, or you suspend it again with Ctrl+Z."
+---
+
+`fg` is the opposite of `bg`: it takes a background or paused job and
+attaches it back to your terminal as the foreground process, the same
+as if you'd started it directly without the trailing `&`. This is handy
+when something you backgrounded earlier now needs direct interaction —
+maybe it's prompting for input, or you simply want to watch its output
+attentively again instead of letting it run unattended.
+
+In day-to-day use, `fg` and `bg` are mostly reached for as a pair: pause
+something with `Ctrl+Z`, decide whether it should keep running quietly
+in the background (`bg`) or actually needs your attention right now
+(`fg`). Multiple jobs can be tracked at once via the numbers shown by
+`jobs`, with `fg %2` bringing back a specific one instead of just the
+most recent.

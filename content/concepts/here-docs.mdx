@@ -1,0 +1,26 @@
+---
+slug: here-docs
+title: Here-Docs
+category: io-and-pipelines
+difficulty: intermediate
+summary: Feed a multi-line block of literal text to a command's input, written inline in a script.
+examples:
+  - description: Feed multiple lines to cat without a separate file
+    input: 'cat <<EOF\nLine one\nLine two\nEOF'
+    output: "Line one\nLine two"
+  - description: Quoting the delimiter disables variable expansion inside the block
+    input: "name=Alice\ncat <<'EOF'\nHello, $name\nEOF"
+    output: "Hello, $name"
+tips:
+  - "A here-string (<<<) is the single-line cousin of a here-doc — command <<< \"$variable\" feeds just one value as input without needing the multi-line EOF ... EOF block at all."
+pitfalls:
+  - "The closing delimiter (EOF or whatever word you chose) must start at the very beginning of its line with no leading whitespace in standard here-docs — indenting it to match the surrounding script's indentation breaks the block unless you use the <<- variant, which strips leading tabs specifically."
+funFacts:
+  - "Here-strings (<<<) showed up much later than the classic here-doc block — they originated in ksh93 and were only adopted by bash and zsh afterward, as a shortcut for the common one-line case."
+relatedConcepts: ["redirection", "quoting", "here-strings"]
+relatedCommands: ["cat", "read"]
+---
+
+A here-document lets you write a multi-line block of literal text directly inline in a script and feed it to a command's standard input, without creating a separate file. The syntax is `command <<DELIMITER`, followed by the lines of text, ending with that same delimiter word (`EOF` is the common convention, though any word works) alone on its own line.
+
+By default, variables and command substitution inside the block still expand, just like in double-quoted text — wrapping the delimiter in quotes (`<<'EOF'`) disables that and treats the whole block completely literally. This is genuinely useful for generating config files or multi-line messages inline in a script, and the related here-string (`<<<`) covers the simpler one-line case without needing the full block syntax.

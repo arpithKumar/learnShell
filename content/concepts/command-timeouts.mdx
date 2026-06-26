@@ -1,0 +1,26 @@
+---
+slug: command-timeouts
+title: Command Timeouts
+category: process-control
+difficulty: intermediate
+summary: Automatically kill a command if it runs longer than a set duration, rather than letting it potentially hang forever.
+examples:
+  - description: Kill a command if it's still running after 5 seconds
+    input: "timeout 5 ping example.com"
+    output: ""
+  - description: Check whether a command actually timed out
+    input: 'timeout 2 sleep 10; echo "exit status: $?"'
+    output: "exit status: 124"
+tips:
+  - "timeout's exit status of exactly 124 specifically means the command was killed for running too long — checking for that exact value is the standard way to distinguish 'it timed out' from 'it failed for some other reason' in a script."
+pitfalls:
+  - "timeout sends SIGTERM by default, which a stubborn or unresponsive process can ignore — timeout -k 5 30 cmd gives the process 30 seconds, then escalates to SIGKILL 5 seconds after that if it still hasn't exited, for processes that won't respond to a polite request to stop."
+funFacts:
+  - "Before timeout existed as a standalone command (added to GNU coreutils relatively late, in 2008), the common workaround was a hand-rolled combination of backgrounding a command, sleep, and kill — a noticeably more fragile pattern than just calling timeout directly."
+relatedConcepts: ["signals", "ulimit-and-resource-limits", "exit-status"]
+relatedCommands: []
+---
+
+`timeout N command` runs a command but kills it automatically if it's still running after `N` seconds — a straightforward safeguard against a command that might hang indefinitely, whether due to a network issue, a stuck process, or input it's waiting on that will never arrive. The exit status `124` specifically signals "this was killed for taking too long," distinguishable from the command's own normal failure exit statuses.
+
+By default, `timeout` sends `SIGTERM`, which a process can choose to ignore — `timeout -k` adds a second, harsher deadline after which it escalates to `SIGKILL` if the process still hasn't exited. Before `timeout` existed as its own coreutils command, achieving the same effect meant manually backgrounding a process, sleeping, then checking and killing it if still running — a noticeably more error-prone pattern than reaching for the dedicated command directly.

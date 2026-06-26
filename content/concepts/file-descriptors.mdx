@@ -1,0 +1,26 @@
+---
+slug: file-descriptors
+title: File Descriptors
+category: io-and-pipelines
+difficulty: advanced
+summary: The numbered handles a process uses to read and write — 0, 1, and 2 by default, but you can open more.
+examples:
+  - description: Duplicate a custom file descriptor pointing at a log file
+    input: "exec 3> debug.log\necho \"debug info\" >&3"
+    output: ""
+  - description: Swap stdout and stderr (a classic trick using a temporary fd)
+    input: "command 3>&1 1>&2 2>&3"
+    output: ""
+tips:
+  - "You're not limited to 0, 1, and 2 — exec 3< file.txt opens file.txt as file descriptor 3, which you can then read from repeatedly across multiple commands in the same script."
+pitfalls:
+  - "2>&1 and 1>&2 look almost identical but mean opposite things — 2>&1 points stderr at wherever stdout currently goes, while 1>&2 points stdout at stderr. Mixing them up silently sends output to the wrong place."
+funFacts:
+  - "The convention of 0/1/2 for stdin/stdout/stderr isn't shell-specific at all — it comes straight from the Unix kernel's process model, which is why C programs, Python scripts, and shell scripts all agree on the same three numbers."
+relatedConcepts: ["redirection", "process-substitution"]
+relatedCommands: ["exec"]
+---
+
+A file descriptor is a small integer a process uses internally to refer to an open input or output stream — `0` for standard input, `1` for standard output, `2` for standard error, by long-standing Unix convention, with any additional numbers available for a script to open more streams as needed. `exec 3> debug.log` opens a fourth stream (`3`) pointed at a log file, which can then be written to repeatedly with `>&3` without reopening the file each time.
+
+Redirection syntax like `2>&1` is really just file-descriptor manipulation: "point file descriptor 2 at wherever file descriptor 1 currently points." This is also why the order in a chain like `command > file 2>&1` matters — `2>&1` has to come *after* `> file` redirects stdout, or stderr ends up pointed at the terminal instead of the file.

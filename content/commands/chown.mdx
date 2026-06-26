@@ -1,0 +1,47 @@
+---
+slug: chown
+name: chown
+category: ["filesystem", "permissions"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Change the owner (and optionally group) of a file or directory.
+syntax: "chown [OPTIONS] OWNER[:GROUP] FILE..."
+flags:
+  - flag: "-R"
+    description: Apply the ownership change recursively to a directory and its contents.
+    example: "chown -R deploy:www-data ./site"
+  - flag: "-v"
+    description: Print a message for each file whose ownership changes (verbose).
+    example: "chown -v alice file.txt"
+examples:
+  - description: Give a file to a different user
+    input: "chown alice file.txt"
+    output: ""
+  - description: Set both owner and group at once
+    input: "chown -R deploy:www-data ./site"
+    output: ""
+shortcuts: []
+tips:
+  - "You can change just the group, leaving the owner untouched, with chown :groupname file (note the leading colon)."
+  - "Use chown -R sparingly on shared systems — recursively reassigning ownership can quietly break other users' or processes' access if you're not careful about scope."
+related: ["chmod", "ls"]
+pitfalls:
+  - "Changing ownership usually requires elevated privileges (sudo), since giving a file away to another user is something the system protects against doing carelessly."
+---
+
+While `chmod` controls *what* someone is allowed to do with a file,
+`chown` ("change owner") controls *who* that someone actually is. Every
+file on a Unix-like system belongs to exactly one user and one group;
+`chown` reassigns that ownership.
+
+This matters most on shared servers, where different processes need to
+operate with different identities — a web server process running as
+`www-data`, for example, and a separate deploy user that uploads new
+files. If those files are still owned by the deploy user after upload,
+the web server may not have permission to read them, even with
+generous `chmod` settings, because ownership and permission are two
+separate, complementary systems working together.
+
+Because reassigning a file you own to someone else is something the
+system is naturally cautious about, `chown` typically needs `sudo` to
+run — you can't just give files away without elevated privileges.

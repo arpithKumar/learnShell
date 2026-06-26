@@ -1,0 +1,39 @@
+---
+slug: tmux
+name: tmux
+category: ["system"]
+difficulty: advanced
+shells: ["bash", "zsh"]
+summary: A terminal multiplexer — run multiple panes and persistent sessions inside one window.
+syntax: "tmux [COMMAND]"
+flags:
+  - flag: "new -s"
+    description: Start a new named session.
+    example: "tmux new -s work"
+  - flag: "attach -t"
+    description: Reattach to an existing named session.
+    example: "tmux attach -t work"
+examples:
+  - description: Start a new named session
+    input: "tmux new -s work"
+    output: ""
+  - description: Reattach to it later, from the same or a different connection
+    input: "tmux attach -t work"
+    output: ""
+shortcuts:
+  - keys: "Ctrl-b %"
+    description: Split the current pane vertically (default prefix Ctrl-b).
+    context: tmux
+  - keys: "Ctrl-b d"
+    description: Detach from the current session, leaving it running in the background.
+    context: tmux
+tips:
+  - "Like screen, a tmux session survives a dropped SSH connection — detach with the prefix key followed by d, then reattach from anywhere with tmux attach."
+related: ["screen", "nohup"]
+pitfalls:
+  - "tmux's default prefix key is Ctrl-b, not Ctrl-a like screen — switching between the two tools regularly is a common source of muscle-memory mistakes."
+---
+
+`tmux` is a terminal multiplexer: it runs multiple terminal panes and windows inside a single session, and that session keeps running in the background even after disconnecting, ready to be reattached to later exactly as it was left. It serves the same core persistent-session purpose as `screen`, but adds much richer support for splitting a window into multiple panes and managing several named sessions at once.
+
+The basic workflow is starting a named session with `tmux new -s NAME`, working inside it, detaching with the prefix key (`Ctrl-b` by default) followed by `d`, and later reattaching from any terminal — local or remote — with `tmux attach -t NAME`. This combination makes it a staple for anyone regularly working over SSH on remote servers.

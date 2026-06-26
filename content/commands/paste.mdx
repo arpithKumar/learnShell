@@ -1,0 +1,30 @@
+---
+slug: paste
+name: paste
+category: ["text-processing"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Merge corresponding lines from multiple files side by side.
+syntax: "paste [OPTIONS] FILE..."
+flags:
+  - flag: "-d"
+    description: Use a custom delimiter between merged columns instead of a tab.
+    example: "paste -d ',' names.txt ages.txt"
+examples:
+  - description: Combine two files into columns
+    input: "paste names.txt ages.txt"
+    output: "Alice\t29\nBob\t34"
+  - description: Use a comma instead of a tab between columns
+    input: "paste -d ',' names.txt ages.txt"
+    output: "Alice,29\nBob,34"
+shortcuts: []
+tips:
+  - "paste is effectively the opposite of cut — where cut slices columns out of one file, paste glues separate files together as columns."
+related: ["cut", "join"]
+pitfalls:
+  - "paste merges purely by line number, with no awareness of matching keys — if the files aren't already in the same order, the merged rows won't correspond to each other meaningfully."
+---
+
+`paste` takes multiple files and merges them line by line into columns — the first line of each file becomes one row, joined by a delimiter (a tab by default). It's the straightforward way to combine separate lists into a single table when they're already in the same order.
+
+Because `paste` merges purely positionally (line 1 with line 1, line 2 with line 2, and so on), it has no concept of matching by a shared key the way a database join would — if the two files aren't already aligned, the result will look fine but be meaningless. For that kind of key-based merging, `join` is the right tool instead.

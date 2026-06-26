@@ -1,0 +1,27 @@
+---
+slug: renice
+name: renice
+category: ["process-system", "system"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Change the scheduling priority of a process that's already running.
+syntax: "renice [-n] PRIORITY -p PID"
+flags:
+  - flag: "-p"
+    description: Specify which process ID to renice.
+    example: "renice -n 10 -p 4821"
+examples:
+  - description: Lower the priority of an already-running process
+    input: "renice -n 10 -p 4821"
+    output: "4821: old priority 0, new priority 10"
+shortcuts: []
+tips:
+  - "renice is exactly what you reach for when a CPU-heavy process is ALREADY running and slowing everything else down — nice only sets priority at the moment a command starts, renice adjusts it afterward."
+related: ["nice", "top", "kill"]
+pitfalls:
+  - "Like nice, only root can lower a process's niceness number (raise its priority) — regular users can only make a running process nicer, never more aggressive than it started."
+---
+
+`renice` adjusts the scheduling priority of a process that's already running, using the same niceness scale as `nice` (-20 highest priority, 19 lowest). Where `nice` sets a starting priority when a command first launches, `renice` is for the moment you realize, after the fact, that something already running needs to back off.
+
+The common scenario: `top` or `ps` reveals a process eating far more CPU than expected, and rather than killing it outright, `renice -n 19 -p PID` lets it keep running while yielding CPU time to everything else — a gentler intervention than `kill` when the process is still doing useful work, just too aggressively.

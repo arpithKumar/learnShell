@@ -1,0 +1,53 @@
+---
+slug: awk
+name: awk
+category: ["text-processing"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: A full pattern-scanning and text-processing language, built around columns of data.
+syntax: "awk [OPTIONS] 'PROGRAM' [FILE...]"
+flags:
+  - flag: "-F"
+    description: Set the field separator (what splits each line into columns).
+    example: "awk -F ',' '{print $2}' data.csv"
+  - flag: "-v"
+    description: Pass a variable into the awk program from the shell.
+    example: "awk -v name=Alice '{print name, $1}' file.txt"
+examples:
+  - description: Print the second column of a CSV
+    input: "awk -F ',' '{print $2}' data.csv"
+    output: "age\n29\n34"
+  - description: Print lines where column 3 is greater than 100
+    input: "awk -F ',' '$3 > 100 {print $1}' data.csv"
+    output: "Bob"
+shortcuts: []
+tips:
+  - "NR gives you the current line number and NF the number of fields on that line — both are commonly used inside conditions, like printing only the last field with print $NF."
+  - "awk 'BEGIN{...}' and 'END{...}' blocks run once before and after processing the input, which is how you compute things like a running total or a final summary line."
+  - "For anything beyond a couple of lines of awk logic, pause and consider whether a real script in a general-purpose language would actually be more maintainable long-term."
+related: ["sed", "grep", "cut"]
+pitfalls:
+  - "awk automatically splits each line into fields ($1, $2, ...) on whitespace by default — beginners often forget to set -F for comma-separated data and end up with unexpected, wrong column references."
+  - "awk is a full programming language under the hood, complete with variables, loops, and functions — it's easy to start with an innocent one-liner and gradually grow something that really deserves to be a proper standalone script instead."
+---
+
+`awk` is, technically, a complete programming language — but almost
+everyone uses it the same simplified way: as a more capable version of
+`cut`, processing input column by column. Every line is automatically
+split into numbered fields (`$1`, `$2`, and so on), with `$0` referring
+to the entire line, which turns tasks like "print column 2, but only
+where column 3 is over 100" into a single line of code instead of a
+script.
+
+The basic shape is `awk 'PATTERN { ACTION }' file`. The pattern is
+optional — leave it out and the action runs on every line. With a
+pattern, the action only runs on lines where that condition is true,
+which is what makes `awk '$3 > 100 {print $1}'` work: for every line
+where field 3 exceeds 100, print field 1.
+
+Unlike `cut`, which only knows how to slice columns, `awk` can compute,
+compare, and aggregate as it goes — keeping running totals, formatting
+output, combining multiple fields into a new value. That extra power is
+exactly why it's considered a step up in complexity from `grep`, `sed`,
+or `cut`: it rewards investment, but there's a real learning curve
+between "useful one-liner" and "comfortable with the language."

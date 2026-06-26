@@ -1,0 +1,26 @@
+---
+slug: shell-options
+title: Shell Options (Strict Mode)
+category: shell-environment
+difficulty: intermediate
+summary: Flags that change the shell's own error-handling behavior, like stopping on the first failed command instead of plowing ahead.
+examples:
+  - description: Stop the script immediately if any command fails
+    input: "set -e\nfalse\necho \"this line never runs\""
+    output: ""
+  - description: A common combination, often called \"strict mode\"
+    input: "set -euo pipefail"
+    output: ""
+tips:
+  - "set -x is invaluable for debugging — it prints every command the script actually runs (after expansion) right before running it, which makes it much easier to see what a script is really doing versus what you assumed it would do."
+pitfalls:
+  - "set -e has well-known exceptions that surprise people — it doesn't stop the script if the failing command is part of an if condition, an && / || chain, or the last command before a pipe in some shells, since those contexts are specifically excluded from triggering it."
+funFacts:
+  - "\"set -euo pipefail\" is informally called bash's \"strict mode\" in the community, popularized by a widely-shared 2014 blog post — it isn't an official bash term, just a convention that stuck."
+relatedConcepts: ["exit-status", "pipes", "debugging-scripts", "error-trap", "shopt-options"]
+relatedCommands: ["trap"]
+---
+
+Shell options, set with `set -OPTION`, change how the shell itself behaves rather than running a command. `set -e` makes the script exit immediately if any command fails (nonzero exit status) instead of continuing on regardless; `set -u` errors on any reference to an unset variable instead of silently treating it as empty; `set -o pipefail` makes a pipeline's exit status reflect any failing stage, not just the last one.
+
+These three combined (`set -euo pipefail`) are commonly called bash's "strict mode" — a defensive habit for scripts where silently continuing after an error could do real damage. They're not a complete safety net, though: `set -e` in particular has several well-documented exceptions (commands inside an `if` condition, for instance, never trigger it), so it reduces certain classes of bugs without eliminating the need to actually check for errors where it matters.

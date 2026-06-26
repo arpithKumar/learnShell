@@ -1,0 +1,24 @@
+---
+slug: shift
+name: shift
+category: ["scripting"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Discard the first positional argument, shifting the rest down by one.
+syntax: "shift [N]"
+flags: []
+examples:
+  - description: Process arguments one at a time, removing each as it's handled
+    input: 'while [ $# -gt 0 ]; do echo "$1"; shift; done'
+    output: ""
+shortcuts: []
+tips:
+  - "shift is the standard way to loop through a script's arguments one at a time without needing an index variable — check $1, handle it, shift, repeat until $# (the remaining count) hits zero."
+related: ["getopts", "test"]
+pitfalls:
+  - "Calling shift more times than there are remaining arguments doesn't error in most shells, it just leaves $1 empty — a loop condition based on $# (the count) rather than checking $1 directly is the safer pattern."
+---
+
+`shift` removes a script's first positional argument (`$1`) and renumbers the rest down by one — what was `$2` becomes the new `$1`, and so on. It's the standard mechanism for processing a variable number of arguments one at a time in a loop, without needing to track an index yourself.
+
+The common pattern is a `while` loop that checks `$#` (the count of remaining arguments), handles `$1`, then calls `shift` before looping again — each iteration peels off and processes the next argument until none are left. It's foundational to how many real-world shell scripts parse flexible argument lists, often alongside `getopts` for named flags specifically.

@@ -1,0 +1,26 @@
+---
+slug: restricted-shells
+title: Restricted Shells
+category: shell-environment
+difficulty: advanced
+summary: A locked-down shell mode that blocks changing directories, modifying $PATH, and other operations that could escape a confined environment.
+examples:
+  - description: Launch bash in restricted mode
+    input: "bash -r"
+    output: ""
+  - description: A blocked operation inside a restricted shell
+    input: "cd /tmp"
+    output: "bash: cd: restricted"
+tips:
+  - "Restricted mode is meant as one layer of containment, not a complete security boundary on its own — it's typically combined with a minimal $PATH and a small set of explicitly permitted commands, rather than relied on alone to fully sandbox an untrusted user."
+pitfalls:
+  - "A restricted shell still allows running any command found via the (now-fixed) $PATH it started with — if that $PATH includes something powerful enough, a sufficiently clever user can often still escape the intended restrictions through it."
+funFacts:
+  - "Restricted shell mode has existed since the very early Bourne shell, originally aimed at giving certain user accounts (like a guest login) a deliberately narrow, non-programmable shell rather than full scripting capability."
+relatedConcepts: ["dotfiles", "builtins-vs-external"]
+relatedCommands: ["sudo"]
+---
+
+A restricted shell (`bash -r`, or a shell symlinked/invoked as `rbash`) disables a specific set of operations that could otherwise be used to escape a confined environment: changing directories (`cd`), modifying `$PATH`, `$SHELL`, or `$ENV`, using command names containing a `/`, and redirecting output to new files, among a few others. It's intended for accounts that should be able to run a small, fixed set of commands and nothing more.
+
+It's deliberately a partial defense, not a complete sandbox — a restricted shell still trusts whatever's already reachable through its starting `$PATH`, so real containment depends on pairing it with a genuinely minimal, carefully chosen set of available commands rather than expecting the restricted mode alone to prevent every possible escape.

@@ -1,0 +1,24 @@
+---
+slug: local
+name: local
+category: ["scripting"]
+difficulty: advanced
+shells: ["bash", "zsh"]
+summary: Declare a variable scoped only to the current shell function.
+syntax: "local NAME[=VALUE]"
+flags: []
+examples:
+  - description: Define a variable that doesn't leak outside its function
+    input: 'greet() { local name="Alice"; echo "Hi, $name"; }'
+    output: ""
+shortcuts: []
+tips:
+  - "Without local, every variable a shell function creates is global by default — a function accidentally overwriting a variable with the same name used elsewhere in the script is a real, easy-to-hit bug that local prevents."
+related: ["declare", "export"]
+pitfalls:
+  - "local only has meaning inside a function — using it at the top level of a script outside any function definition does nothing useful and may produce an error depending on the shell."
+---
+
+`local` declares a variable that exists only within the function it's defined in, disappearing once that function returns. This matters because shell variables are global by default — a variable set anywhere inside a function, without `local`, leaks out and can silently overwrite a variable of the same name used elsewhere in the script.
+
+For any function with internal working variables — loop counters, temporary values — declaring them `local` is the defensive habit that prevents that kind of cross-contamination between unrelated parts of a script that happen to reuse a common variable name.

@@ -1,0 +1,26 @@
+---
+slug: login-vs-interactive-shells
+title: Login vs Interactive Shells
+category: shell-environment
+difficulty: intermediate
+summary: Two independent, overlapping classifications of a shell session that determine which startup files get read.
+examples:
+  - description: Check whether the current shell is a login shell
+    input: 'shopt -q login_shell && echo "login" || echo "not login"'
+    output: "not login"
+  - description: Force a login shell explicitly
+    input: "bash --login"
+    output: ""
+tips:
+  - "When in doubt about why a setting isn't taking effect, check both dimensions at once: is this shell interactive (will it even read .bashrc), and is it a login shell (will it read .bash_profile)? Most startup-file confusion comes from assuming one when the session is actually the other."
+pitfalls:
+  - "These two properties are independent, not opposites — a shell can be login-and-interactive (a fresh terminal on many Linux setups), interactive-but-not-login (a new tab in some terminal emulators), or neither (a script run non-interactively). Each combination reads a different set of startup files."
+funFacts:
+  - "macOS's Terminal.app historically launched every new window as a login shell by default, while many Linux terminal emulators don't — this single platform difference is responsible for a large share of \"my .bash_profile works on my Mac but not on my coworker's Linux machine\" confusion."
+relatedConcepts: ["dotfiles", "shell-differences"]
+relatedCommands: []
+---
+
+Whether a shell session is "interactive" and whether it's a "login" shell are two separate, independent questions, not two names for the same thing. Interactive means a human is actively typing commands and seeing a prompt — a script run from cron isn't interactive, even though it might be running bash. Login means the shell is the first one started for a session, typically right after authenticating (SSH-ing in, or the very first terminal opened after logging into a desktop) — a new tab opened afterward usually is not a login shell, even though it's still interactive.
+
+This distinction is exactly what determines which dotfiles get read: login shells read `.bash_profile`/`.profile`, while non-login interactive shells read `.bashrc`. Different operating systems and terminal emulators default differently here (notably, macOS's Terminal.app has historically treated new windows as login shells more often than common Linux setups do), which is a frequent source of "it works on my machine" dotfile confusion between platforms.

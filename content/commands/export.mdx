@@ -1,0 +1,43 @@
+---
+slug: export
+name: export
+category: ["process-system"]
+difficulty: intermediate
+shells: ["bash", "zsh"]
+summary: Mark a shell variable as an environment variable, visible to child processes.
+syntax: "export NAME=VALUE"
+flags: []
+examples:
+  - description: Set an environment variable for this session
+    input: "export NODE_ENV=production"
+    output: ""
+  - description: See the value of an exported variable
+    input: "echo $NODE_ENV"
+    output: "production"
+shortcuts: []
+tips:
+  - "Add export lines to your shell's startup file (~/.zshrc or ~/.bashrc) to make a variable available automatically in every new terminal session, instead of retyping it each time."
+  - "You can assign and export in a single line, export NODE_ENV=production, rather than setting the variable and exporting it as two separate steps."
+related: ["env", "alias"]
+pitfalls:
+  - "A plain variable assignment (NAME=VALUE without export) only exists inside the current shell — it won't be visible to any program or script that shell goes on to launch. export is specifically what makes a variable inherited by child processes."
+  - "fish uses an entirely different syntax (set -x NAME VALUE) instead of export — a common trip-up the first time you switch shells."
+---
+
+By default, a variable you set in your shell — `NAME=VALUE`, with no
+`export` — is purely local to that shell. Any program you run from it
+can't see it, because environment variables are only passed down to
+*child* processes, and a plain shell variable was never promoted into
+that environment in the first place.
+
+`export` is exactly that promotion. Once a variable is exported, every
+program your shell launches afterward — scripts, other command-line
+tools, whole applications — inherits its own copy of it. This is the
+mechanism behind configuration patterns like `NODE_ENV`: setting and
+exporting it in your shell makes it visible to any Node.js process you
+then start from that same shell.
+
+Because the effect only lasts for the current session by default,
+anything you want available every time you open a new terminal needs to
+be added to your shell's startup configuration file instead of typed
+fresh each session.

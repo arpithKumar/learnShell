@@ -1,0 +1,26 @@
+---
+slug: wait-for-background-jobs
+title: Waiting for Background Jobs
+category: process-control
+difficulty: intermediate
+summary: Pause a script until one or more background processes finish, and collect each one's individual exit status.
+examples:
+  - description: Wait for a specific background process and check its result
+    input: "sleep 2 &\npid=$!\nwait \"$pid\"\necho \"exit status: $?\""
+    output: "exit status: 0"
+  - description: Launch several jobs, then wait for all of them
+    input: "task1 & task2 & task3 &\nwait\necho \"all done\""
+    output: "all done"
+tips:
+  - "wait -n waits for just the NEXT background job to finish, rather than all of them — useful for processing results as soon as each one becomes available instead of blocking until every single job completes."
+pitfalls:
+  - "Plain wait with no arguments waits for every currently-running background job and returns the exit status of the LAST one to finish, not a combined result — checking each job's own status individually (by capturing each $! and wait-ing on it specifically) is necessary if you need to know which ones actually succeeded."
+funFacts:
+  - "wait is one of the only builtins whose entire job is to pause a script doing nothing else — it doesn't run a command or transform anything, it just blocks until specific other processes finish, which makes it almost invisible in casual reading of a script's logic."
+relatedConcepts: ["job-control", "special-variables"]
+relatedCommands: ["wait", "jobs"]
+---
+
+`wait` pauses a script until a background process finishes, and reports that process's exit status as its own — `wait "$pid"` (using a PID captured from `$!` right after backgrounding something) waits for that one specific job, while plain `wait` with no arguments waits for every currently-running background job to finish before continuing.
+
+This is the standard way to launch several independent tasks concurrently and then synchronize before moving on — start them all with `&`, then `wait` once everything needs to have finished. Checking each one's individual success or failure needs a bit more care, though: capturing each job's PID separately and `wait`-ing on each one individually is necessary if the script needs to know specifically which jobs succeeded and which failed, since a bare `wait` only reports the last job's status.

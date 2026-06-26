@@ -1,0 +1,24 @@
+---
+slug: rev
+name: rev
+category: ["text-processing"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Reverse the characters of each line.
+syntax: "rev [FILE]"
+flags: []
+examples:
+  - description: Reverse a line of text
+    input: "echo 'hello' | rev"
+    output: "olleh"
+shortcuts: []
+tips:
+  - "rev is a small, niche tool, but genuinely useful combined with cut when you need to extract something counted from the END of a line — reverse, cut from the front, reverse again."
+related: ["tac", "cut"]
+pitfalls:
+  - "rev reverses character order within each line, not the order of lines themselves — for reversing line order, tac is the tool you actually want."
+---
+
+`rev` reverses the characters within each line of its input — "hello" becomes "olleh." It's a small, specialized tool that doesn't come up often, but solves one particular problem neatly: extracting something measured from the *end* of a line, rather than the beginning, by reversing, applying a front-anchored tool like `cut`, then reversing back.
+
+It's easy to confuse with `tac`, which reverses the *order of lines* rather than the characters within them — the two solve genuinely different problems despite the similar-sounding names.

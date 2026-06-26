@@ -1,0 +1,26 @@
+---
+slug: here-strings
+title: Here-Strings
+category: io-and-pipelines
+difficulty: beginner
+summary: Feed a single value to a command's standard input with <<<, the one-line cousin of a full here-document block.
+examples:
+  - description: Feed a variable's value to a command as input
+    input: 'name="Alice"; cat <<< "$name"'
+    output: "Alice"
+  - description: Often used with read to parse a single line without a pipeline
+    input: 'IFS=, read -r first last <<< "Jane,Doe"; echo "$last, $first"'
+    output: "Doe, Jane"
+tips:
+  - "cmd <<< \"$var\" and echo \"$var\" | cmd both feed the same data to cmd's input, but the here-string avoids spawning an extra echo process and an extra subshell for the pipeline — a small but real efficiency difference in a tight loop."
+pitfalls:
+  - "Like process substitution and arrays, here-strings are a bash/zsh/ksh extension, not part of POSIX sh — a script declared #!/bin/sh can't rely on <<< working at all."
+funFacts:
+  - "Here-strings originated in ksh93, arriving in bash only with version 2.05b — they're a noticeably newer addition than the classic <<EOF here-document block, which traces back to the original Bourne shell."
+relatedConcepts: ["here-docs", "redirection", "pipes"]
+relatedCommands: ["read", "cat"]
+---
+
+A here-string, `command <<< "value"`, feeds a single string to a command's standard input — the simpler, one-line equivalent of a full `<<EOF ... EOF` here-document block, for the common case where you just need to hand a command one value rather than several lines of text. It's especially common paired with `read`, as a way to parse one line of data without needing an actual pipe or a separate file.
+
+It accomplishes roughly the same thing as `echo "$value" | command`, but more efficiently — no extra `echo` process and no extra pipeline subshell are needed, since the shell hands the string directly to the command's input. Like process substitution, it's a bash/ksh/zsh feature absent from strict POSIX `sh`, and it arrived in bash noticeably later than the classic here-document syntax.

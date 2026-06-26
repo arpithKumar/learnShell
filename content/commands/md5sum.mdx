@@ -1,0 +1,27 @@
+---
+slug: md5sum
+name: md5sum
+category: ["security"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Compute the MD5 checksum of a file, used to verify its contents haven't changed.
+syntax: "md5sum FILE"
+flags:
+  - flag: "-c"
+    description: Verify files against a previously saved list of checksums.
+    example: "md5sum -c checksums.txt"
+examples:
+  - description: Get a file's MD5 checksum
+    input: "md5sum installer.dmg"
+    output: "d41d8cd98f00b204e9800998ecf8427e  installer.dmg"
+shortcuts: []
+tips:
+  - "Comparing a downloaded file's md5sum against the checksum published by the source is a quick way to confirm the download wasn't corrupted or tampered with in transit."
+related: ["sha256sum"]
+pitfalls:
+  - "MD5 is considered cryptographically broken for security purposes (it's vulnerable to deliberate collision attacks) — it's still fine for detecting accidental corruption, but sha256sum is the better choice when integrity actually matters for security."
+---
+
+`md5sum` computes a checksum — a short fingerprint — of a file's contents using the MD5 algorithm. Two files with identical content always produce the same checksum, and changing even a single byte produces a completely different one, which makes it useful for verifying a file wasn't corrupted or altered.
+
+The classic use is checking a downloaded file against a checksum the publisher provides: if they match, the download is intact. MD5 itself is no longer considered secure against deliberate tampering — it's been demonstrated that two different files can be deliberately crafted to share the same MD5 checksum — so for anything where security (not just accidental corruption) matters, `sha256sum` is the modern equivalent worth reaching for instead.

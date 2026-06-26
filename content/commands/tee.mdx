@@ -1,0 +1,31 @@
+---
+slug: tee
+name: tee
+category: ["text-processing"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Copy input to both a file and standard output at the same time.
+syntax: "COMMAND | tee [OPTIONS] FILE"
+flags:
+  - flag: "-a"
+    description: Append to the file instead of overwriting it.
+    example: "echo 'new line' | tee -a log.txt"
+examples:
+  - description: Save a command's output to a file while still seeing it on screen
+    input: "ls -la | tee listing.txt"
+    output: ""
+  - description: Use tee in the middle of a pipeline to save an intermediate step
+    input: "cat data.txt | tee raw-copy.txt | grep ERROR"
+    output: ""
+shortcuts: []
+tips:
+  - "tee is named after a plumbing T-joint — it splits one input stream into two outputs, the file and your terminal, without you needing to choose between them."
+  - "Placing tee in the middle of a longer pipeline lets you save a snapshot of the data at that exact stage, while the pipeline continues processing it further — handy for debugging a multi-stage pipeline."
+related: ["cat", "grep"]
+pitfalls:
+  - "Without -a, tee overwrites the target file every time it runs — if you're appending across multiple runs, remember the flag."
+---
+
+Normally, redirecting a command's output to a file (`command > file.txt`) means you no longer see that output on screen. `tee` solves exactly that trade-off: it writes the same input to a file *and* passes it through to standard output unchanged, so you get both at once.
+
+The simplest use is saving a log while still watching it happen live: `some-command | tee output.log` shows you the output as it streams by, while also keeping a permanent copy. It's equally useful in the middle of a longer pipeline, letting you capture an intermediate stage's data for later inspection without interrupting the rest of the pipeline's processing.

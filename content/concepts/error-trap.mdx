@@ -1,0 +1,26 @@
+---
+slug: error-trap
+title: Error Trapping (trap ERR)
+category: process-control
+difficulty: advanced
+summary: Run a handler automatically whenever any command in a script fails, without checking $? after every single line by hand.
+examples:
+  - description: Print a message whenever any command fails
+    input: "trap 'echo Error on line $LINENO' ERR\nfalse\necho after"
+    output: "Error on line 2\nafter"
+  - description: Combine with EXIT to guarantee cleanup runs no matter how the script ends
+    input: "trap 'rm -f \"$tmpfile\"' EXIT"
+    output: ""
+tips:
+  - "trap ... ERR fires for most command failures, but has the same exceptions as set -e — a failing command inside an if condition or part of an && / || chain won't trigger it, since those contexts are specifically excluded."
+pitfalls:
+  - "An ERR trap doesn't stop script execution by itself — it just runs the handler and then continues on to the next line, exactly like a failed command normally would without set -e also enabled."
+funFacts:
+  - "$LINENO inside an ERR trap reports the line number of the command that triggered it, which is one of the few built-in ways a shell script can report roughly where something went wrong without manual logging at every step."
+relatedConcepts: ["signals", "exit-status", "shell-options"]
+relatedCommands: ["trap"]
+---
+
+`trap 'commands' ERR` registers a handler that runs automatically whenever a command in the script fails, instead of needing to manually check `$?` after every single line. Combined with `$LINENO` inside the handler, this gives a basic but genuinely useful way to log roughly where a script broke, without instrumenting every command individually.
+
+It shares the same notable exceptions `set -e` has — a failing command inside an `if` condition, or one side of an `&&`/`||` chain, won't trigger the `ERR` trap, since those are specifically excluded contexts. It's commonly paired with a separate `trap '...' EXIT` for cleanup that needs to run no matter how the script ends, whether that's a normal finish, an error, or an interrupt.

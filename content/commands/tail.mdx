@@ -1,0 +1,45 @@
+---
+slug: tail
+name: tail
+category: ["text-processing"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Print the last lines of a file or input stream.
+syntax: "tail [OPTIONS] [FILE...]"
+flags:
+  - flag: "-n"
+    description: Print a specific number of lines (default is 10).
+    example: "tail -n 20 app.log"
+  - flag: "-f"
+    description: Keep the file open and print new lines as they're appended (follow mode).
+    example: "tail -f app.log"
+examples:
+  - description: See the most recent 10 lines of a log
+    input: "tail app.log"
+    output: "2024-01-02 INFO: request handled\n2024-01-02 ERROR: disk full"
+  - description: Watch a log file live as new lines arrive
+    input: "tail -f app.log"
+    output: "2024-01-02 INFO: request handled"
+shortcuts: []
+tips:
+  - "tail -f -n 100 shows the last 100 lines first, then keeps following — giving you context before the live stream starts, instead of an empty screen waiting for new activity."
+  - "tail -f is the standard way to watch a server's log file in real time while you reproduce a bug in another window."
+related: ["head", "cat", "grep"]
+pitfalls:
+  - "tail -f keeps running forever, watching for new lines — press Ctrl+C to stop it. Beginners sometimes think the terminal has frozen when it's actually just doing exactly what was asked."
+---
+
+`tail` is `head`'s mirror image: instead of the beginning of a file, it
+shows the end — by default, the last 10 lines. That makes it the
+natural tool for checking what just happened in a log file, where the
+most recent and most relevant entries are always at the bottom.
+
+Its standout feature is `-f` ("follow"), which doesn't just print the
+current end of the file and stop — it keeps the file open and streams
+new lines to your terminal as they're written. This is the standard way
+developers watch a server's logs live: start a process in one terminal,
+run `tail -f` on its log file in another, and watch errors or requests
+appear in real time as they happen.
+
+Since `-f` runs indefinitely by design, it won't return your prompt on
+its own — you stop it manually with `Ctrl+C` once you're done watching.

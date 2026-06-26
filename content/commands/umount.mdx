@@ -1,0 +1,27 @@
+---
+slug: umount
+name: umount
+category: ["system"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Detach a mounted filesystem from its directory.
+syntax: "umount MOUNTPOINT"
+flags:
+  - flag: "-f"
+    description: Force the unmount, even if the filesystem appears busy.
+    example: "umount -f /mnt/usb"
+examples:
+  - description: Safely eject a mounted drive
+    input: "umount /mnt/usb"
+    output: ""
+shortcuts: []
+tips:
+  - "Always umount a removable drive before physically disconnecting it — unmounting flushes any pending writes, which a sudden disconnect skips and can corrupt data still being written."
+related: ["mount", "df"]
+pitfalls:
+  - "umount fails with a 'device busy' error if any process still has an open file on that filesystem — closing whatever's using it (or using -f to force it, with the data-loss risk that implies) is the way around it."
+---
+
+`umount` detaches a mounted filesystem from its directory, the reverse of `mount`. It's the proper way to disconnect a removable drive or network share before physically unplugging it or considering it safe to remove.
+
+The reason this matters more than it might seem: unmounting flushes any data still pending in memory out to the actual device, ensuring writes are complete. Disconnecting a drive without unmounting it first skips that flush and is a common, avoidable cause of corrupted files on removable media.

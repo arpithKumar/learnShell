@@ -1,0 +1,30 @@
+---
+slug: disown
+name: disown
+category: ["process-system"]
+difficulty: advanced
+shells: ["bash", "zsh"]
+summary: Remove a background job from the shell's job table, so closing the terminal won't stop it.
+syntax: "disown [%JOB_ID]"
+flags:
+  - flag: "-h"
+    description: Keep the job in the table but mark it to be excluded from the SIGHUP sent on shell exit.
+    example: "disown -h %1"
+examples:
+  - description: Disown the most recent background job
+    input: "disown"
+    output: ""
+  - description: Disown a specific job by number
+    input: "disown %2"
+    output: ""
+shortcuts: []
+tips:
+  - "disown is the after-the-fact alternative to nohup — use it when you already started a job in the foreground or background and only now decide you want it to survive closing the terminal."
+related: ["nohup", "jobs", "bg"]
+pitfalls:
+  - "Once a job is disowned, jobs and fg/bg can no longer see or control it — you're trading the ability to manage it from this shell for it surviving the shell's exit."
+---
+
+`disown` removes a background job from your shell's job table, which has one specific practical effect: when the shell later closes and would normally send a hang-up signal to every job it still knows about, a disowned job is no longer on that list and keeps running.
+
+It solves the same underlying problem as `nohup`, but from the opposite direction — `nohup` is set up *before* starting a command, while `disown` is applied *after*, to something already running that you've only now decided should survive the terminal closing. The trade-off is that once disowned, that job also drops off `jobs`, `fg`, and `bg`'s radar — you give up easy control over it in exchange for it persisting.

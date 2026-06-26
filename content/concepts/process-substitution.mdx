@@ -1,0 +1,26 @@
+---
+slug: process-substitution
+title: Process Substitution
+category: io-and-pipelines
+difficulty: advanced
+summary: Treat a command's output as if it were a file, passing it to another command that expects a filename rather than stdin.
+examples:
+  - description: Diff the output of two commands directly, without temp files
+    input: "diff <(ls dir1) <(ls dir2)"
+    output: ""
+  - description: Keep a while loop in the current shell instead of a subshell
+    input: "while read -r line; do count=$((count+1)); done < <(grep ERROR log.txt)"
+    output: ""
+tips:
+  - "<(...) and >(...) are how you avoid writing a command's output to a temporary file just so another command can read it as a file argument — diff, comm, and join all expect actual filenames, not piped stdin."
+pitfalls:
+  - "Process substitution is a bash/zsh extension, not POSIX sh — and the space matters: a < <(cmd) needs that space between the two < characters, since <<( would be parsed as a here-doc instead."
+funFacts:
+  - "Under the hood, <(...) is usually implemented using /dev/fd/N or a named pipe (FIFO) — the 'file' diff or comm reads from doesn't really exist as a regular file on disk, the shell fakes it."
+relatedConcepts: ["pipes", "redirection", "subshells", "file-descriptors"]
+relatedCommands: ["diff", "grep"]
+---
+
+Process substitution, `<(command)` or `>(command)`, makes a command's output (or input) appear as a filename rather than a stream — useful specifically for tools like `diff` or `comm` that expect two file arguments and have no concept of reading from a pipe directly. `diff <(ls dir1) <(ls dir2)` compares two directory listings without ever writing either one to a real temporary file.
+
+It also solves a specific subshell problem: piping into a `while read` loop normally runs that loop in a subshell (so any variables it sets disappear afterward), but redirecting from `<(...)` instead — `done < <(command)` — keeps the loop in the current shell, so its variables persist as expected. This is a bash/zsh feature, not available in strict POSIX `sh`.

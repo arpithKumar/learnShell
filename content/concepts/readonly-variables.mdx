@@ -1,0 +1,26 @@
+---
+slug: readonly-variables
+title: Readonly Variables
+category: fundamentals
+difficulty: intermediate
+summary: Lock a variable so it can never be reassigned for the rest of the script, using readonly or declare -r.
+examples:
+  - description: Make a variable immutable after setting it
+    input: 'MAX_RETRIES=3; readonly MAX_RETRIES; MAX_RETRIES=5'
+    output: "bash: MAX_RETRIES: readonly variable"
+  - description: declare -r does the same thing in one step
+    input: "declare -r API_URL=\"https://example.com\""
+    output: ""
+tips:
+  - "readonly with no arguments lists every readonly variable currently set in the shell — a quick way to check what's actually locked before debugging a confusing 'readonly variable' error."
+pitfalls:
+  - "Once a variable is marked readonly, there's no way to undo it for the rest of that shell session — not even unset works on it. The only way to change it is starting a fresh shell or script run."
+funFacts:
+  - "readonly is one of the original Bourne shell builtins from 1979 — it predates declare (which only arrived with bash) by well over a decade, which is why both exist for the same basic purpose."
+relatedConcepts: ["variables", "exit-status"]
+relatedCommands: ["declare"]
+---
+
+`readonly NAME` (or equivalently `declare -r NAME`) locks a variable so any later attempt to reassign it fails with an error, for the remainder of that shell session or script. It's the shell's version of a constant — useful for values like a configuration URL or a fixed limit that should never accidentally change partway through a script.
+
+Once set, there's no escape hatch: the lock can't be lifted, and even `unset` refuses to remove a readonly variable. This makes it a genuinely strong guarantee, not just a style convention — reaching for it on values that truly shouldn't change catches real bugs (an accidental reassignment somewhere later in a long script) the moment they happen, rather than letting them silently corrupt later behavior.

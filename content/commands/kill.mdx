@@ -1,0 +1,55 @@
+---
+slug: kill
+name: kill
+category: ["process-system"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Send a signal to a running process, most commonly to stop it.
+syntax: "kill [OPTIONS] PID..."
+flags:
+  - flag: "-9"
+    description: Send SIGKILL — force-terminate the process immediately, no cleanup.
+    example: "kill -9 501"
+  - flag: "-15"
+    description: Send SIGTERM (the default) — politely ask the process to shut down.
+    example: "kill -15 501"
+  - flag: "-l"
+    description: List all available signal names and numbers.
+    example: "kill -l"
+examples:
+  - description: Ask a process to shut down gracefully
+    input: "kill 501"
+    output: ""
+  - description: Force-kill a process that won't respond
+    input: "kill -9 501"
+    output: ""
+shortcuts: []
+tips:
+  - "pkill lets you target a process by name instead of PID, which saves the extra ps lookup step beforehand."
+  - "Try a plain kill (SIGTERM) first, and only escalate to kill -9 if the process doesn't actually exit after a few seconds — many programs use that grace period to save state or close connections cleanly."
+related: ["ps", "top", "jobs"]
+pitfalls:
+  - "Despite the name, plain kill doesn't forcibly destroy a process — by default it sends SIGTERM, a polite request that a well-behaved program can intercept and respond to (saving its state before exiting, for instance). kill -9 is the actually-forceful version."
+  - "You need the process's PID, not its name, as the argument — find it first with ps or pgrep if you don't already know it."
+---
+
+`kill` sends a signal to a running process, identified by its PID. The
+name is a little misleading: by default it sends `SIGTERM`, which is
+better understood as a polite request to shut down than a forced
+termination — a well-written program can catch that signal and use it
+as a cue to clean up (closing files, finishing in-flight work) before
+actually exiting.
+
+`kill -9` is the genuinely forceful version, sending `SIGKILL` instead.
+The operating system enforces this one immediately and unconditionally
+— the target process gets no chance to clean up or respond at all. It's
+the right tool when a process is unresponsive and a normal `kill`
+hasn't worked after giving it a moment, but it should generally be a
+fallback, not a first move, since skipping a program's cleanup logic
+can occasionally leave things in an inconsistent state (an unfinished
+write to a file, for example).
+
+Between those two extremes, Unix systems support a whole range of
+named signals (`kill -l` lists them) for more specific situations, but
+`SIGTERM` and `SIGKILL` cover the overwhelming majority of everyday
+use.

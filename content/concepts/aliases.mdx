@@ -1,0 +1,26 @@
+---
+slug: aliases
+title: Aliases
+category: shell-environment
+difficulty: beginner
+summary: A shorthand that expands to a longer command before running, defined for convenience in the current shell session.
+examples:
+  - description: Define and use a simple alias
+    input: "alias ll='ls -la'\nll"
+    output: "drwxr-xr-x  5 alice  staff  160 Jan  1 12:00 ."
+  - description: List every currently defined alias
+    input: "alias"
+    output: "alias ll='ls -la'\nalias gs='git status'"
+tips:
+  - "An alias only handles the command name itself, with no real parameter handling — for anything that needs to accept and use its own arguments meaningfully, a function is almost always the better tool."
+pitfalls:
+  - "Aliases defined interactively don't persist to a new terminal session or to a script — they need to live in a dotfile like .bashrc to be available every time, and even then, aliases are disabled by default inside non-interactive scripts in bash unless explicitly re-enabled."
+funFacts:
+  - "Aliases can't take arguments the way functions can — alias greet='echo Hello, $1' doesn't work as you'd expect, because the alias is just dumb text substitution, not something that receives parameters."
+relatedConcepts: ["dotfiles", "functions"]
+relatedCommands: ["alias"]
+---
+
+An alias is a simple text substitution defined for convenience — `alias ll='ls -la'` means typing `ll` afterward runs `ls -la` instead. It's purely a shorthand at the shell's command-entry level, expanded before anything else happens, with no real support for parameters the way a function has.
+
+Aliases set interactively in a terminal disappear once that session ends, which is why persistent ones live in a dotfile like `.bashrc` instead. They're also intentionally limited in scope: once a command needs actual logic, argument handling, or anything beyond "replace this short word with this longer text," a shell function is the right upgrade rather than trying to stretch an alias further than it's built for.

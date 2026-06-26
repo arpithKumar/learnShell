@@ -1,0 +1,46 @@
+---
+slug: tar
+name: tar
+category: ["archives"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Bundle files into a single archive, with optional compression.
+syntax: "tar [OPTIONS] -f ARCHIVE [FILE...]"
+flags:
+  - flag: "-c"
+    description: Create a new archive.
+    example: "tar -cf backup.tar ./project"
+  - flag: "-x"
+    description: Extract files from an archive.
+    example: "tar -xf backup.tar"
+  - flag: "-z"
+    description: Compress/decompress using gzip (combine with -c or -x).
+    example: "tar -czf backup.tar.gz ./project"
+  - flag: "-v"
+    description: Print each file as it's processed (verbose).
+    example: "tar -xvf backup.tar"
+  - flag: "-t"
+    description: List an archive's contents without extracting.
+    example: "tar -tf backup.tar"
+examples:
+  - description: Create a compressed archive of a folder
+    input: "tar -czf project.tar.gz ./project"
+    output: ""
+  - description: Extract a compressed archive
+    input: "tar -xzf project.tar.gz"
+    output: ""
+shortcuts: []
+tips:
+  - "The classic mnemonic for the most common combo is 'tar -xzvf' — extract, gzip, verbose, file — said almost as one word by people who use it daily."
+  - "tar -tf archive.tar lets you peek at what's inside before extracting, which is worth doing before extracting an archive from an untrusted source."
+related: ["gzip", "zip", "find"]
+pitfalls:
+  - "tar itself doesn't compress anything — that's what -z (gzip) or -j (bzip2) add. Plain 'tar -cf' produces an uncompressed bundle, which surprises people expecting automatic compression."
+  - "Extracting an archive into the current directory can overwrite existing files with no warning — check what's inside with -t first if you're unsure."
+---
+
+`tar` ("tape archive," a name that's outlived actual tapes by decades) bundles a set of files and directories into a single file, preserving their structure and permissions. It's the standard way Unix-like systems package and distribute multiple files as one — most software you download as a `.tar.gz` or `.tgz` was packaged with `tar`.
+
+On its own, `tar` only combines files; it doesn't compress them. Combined with `-z` (gzip) or `-j` (bzip2), it both bundles and compresses in one step, which is why archives are almost always created and extracted with one of those flags included. The three letters that matter most are `c` (create), `x` (extract), and `f` (the archive filename follows) — `tar -czf` to create a compressed archive, `tar -xzf` to extract one.
+
+Because extraction can silently overwrite files in the current directory, it's worth building the habit of checking an archive's contents with `tar -tf archive.tar.gz` before extracting anything you didn't create yourself.

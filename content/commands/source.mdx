@@ -1,0 +1,28 @@
+---
+slug: source
+name: source
+category: ["scripting"]
+difficulty: intermediate
+shells: ["bash", "zsh"]
+summary: Run a script's commands in the current shell, instead of a new subprocess.
+syntax: "source FILE  (or equivalently: . FILE)"
+flags: []
+examples:
+  - description: Reload your shell configuration after editing it
+    input: "source ~/.zshrc"
+    output: ""
+  - description: The shorthand dot form, equivalent to source
+    input: ". ~/.zshrc"
+    output: ""
+shortcuts: []
+tips:
+  - "The dot form, '. file', is POSIX-standard and works in every shell; 'source' is a bash/zsh convenience alias for the same thing and reads slightly more clearly."
+  - "source is exactly how shell startup files (.bashrc, .zshrc) and activate scripts for tools like Python virtual environments apply their changes to your current session, rather than a throwaway subprocess."
+related: ["export", "alias"]
+pitfalls:
+  - "Running a script normally (./script.sh) executes it in a new subshell — any variables or directory changes it makes disappear once it finishes. source runs it in your current shell instead, so its effects actually stick around."
+---
+
+`source` reads a script and runs its commands directly in your current shell session, rather than starting a separate subprocess to run it in. The distinction matters because anything a normal script does — setting variables, changing directory, defining functions — disappears the moment that script's subprocess exits. `source`-ing it means those changes happen in your actual session and persist afterward.
+
+This is exactly why editing your `.zshrc` or `.bashrc` and wanting the changes immediately, without closing and reopening your terminal, means running `source ~/.zshrc` rather than just executing the file. It's the same mechanism behind activating a Python virtual environment (`source venv/bin/activate`) — the activation script needs to modify your current shell's environment, which only `source` allows.

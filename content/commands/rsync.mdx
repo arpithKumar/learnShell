@@ -1,0 +1,60 @@
+---
+slug: rsync
+name: rsync
+category: ["networking", "filesystem"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Efficiently synchronize files and directories, locally or over a network.
+syntax: "rsync [OPTIONS] SOURCE DEST"
+flags:
+  - flag: "-a"
+    description: Archive mode — preserves permissions, timestamps, symlinks, and recurses into directories.
+    example: "rsync -a ./src/ ./backup/"
+  - flag: "-v"
+    description: Print each file as it's transferred (verbose).
+    example: "rsync -av ./src/ alice@example.com:/backup/"
+  - flag: "--delete"
+    description: Remove files from the destination that no longer exist in the source.
+    example: "rsync -a --delete ./src/ ./backup/"
+  - flag: "-z"
+    description: Compress data during transfer (useful over slow networks).
+    example: "rsync -avz ./src/ alice@example.com:/backup/"
+examples:
+  - description: Sync a local folder to a remote server over SSH
+    input: "rsync -avz ./dist/ alice@example.com:/var/www/site/"
+    output: "sending incremental file list\nindex.html\nsent 1,024 bytes  received 35 bytes"
+  - description: Mirror a backup folder exactly, removing anything extra
+    input: "rsync -a --delete ./src/ ./backup/"
+    output: ""
+shortcuts: []
+tips:
+  - "Run with --dry-run first to preview exactly what would change, without actually touching anything — invaluable before a --delete sync especially."
+  - "-P combines --partial and --progress, letting you resume an interrupted large transfer and watch live progress as it happens."
+  - "Always double-check the trailing slash on your source path before running a real sync — it changes the meaning of the whole command (see the pitfall below)."
+related: ["scp", "ssh", "cp"]
+pitfalls:
+  - "A trailing slash on the source folder fundamentally changes the result: rsync -a src/ dest copies the *contents* of src into dest, while rsync -a src dest copies src itself as a new subfolder inside dest. This is the single most common rsync mistake."
+  - "--delete is genuinely destructive — it permanently removes files at the destination that don't exist in the source. Always run with --dry-run first, and double-check which side is the source and which is the destination before running it for real."
+---
+
+`rsync` ("remote sync") copies files the way `cp` or `scp` do, but with
+one crucial difference: on repeated runs, it only transfers the parts
+of files that actually changed since the last sync, rather than
+re-sending everything from scratch every time. That difference makes
+it dramatically faster for backups, deployments, and keeping two
+folders in sync, whether that's locally on one machine or across a
+network via SSH.
+
+The flag combination almost everyone uses is `-a` ("archive" mode),
+which bundles together recursion, permission preservation, timestamp
+preservation, and symlink handling into one sensible default — it's
+rarely worth setting those individually when `-a` already covers the
+common case correctly.
+
+`rsync` is also one of the few commands where a single character — that
+trailing slash on the source path — changes the entire outcome of the
+command. It's genuinely worth pausing and double-checking before
+running any `rsync` command for real, especially one using `--delete`,
+which can permanently remove files at the destination if the source and
+destination are reversed by mistake. `--dry-run` exists specifically to
+let you preview the exact changes before committing to them.

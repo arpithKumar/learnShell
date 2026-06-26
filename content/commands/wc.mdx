@@ -1,0 +1,46 @@
+---
+slug: wc
+name: wc
+category: ["text-processing"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Count lines, words, and bytes in a file or input stream.
+syntax: "wc [OPTIONS] [FILE...]"
+flags:
+  - flag: "-l"
+    description: Print only the line count.
+    example: "wc -l app.log"
+  - flag: "-w"
+    description: Print only the word count.
+    example: "wc -w essay.txt"
+  - flag: "-c"
+    description: Print only the byte count.
+    example: "wc -c file.bin"
+examples:
+  - description: Count how many lines a log file has
+    input: "wc -l app.log"
+    output: "1432 app.log"
+  - description: Count how many files are returned by another command
+    input: "ls | wc -l"
+    output: "27"
+shortcuts: []
+tips:
+  - "wc -l is common enough to memorize on its own — it's the fastest way to answer 'how many lines/results was that?' for any command's output."
+  - "wc reads from standard input when given no filename, so it slots naturally onto the end of any pipeline."
+related: ["grep", "sort", "cat"]
+pitfalls:
+  - "With no flags, wc prints lines, words, and bytes all at once, in that order — if you expect just one number, add -l, -w, or -c explicitly."
+---
+
+`wc` ("word count") tallies up a few basic statistics about its input:
+how many lines, words, and bytes it contains. Run with no flags, it
+prints all three at once, which can be more than you wanted if you were
+only after one specific number.
+
+By far the most common use, in practice, is `wc -l` — counting lines.
+Because so many command-line tools produce one result per line, piping
+their output into `wc -l` is a quick generic way to count results:
+`ls | wc -l` counts files in a directory, `grep -r TODO ./src | wc -l`
+counts matches across a codebase, and so on. It works as a fallback
+counting mechanism even when a tool doesn't have its own dedicated
+"count" flag.

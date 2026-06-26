@@ -1,0 +1,36 @@
+---
+slug: comm
+name: comm
+category: ["text-processing"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Compare two sorted files line by line, showing what's unique to each and what's shared.
+syntax: "comm [OPTIONS] FILE1 FILE2"
+flags:
+  - flag: "-1"
+    description: Suppress the column of lines unique to the first file.
+    example: "comm -1 a.txt b.txt"
+  - flag: "-2"
+    description: Suppress the column of lines unique to the second file.
+    example: "comm -2 a.txt b.txt"
+  - flag: "-3"
+    description: Suppress the column of lines common to both files.
+    example: "comm -3 a.txt b.txt"
+examples:
+  - description: See lines unique to either file, and lines shared by both, in three columns
+    input: "comm a.txt b.txt"
+    output: "only-in-a.txt line\n\tonly-in-b.txt line\n\t\tshared line"
+  - description: Show only the lines that exist in both files
+    input: "comm -12 a.txt b.txt"
+    output: "shared line"
+shortcuts: []
+tips:
+  - "comm -12 (suppressing both unique columns) is the quickest way to print only the lines two sorted files have in common."
+related: ["diff", "sort", "uniq"]
+pitfalls:
+  - "Like join, comm requires both files to be sorted first — unsorted input produces incorrect, misleading results rather than an obvious error."
+---
+
+`comm` compares two sorted files and reports, in three columns, which lines appear only in the first file, only in the second, and in both. It answers a different question than `diff`: not "what changed line by line," but "which lines are unique to each set, and which are shared."
+
+Combining the suppression flags is how it's actually used in practice — `comm -23` shows only what's unique to the first file, `comm -13` shows only what's unique to the second, and `comm -12` shows only what the two have in common. As with `join`, both inputs need to be sorted beforehand for the comparison to be meaningful.

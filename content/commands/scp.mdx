@@ -1,0 +1,52 @@
+---
+slug: scp
+name: scp
+category: ["networking"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Securely copy files between machines over SSH.
+syntax: "scp [OPTIONS] SOURCE DEST"
+flags:
+  - flag: "-r"
+    description: Copy directories recursively.
+    example: "scp -r ./dist alice@example.com:/var/www/site"
+  - flag: "-i"
+    description: Use a specific private key file for authentication.
+    example: "scp -i ~/.ssh/id_ed25519 file.txt alice@example.com:~"
+  - flag: "-P"
+    description: Connect on a non-default port (capital P, unlike ssh's lowercase -p).
+    example: "scp -P 2222 file.txt alice@example.com:~"
+examples:
+  - description: Upload a local file to a remote server
+    input: "scp report.pdf alice@example.com:/home/alice/"
+    output: "report.pdf  100%  2.1MB  1.2MB/s   00:01"
+  - description: Download a file from a remote server to your machine
+    input: "scp alice@example.com:/home/alice/data.csv ./"
+    output: "data.csv  100%  500KB  1.0MB/s   00:00"
+shortcuts: []
+tips:
+  - "For anything beyond a single quick file copy — especially repeated syncs of the same folder — rsync over the same connection is usually faster, since it only transfers what's actually changed."
+  - "You can copy directly between two remote hosts in one command, scp user@host1:/file user@host2:/dest, with the data routed through your local machine as the middleman."
+related: ["ssh", "rsync"]
+pitfalls:
+  - "scp's port flag is capital -P, while ssh uses lowercase -p for the exact same purpose — an easy typo to make when switching between the two commands."
+  - "Like cp, scp overwrites the destination silently if a file with the same name already exists there, with no built-in confirmation prompt."
+---
+
+`scp` ("secure copy") moves files to or from a remote machine, riding
+on the same encrypted connection mechanism as `ssh`. The syntax follows
+the familiar `cp SOURCE DEST` shape, except either side of the copy can
+be prefixed with `user@host:` to point at a location on a remote server
+instead of your local filesystem.
+
+That symmetry is genuinely convenient: `scp file.txt server:~/` uploads
+a file, while `scp server:~/file.txt ./` downloads one, using
+essentially the same mental model in both directions, just with the
+remote path on a different side of the command.
+
+For a single file or a small, one-time copy, `scp` is the simplest tool
+for the job. Once you're repeatedly syncing the same folder back and
+forth — deploying a build output directory over and over, for instance
+— `rsync` becomes the better choice, since it only transfers what's
+actually different on each run instead of re-sending everything from
+scratch every time.

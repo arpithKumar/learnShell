@@ -1,0 +1,26 @@
+---
+slug: shopt-options
+title: Shopt Options
+category: shell-environment
+difficulty: intermediate
+summary: A second, separate set of bash-specific behavior toggles alongside set -o, controlled with the shopt builtin instead.
+examples:
+  - description: Make a glob with no matches expand to nothing instead of staying literal
+    input: "shopt -s nullglob\nfor f in *.csv; do echo \"$f\"; done"
+    output: ""
+  - description: Enable ** to match across nested directories
+    input: "shopt -s globstar\nls **/*.txt"
+    output: "notes.txt\nsrc/readme.txt\nsrc/deep/nested.txt"
+tips:
+  - "shopt -p prints every shopt option in a form you can paste straight back into a script to restore the exact same settings — handy for checking what's actually enabled before debugging unexpected globbing or other behavior."
+pitfalls:
+  - "shopt and set -o are two entirely separate mechanisms controlling different (and non-overlapping) sets of options — looking for a shopt-controlled behavior like nullglob inside set -o's option list (or vice versa) is a common, simple mix-up."
+funFacts:
+  - "nullglob and globstar are both shopt options precisely because they change such fundamental, surprising-if-unexpected behavior (whether an unmatched glob disappears or stays literal; whether ** recurses into subdirectories) that bash keeps them opt-in rather than default."
+relatedConcepts: ["shell-options", "globbing", "extended-glob-patterns"]
+relatedCommands: []
+---
+
+`shopt` controls a separate set of bash-specific behavior toggles, distinct from the more POSIX-rooted options `set -o` manages. Common ones include `nullglob` (makes a glob with no matches expand to nothing instead of staying as the literal pattern text), `globstar` (enables `**` to match recursively through subdirectories), and `autocd` (typing just a directory name changes into it, no `cd` needed).
+
+It's easy to expect every shell-behavior toggle to live under one unified mechanism, but bash genuinely splits them across two: `set -o` for the longer-established, more POSIX-aligned options (`errexit`, `nounset`, `pipefail`), and `shopt` for newer, bash-specific ones. `shopt -p` is the equivalent of `set -o` with no arguments — printing every currently configured option in a directly reusable form.

@@ -1,0 +1,23 @@
+---
+slug: recursion
+title: Recursion
+category: control-flow
+difficulty: advanced
+summary: A function that calls itself, with a base case that stops it — usable in shell, but rarely the best tool for the job.
+examples:
+  - description: A recursive factorial function
+    input: 'factorial() { if [ "$1" -le 1 ]; then echo 1; else echo $(( $1 * $(factorial $(($1 - 1))) )); fi; }; factorial 5'
+    output: "120"
+tips:
+  - "Every recursive shell function needs a clear base case checked first — without one that's actually reachable, the function keeps calling itself until it hits the shell's function-nesting limit and errors out instead of looping forever cleanly."
+pitfalls:
+  - "Each recursive call in shell spawns real overhead (a new function-call context, and the $(...) form above also forks a subshell) — for anything beyond small, shallow recursion, a loop is almost always faster and more idiomatic in shell specifically."
+funFacts:
+  - "Bash enforces a maximum function-nesting depth (controlled by FUNCNEST) specifically to catch runaway, base-case-less recursion before it exhausts system resources — a safety net most other recursion-friendly languages don't bother to build in by default."
+relatedConcepts: ["functions", "loops", "exit-vs-return"]
+relatedCommands: []
+---
+
+A recursive function calls itself, usually with a slightly smaller version of the original problem each time, until a base case is reached and the chain of calls finally stops and unwinds. Shell functions can do this — the example above computes a factorial by having `factorial` call itself with a decremented argument until it hits `1`.
+
+In practice, shell scripting reaches for recursion far less often than languages built more explicitly around it. Each recursive call carries real overhead (a new function context, and command-substitution-based recursion like above forks an actual subshell per call), and most problems that look naturally recursive — walking a directory tree, for instance — usually have a more efficient iterative or `find`-based equivalent in shell. Bash even enforces a maximum nesting depth (`FUNCNEST`) specifically to stop a recursive function with a broken or unreachable base case before it runs away.

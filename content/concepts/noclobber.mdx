@@ -1,0 +1,26 @@
+---
+slug: noclobber
+title: Noclobber
+category: io-and-pipelines
+difficulty: intermediate
+summary: A shell option that blocks > from silently overwriting an existing file, requiring >| when you genuinely mean to replace it.
+examples:
+  - description: Enable noclobber and try to overwrite an existing file
+    input: "set -o noclobber\necho \"new\" > existing.txt"
+    output: "bash: existing.txt: cannot overwrite existing file"
+  - description: Force the overwrite anyway with >|
+    input: "echo \"new\" >| existing.txt"
+    output: ""
+tips:
+  - "Turning on noclobber (set -o noclobber, or set -C) in an interactive shell's startup file is a cheap, real safety net against the classic typo of redirecting into the wrong filename and destroying a file you meant to keep."
+pitfalls:
+  - "noclobber only protects plain > redirection into a REGULAR file that already exists — it doesn't stop >>, doesn't apply to special files like /dev/null, and doesn't protect against rm or other genuinely destructive commands at all."
+funFacts:
+  - "The override operator, >|, is one of the more obscure pieces of redirection syntax in bash — many long-time users have used noclobber for years without ever needing (or knowing about) the explicit override."
+relatedConcepts: ["redirection", "shell-options"]
+relatedCommands: []
+---
+
+`set -o noclobber` (or the shorter `set -C`) changes `>` so it refuses to overwrite a file that already exists, failing with an error instead of silently destroying its previous contents. It's a small, genuinely useful interactive safety net against a common typo — redirecting into the wrong filename, or hitting up-arrow and re-running a command with `>` against a file you actually wanted to keep.
+
+When an overwrite is intentional with `noclobber` turned on, `>|` explicitly forces it through regardless. The protection is narrow, though — it only covers plain `>` against an existing regular file; appending with `>>`, redirecting into special files like `/dev/null`, and unrelated destructive commands like `rm` are entirely unaffected by it.

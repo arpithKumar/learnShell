@@ -1,0 +1,27 @@
+---
+slug: unset
+name: unset
+category: ["scripting"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Remove a variable or function from the shell's environment entirely.
+syntax: "unset NAME"
+flags:
+  - flag: "-f"
+    description: Unset a function rather than a variable.
+    example: "unset -f my_function"
+examples:
+  - description: Remove a variable completely
+    input: 'name="Alice"; unset name; echo "${name:-empty}"'
+    output: "empty"
+shortcuts: []
+tips:
+  - "unset removes a variable entirely, which is different from setting it to an empty string (name=\"\") — an unset variable and an empty-but-set variable can behave differently depending on how a script checks for it."
+related: ["export", "declare"]
+pitfalls:
+  - "Attempting to unset a variable that was declared read-only (declare -r) fails — that protection is intentional and exists specifically to prevent that kind of removal or modification."
+---
+
+`unset` removes a variable (or, with `-f`, a function) from the shell's environment entirely, as opposed to merely setting it to an empty value. This distinction matters in scripts that check `${VAR:-default}` or test `[ -z "$VAR" ]` — an unset variable and one explicitly set to an empty string can be treated differently depending on exactly how a script checks for it.
+
+It's most commonly used for cleaning up temporary variables once they're no longer needed, or for explicitly removing an exported environment variable so it no longer gets passed to subsequently launched programs.

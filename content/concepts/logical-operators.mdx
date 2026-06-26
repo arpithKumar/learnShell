@@ -1,0 +1,26 @@
+---
+slug: logical-operators
+title: Logical Operators
+category: control-flow
+difficulty: beginner
+summary: Chain commands together based on whether the previous one succeeded or failed, using && and ||.
+examples:
+  - description: Run the second command only if the first succeeds
+    input: "mkdir build && cd build"
+    output: ""
+  - description: Run the second command only if the first fails
+    input: "ping -c 1 example.com || echo \"host unreachable\""
+    output: "host unreachable"
+tips:
+  - "cmd1 && cmd2 || cmd3 is a common compact if/else pattern, but it has a subtle trap: if cmd2 itself fails, cmd3 also runs (since the whole chain is just evaluated left to right), which isn't what an if/else would do."
+pitfalls:
+  - "&& and || short-circuit, meaning later commands may never run at all — rm -rf \"$dir\" && echo done relies on this; if you actually need both commands to always run regardless of the first's outcome, use ; instead."
+funFacts:
+  - "&& and || are evaluated strictly left to right with equal precedence in shell, unlike in many programming languages where && binds tighter than || — a chain like a && b || c can genuinely surprise someone coming from another language."
+relatedConcepts: ["exit-status", "conditionals"]
+relatedCommands: ["test"]
+---
+
+`&&` and `||` chain commands based on the previous command's exit status: `cmd1 && cmd2` runs `cmd2` only if `cmd1` succeeded (exit status 0), while `cmd1 || cmd2` runs `cmd2` only if `cmd1` failed. Both are "short-circuiting" — the right-hand command may never run at all, which is exactly the intended behavior for guards like `command -v git >/dev/null || echo "git not found"`.
+
+A common pattern, `cmd1 && cmd2 || cmd3`, reads like an if/else at a glance, but it isn't quite one: it's really just two independent chained checks evaluated left to right, so if `cmd2` itself happens to fail, `cmd3` runs too — not the mutually-exclusive branching an actual `if`/`else` would give you. For anything beyond the simplest guard, a real `if` statement is the more reliable and more readable choice.

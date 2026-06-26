@@ -1,0 +1,29 @@
+---
+slug: string-manipulation
+title: String Manipulation
+category: expansions-and-substitution
+difficulty: intermediate
+summary: Extract a substring, find its length, or replace part of it — all inline, using parameter expansion's string-editing operators.
+examples:
+  - description: Extract a substring by position and length
+    input: 'word="shellscript"; echo "${word:0:5}"'
+    output: "shell"
+  - description: Replace the first match of a pattern
+    input: 'path="/usr/local/bin"; echo "${path/local/opt}"'
+    output: "/usr/opt/bin"
+  - description: Replace every match, not just the first
+    input: 'csv="a,b,c"; echo "${csv//,/ }"'
+    output: "a b c"
+tips:
+  - "A single / replaces only the first match; doubling it to // replaces every match in the string — easy to forget which is which, since the difference is just one extra character."
+pitfalls:
+  - "${var:offset:length} counts from 0, like most string-indexing systems, but a negative offset (${var: -5}) needs a space before the minus sign — without it, bash parses :-5 as the \"use a default value\" operator instead of a position."
+funFacts:
+  - "These substring/replace operators are bash-specific extensions to POSIX parameter expansion — POSIX sh only guarantees the prefix/suffix-stripping forms (%, #), not slicing or replacement, which is why portable scripts often fall back to cut, sed, or awk instead."
+relatedConcepts: ["parameter-expansion", "variables"]
+relatedCommands: ["cut", "sed", "tr"]
+---
+
+Beyond default values and prefix/suffix stripping, parameter expansion also supports string editing directly: `${var:offset:length}` extracts a substring by position, `${var/pattern/replacement}` replaces the first match of a pattern, and `${var//pattern/replacement}` (note the doubled slash) replaces every match instead of just the first.
+
+These are bash/zsh extensions on top of the more minimal POSIX parameter-expansion feature set, so a strictly portable `#!/bin/sh` script can't rely on them — `cut`, `sed`, or `awk` are the usual fallback for substring and replace operations in that more constrained environment. Within bash specifically, though, these operators are fast and avoid spawning a separate process just to edit a string.

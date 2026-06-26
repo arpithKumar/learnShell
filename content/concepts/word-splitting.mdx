@@ -1,0 +1,26 @@
+---
+slug: word-splitting
+title: Word Splitting (IFS)
+category: expansions-and-substitution
+difficulty: intermediate
+summary: After an unquoted variable expands, the shell splits the result into separate words wherever IFS characters appear — by default, any whitespace.
+examples:
+  - description: An unquoted variable with spaces splits into multiple arguments
+    input: 'words="one two three"; set -- $words; echo "$#"'
+    output: "3"
+  - description: Changing IFS changes where splitting happens
+    input: 'line="a,b,c"; IFS=","; set -- $line; echo "$2"'
+    output: "b"
+tips:
+  - "Quoting a variable expansion (\"$var\") disables word splitting entirely for that expansion — it's the single most reliable way to avoid this whole category of bug, rather than memorizing IFS behavior."
+pitfalls:
+  - "Changing IFS globally (IFS=\",\") affects every subsequent unquoted expansion in the script, not just the one you cared about — it's safer to save and restore it, or scope it to a single command: IFS=\",\" read -ra parts <<< \"$line\"."
+funFacts:
+  - "IFS stands for Internal Field Separator, and its default value is actually three characters: space, tab, and newline — not just a single space character, which is easy to assume."
+relatedConcepts: ["quoting", "variables", "arrays"]
+relatedCommands: ["read"]
+---
+
+Word splitting is the step where an unquoted expansion's result gets broken into separate words, using the characters in the `IFS` (Internal Field Separator) variable as delimiters — by default, space, tab, and newline. This is exactly why an unquoted variable holding `"my file.txt"` becomes two separate arguments instead of one: the space inside it is treated as a word boundary, identical to typing two separate words yourself.
+
+Wrapping an expansion in double quotes suppresses word splitting entirely, which is why "always quote your variables" is such a strong, simple rule of thumb — it sidesteps this mechanism altogether rather than requiring you to reason about `IFS` in the common case. Deliberately changing `IFS` (commonly to a comma, for parsing CSV-like data) is a real, useful technique, just one that needs care since it affects every unquoted expansion until it's reset.

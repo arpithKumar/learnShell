@@ -1,0 +1,24 @@
+---
+slug: ncdu
+name: ncdu
+category: ["files-and-navigation", "system"]
+difficulty: intermediate
+shells: ["bash", "zsh"]
+summary: An interactive disk usage analyzer for navigating directories by size.
+syntax: "ncdu [PATH]"
+flags: []
+examples:
+  - description: Interactively browse disk usage starting at the current directory
+    input: "ncdu ."
+    output: ""
+shortcuts: []
+tips:
+  - "ncdu is much faster than visually scanning du -sh output for a large directory tree — it scans once, then lets you navigate the results interactively, sorted by size, drilling into the biggest folders first."
+related: ["du", "df", "find"]
+pitfalls:
+  - "ncdu isn't installed by default on most systems and needs to be installed through a package manager before use, unlike du which is part of the core coreutils."
+---
+
+`ncdu` (NCurses Disk Usage) scans a directory tree once and then presents the results as an interactive, navigable list sorted by size — letting you drill into the largest subdirectories one level at a time to track down exactly what's consuming disk space. It solves the same problem as `du -sh */ | sort -h`, but without needing to re-run the scan or manually re-sort every time you go deeper into a folder.
+
+It's a particularly fast way to answer "what's actually filling up this disk" on a server or laptop running low on space, since the interactive browsing makes it easy to keep narrowing down to the real offender without repeated commands.

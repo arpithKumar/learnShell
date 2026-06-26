@@ -1,0 +1,33 @@
+---
+slug: dig
+name: dig
+category: ["networking"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Query DNS servers directly, showing exactly how a domain name resolves.
+syntax: "dig [OPTIONS] DOMAIN [RECORD_TYPE]"
+flags:
+  - flag: "+short"
+    description: Print just the resolved IP address, without the full detailed report.
+    example: "dig +short example.com"
+  - flag: "MX"
+    description: Query for a specific DNS record type (e.g. MX for mail servers).
+    example: "dig example.com MX"
+examples:
+  - description: Look up a domain's IP address with full detail
+    input: "dig example.com"
+    output: ";; ANSWER SECTION:\nexample.com.  86400  IN  A  93.184.216.34"
+  - description: Get just the IP, nothing else
+    input: "dig +short example.com"
+    output: "93.184.216.34"
+shortcuts: []
+tips:
+  - "dig +short is the version most people actually want day-to-day — it strips away the full diagnostic report and just answers the question."
+related: ["ping", "host", "curl"]
+pitfalls:
+  - "dig queries whatever DNS server your system is currently configured to use — if you suspect a stale DNS cache, dig @8.8.8.8 example.com queries a specific public DNS server directly, bypassing your local cache."
+---
+
+`dig` ("domain information groper") queries DNS servers directly and shows exactly how a domain name resolves — its IP address, mail server records, name server records, and more, along with the full technical detail of the response.
+
+For everyday use, `dig +short example.com` is the version worth knowing — it strips away dig's normally verbose diagnostic output and just prints the resolved IP address. The full output becomes useful specifically when troubleshooting DNS issues, where details like which name server answered and how long the result is cached for actually matter.

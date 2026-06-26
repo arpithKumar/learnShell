@@ -1,0 +1,26 @@
+---
+slug: exit-vs-return
+title: Exit vs Return
+category: control-flow
+difficulty: beginner
+summary: exit ends the whole shell or script; return only ends the current function, handing control back to whatever called it.
+examples:
+  - description: return only exits the function, not the whole script
+    input: 'check() { return 1; }; check; echo "still running, status was $?"'
+    output: "still running, status was 1"
+  - description: exit would have ended everything instead
+    input: 'check() { exit 1; }; check; echo "this never prints"'
+    output: ""
+tips:
+  - "Inside a function, always use return to report success or failure back to the caller — reaching for exit by habit inside a function is a common mistake that kills the entire script instead of just that one function call."
+pitfalls:
+  - "Calling return outside of any function (at the top level of a sourced script) behaves like exit instead — the distinction only applies cleanly while actually inside a function body."
+funFacts:
+  - "Both exit and return are capped to the same 0–255 exit-status range as any other command — return 300 silently wraps around to return 44, the same byte-overflow behavior exit status always has."
+relatedConcepts: ["functions", "exit-status"]
+relatedCommands: []
+---
+
+`return` ends the currently executing function and hands control back to whatever called it, optionally setting the function's exit status with a number. `exit` is much more drastic — it terminates the entire script (or the whole interactive shell, if typed directly at a prompt), not just the function currently running.
+
+Using `exit` inside a function by mistake is a real, easy-to-make bug: instead of that function simply reporting failure to its caller and letting the script decide what to do next, the entire script stops dead, often well before its actual intended ending point. `return` is almost always the right choice inside a function; `exit` belongs at the top level, when the script as a whole is genuinely done.

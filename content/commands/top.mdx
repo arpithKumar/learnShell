@@ -1,0 +1,52 @@
+---
+slug: top
+name: top
+category: ["process-system"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Show a live, continuously updating view of running processes and resource usage.
+syntax: "top [OPTIONS]"
+flags:
+  - flag: "-o"
+    description: Sort the process list by a specific column, like CPU or memory.
+    example: "top -o cpu"
+  - flag: "-u"
+    description: Show only processes belonging to a specific user.
+    example: "top -u alice"
+examples:
+  - description: Open the live process monitor
+    input: "top"
+    output: "PID  COMMAND   %CPU  MEM\n501  node       12.4  220M"
+shortcuts:
+  - keys: "q"
+    description: Quit top and return to the shell.
+    context: readline
+  - keys: "Space"
+    description: Force an immediate refresh of the display.
+    context: readline
+tips:
+  - "Press capital M while top is running to sort the list by memory usage instead of CPU, on most implementations."
+  - "If it's installed, htop is a more visual, easier-to-read, mouse-and-color-friendly alternative to top, with very similar core functionality."
+related: ["ps", "kill"]
+pitfalls:
+  - "top takes over your entire terminal window until you quit it with q — beginners sometimes think the terminal has frozen when it's actually just running as a full-screen interface."
+---
+
+While `ps` gives you a single snapshot, `top` gives you a live,
+auto-refreshing dashboard of every running process, sorted by whichever
+resource matters most — usually CPU or memory by default. It's the
+natural first step when a machine feels sluggish and you want to know
+exactly what's responsible.
+
+Running `top` takes over your whole terminal until you exit, which can
+be disorienting the first time — it's not a normal command that prints
+output and returns; it's an interactive, full-screen display that keeps
+running and updating until you explicitly quit it (typically by
+pressing `q`).
+
+Once it's open, the columns to watch are usually `%CPU` and `%MEM` (or
+similarly named columns depending on your system) next to each
+process's command name. A process pinned near 100% CPU, or one whose
+memory usage keeps climbing without leveling off, are both classic
+signs worth investigating further with `ps` or by checking the
+program's own logs.

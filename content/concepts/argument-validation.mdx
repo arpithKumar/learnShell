@@ -1,0 +1,26 @@
+---
+slug: argument-validation
+title: Argument Validation
+category: control-flow
+difficulty: beginner
+summary: Check a script's arguments are actually present and sensible before using them, instead of letting a missing argument cause a confusing failure later.
+examples:
+  - description: Bail out early with a usage message if an argument is missing
+    input: 'if [ $# -lt 1 ]; then echo "Usage: $0 FILENAME" >&2; exit 1; fi'
+    output: "Usage: ./script.sh FILENAME"
+  - description: Validate that an argument is actually a number
+    input: 'if ! [[ $1 =~ ^[0-9]+$ ]]; then echo "Error: expected a number" >&2; exit 1; fi'
+    output: "Error: expected a number"
+tips:
+  - "Sending usage and error messages to stderr (>&2) rather than stdout is the conventional, correct choice — it keeps them visible even if a script's normal output is being redirected or piped somewhere else."
+pitfalls:
+  - "Checking $# (the argument count) confirms something was passed, but not that it's the RIGHT kind of value — a script expecting a number that only checks $# -ge 1 will happily accept a string and fail confusingly much later, deeper in the script."
+funFacts:
+  - "A two-part argument-checking pattern — first the count ($#), then the shape of each value (regex, file existence, etc.) — shows up in nearly every well-written shell script ever written, regardless of how different the rest of the script's purpose is."
+relatedConcepts: ["positional-parameters", "conditionals", "regex-matching", "exit-status"]
+relatedCommands: ["test"]
+---
+
+Validating arguments means checking, right at the start of a script, that it actually received what it needs — the right number of arguments, and ideally the right shape for each one — before using any of them. `if [ $# -lt 1 ]; then echo "Usage: ..." >&2; exit 1; fi` is the most common form: catch a missing argument immediately, print how the script should actually be called, and exit cleanly rather than letting some later line fail with a confusing, unrelated-looking error.
+
+Checking the count alone only catches "nothing was passed" — it doesn't catch "the wrong kind of thing was passed." Pairing it with a shape check (a regex via `[[ =~ ]]`, an `-f` test for a file argument, or a `case` pattern for an expected set of values) catches a much wider range of real-world misuse before it has a chance to cause a confusing failure several lines deeper into the script.

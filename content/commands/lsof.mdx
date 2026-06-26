@@ -1,0 +1,36 @@
+---
+slug: lsof
+name: lsof
+category: ["system", "networking"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: List open files and network connections, and which process owns each one.
+syntax: "lsof [OPTIONS]"
+flags:
+  - flag: "-i"
+    description: List only network connections (optionally filtered by port).
+    example: "lsof -i :3000"
+  - flag: "-p"
+    description: List only files/connections opened by a specific process ID.
+    example: "lsof -p 4821"
+  - flag: "-u"
+    description: List only files/connections opened by a specific user.
+    example: "lsof -u alice"
+examples:
+  - description: Find out what's using port 3000
+    input: "lsof -i :3000"
+    output: "COMMAND  PID  USER  FD  TYPE  NAME\nnode    4821 alice  20u  IPv4  *:3000"
+  - description: See every file a specific process has open
+    input: "lsof -p 4821"
+    output: ""
+shortcuts: []
+tips:
+  - "lsof -i :PORT is the most common reason people reach for this command — it's the direct way to answer 'what's already using this port' before starting a dev server."
+related: ["netstat", "kill", "ps"]
+pitfalls:
+  - "On Unix-like systems, almost everything is represented as a file handle, including network sockets — that's why lsof, despite its name being about 'open files,' is also the standard tool for finding what's listening on a port."
+---
+
+`lsof` ("list open files") shows every file, device, and network connection currently held open by running processes, and which process holds each one. Because Unix treats network sockets as a kind of file handle internally, `lsof` doubles as one of the most direct tools for answering "what's using this port" — often faster to interpret than `netstat`'s broader connection listing.
+
+`lsof -i :3000` is the version worth memorizing: it filters straight to whatever's bound to port 3000, showing the process name and PID you'd need to stop it with `kill`. Filtering by `-p` (a specific process) or `-u` (a specific user) narrows the same underlying view to exactly what you're trying to investigate.

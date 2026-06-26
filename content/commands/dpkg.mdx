@@ -1,0 +1,33 @@
+---
+slug: dpkg
+name: dpkg
+category: ["package-management"]
+difficulty: advanced
+shells: ["bash", "zsh"]
+summary: Install and inspect individual .deb package files directly, the lower-level tool underneath apt.
+syntax: "dpkg [OPTIONS] FILE.deb"
+flags:
+  - flag: "-i"
+    description: Install a .deb package file.
+    example: "sudo dpkg -i app.deb"
+  - flag: "-l"
+    description: List all currently installed packages.
+    example: "dpkg -l"
+  - flag: "-r"
+    description: Remove an installed package by name.
+    example: "sudo dpkg -r app-name"
+examples:
+  - description: Install a package from a downloaded .deb file
+    input: "sudo dpkg -i app.deb"
+    output: ""
+shortcuts: []
+tips:
+  - "dpkg is what apt itself uses under the hood — reach for it directly when you have a standalone .deb file to install, rather than a package from a configured repository."
+related: ["apt"]
+pitfalls:
+  - "dpkg installs a package file directly but doesn't resolve or fetch its dependencies the way apt does — if a .deb needs other packages that aren't already installed, dpkg -i will report a dependency error rather than fixing it for you (apt install -f afterward typically resolves this)."
+---
+
+`dpkg` is the lower-level tool that `apt` itself is built on, working directly with individual `.deb` package files rather than a configured online repository. The main reason to reach for it directly is having a `.deb` file you downloaded manually — software that isn't in your distribution's standard repositories.
+
+The trade-off for working at this lower level is that `dpkg` doesn't automatically fetch missing dependencies the way `apt` does — if the package you're installing needs something else that isn't already present, `dpkg -i` reports the problem rather than resolving it. Running `sudo apt install -f` afterward is the standard fix, letting `apt` pull in whatever was missing.

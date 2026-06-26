@@ -1,0 +1,38 @@
+---
+slug: apt
+name: apt
+category: ["package-management"]
+difficulty: intermediate
+shells: ["bash", "zsh"]
+summary: Install and manage system software packages on Debian-based Linux distributions (Ubuntu, Debian).
+syntax: "apt COMMAND [PACKAGE]"
+flags:
+  - flag: "update"
+    description: Refresh the local list of available packages and versions.
+    example: "sudo apt update"
+  - flag: "install"
+    description: Install a package.
+    example: "sudo apt install nginx"
+  - flag: "upgrade"
+    description: Upgrade every installed package to its latest available version.
+    example: "sudo apt upgrade"
+  - flag: "remove"
+    description: Uninstall a package.
+    example: "sudo apt remove nginx"
+examples:
+  - description: Refresh package lists, then install something
+    input: "sudo apt update && sudo apt install nginx"
+    output: ""
+shortcuts: []
+tips:
+  - "apt update && apt upgrade is a common combo, and intentionally two separate steps — update refreshes what's AVAILABLE, upgrade actually installs newer versions of what you have."
+related: ["dpkg", "brew"]
+pitfalls:
+  - "apt almost always needs sudo, since it's modifying system-wide software — and update doesn't install anything itself, it just refreshes the list of what's available, which trips up people expecting it to also upgrade."
+---
+
+`apt` (Advanced Package Tool) installs, updates, and removes system software on Debian-based Linux distributions like Ubuntu and Debian — it's the standard way most server and desktop software gets installed on those systems, instead of downloading and compiling things manually.
+
+The two-step habit worth knowing is `apt update` followed by `apt upgrade`: the first refreshes the local list of what packages and versions are available (it doesn't install anything by itself), and the second actually installs newer versions of packages you already have. Running `upgrade` without first running `update` works against a possibly stale package list.
+
+Because `apt` manages system-wide software, almost every command needs to run with `sudo` — a regular user account doesn't have permission to install or remove things that affect the whole system.

@@ -1,0 +1,23 @@
+---
+slug: coprocesses
+title: Coprocesses
+category: process-control
+difficulty: advanced
+summary: Run a background process with a two-way pipe to it, letting the shell both send it input and read its output, instead of just one direction.
+examples:
+  - description: Start a coprocess and exchange a line with it
+    input: "coproc mycat { cat; }\necho \"hello\" >&\"${mycat[1]}\"\nread -r line <&\"${mycat[0]}\"\necho \"$line\""
+    output: "hello"
+tips:
+  - "A coprocess is most useful when you need to send a process several inputs and read its response after each one, like keeping a long-lived helper process running instead of starting a brand new process for every single request."
+pitfalls:
+  - "bash only supports a single active coprocess at a time by default — starting a second one replaces the file-descriptor variables for the first, making it much harder to keep more than one coprocess's pipes addressable at once."
+funFacts:
+  - "coproc is a relatively recent bash addition (version 4.0, 2009) — ksh had a similar feature for years before that under a different syntax, and bash's version was modeled on it."
+relatedConcepts: ["pipes", "named-pipes", "subshells"]
+relatedCommands: []
+---
+
+A coprocess, started with `coproc NAME { commands; }`, runs in the background with a bidirectional pipe connecting it to the current shell — unlike a normal pipeline, where data only flows one direction through a chain of commands. The shell can write to the coprocess's input and separately read from its output, both through file descriptors bash stores automatically in an array named after the coprocess.
+
+This is useful for talking to a long-running helper process repeatedly — sending it one line, reading back a response, sending another — rather than starting a brand-new process for every single exchange. It's a comparatively advanced, less commonly needed feature; bash also only supports one active coprocess at a time by default, which is a real limitation if a script needs to juggle more than one simultaneously.

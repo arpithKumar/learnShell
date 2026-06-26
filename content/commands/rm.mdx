@@ -1,0 +1,58 @@
+---
+slug: rm
+name: rm
+category: ["filesystem"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Remove (delete) files and directories.
+syntax: "rm [OPTIONS] FILE..."
+flags:
+  - flag: "-r"
+    description: Remove directories and their contents recursively.
+    example: "rm -r ./old-build"
+  - flag: "-f"
+    description: Force deletion without confirmation, and ignore missing files.
+    example: "rm -f *.tmp"
+  - flag: "-i"
+    description: Prompt for confirmation before every removal.
+    example: "rm -i important.txt"
+  - flag: "-v"
+    description: Print each file as it's removed (verbose).
+    example: "rm -v *.log"
+examples:
+  - description: Delete a single file
+    input: "rm notes.txt"
+    output: ""
+  - description: Delete a folder and everything inside it
+    input: "rm -rf ./node_modules"
+    output: ""
+shortcuts: []
+tips:
+  - "Get comfortable with rm -i (interactive confirmation) before ever reaching for rm -rf on anything you haven't triple-checked."
+  - "Some people alias rm to 'rm -i' in their shell config as a personal safety net against fat-fingered deletes."
+  - "If your system has a 'trash' command available (some package managers offer one), prefer it over rm for anything you're not fully certain about — it moves files instead of destroying them."
+related: ["cp", "mv", "find"]
+pitfalls:
+  - "There is no trash can or undo — rm deletes immediately and permanently. Always double-check the path before running rm -rf."
+  - "rm -rf with an unquoted variable that happens to be empty (e.g. rm -rf $DIR/* when $DIR is unset) can delete far more than intended — always quote variables in any rm command inside a script."
+---
+
+`rm` deletes files, and it does so immediately and permanently — there's
+no recycle bin to recover from. On its own, plain `rm` only removes
+regular files; trying to delete a directory without `-r` fails on
+purpose, since a directory might contain other files and folders that
+all need to be accounted for too.
+
+Combined with `-f` (force), `rm -rf` becomes one of the most powerful —
+and most dangerous — commands you'll use in a shell. It deletes a
+folder and everything inside it, suppresses any "are you sure"
+prompts, and won't even complain if some of the targets don't exist.
+That combination is genuinely necessary sometimes (clearing out a build
+folder, for instance), but it's worth building real caution around it
+before typing it on autopilot.
+
+A good habit for beginners: practice with plain `rm` and `rm -i` first,
+and only reach for `-rf` once you're confident reading and double
+checking a path before you hit enter. The classic disaster scenario is
+a stray space turning `rm -rf ./build` into something that deletes far
+more than intended — always read the line back before running it.

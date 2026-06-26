@@ -1,0 +1,30 @@
+---
+slug: split
+name: split
+category: ["filesystem", "text-processing"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Split a large file into smaller pieces.
+syntax: "split [OPTIONS] FILE [PREFIX]"
+flags:
+  - flag: "-l"
+    description: Split by a fixed number of lines per piece.
+    example: "split -l 1000 big.csv chunk_"
+  - flag: "-b"
+    description: Split by a fixed size in bytes per piece.
+    example: "split -b 10M big.log part_"
+examples:
+  - description: Split a large CSV into 1000-line chunks
+    input: "split -l 1000 big.csv chunk_"
+    output: "chunk_aa  chunk_ab  chunk_ac"
+shortcuts: []
+tips:
+  - "The output filenames get an alphabetic suffix appended automatically (chunk_aa, chunk_ab, ...) — the prefix you give just sets the start of each generated name."
+related: ["cat", "wc"]
+pitfalls:
+  - "split doesn't understand structured data, like a CSV header row — splitting by line count alone means only the first chunk keeps the header, which can break tools that expect every chunk to have one."
+---
+
+`split` breaks one large file into a series of smaller pieces, either by a fixed number of lines (`-l`) or a fixed byte size (`-b`). It's useful when a single file is too large for some downstream tool or transfer limit to handle comfortably as one piece.
+
+Each output file gets the prefix you provide plus an automatically generated alphabetic suffix — `split -l 1000 big.csv chunk_` produces `chunk_aa`, `chunk_ab`, and so on. Worth noting: `split` has no awareness of structured content like a CSV header row, so only the very first chunk will contain it unless you handle that separately.

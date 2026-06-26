@@ -1,0 +1,23 @@
+---
+slug: select-menu
+title: Select Menus
+category: control-flow
+difficulty: intermediate
+summary: Build a simple numbered interactive menu without manually printing options and parsing the user's choice yourself.
+examples:
+  - description: A basic menu loop
+    input: 'select fruit in apple banana quit; do\n  case $fruit in\n    quit) break ;;\n    *) echo "You picked: $fruit" ;;\n  esac\ndone'
+    output: "1) apple\n2) banana\n3) quit\n#? 1\nYou picked: apple"
+tips:
+  - "$REPLY inside a select loop holds exactly what the user typed, even if it didn't match a valid number — useful for printing a helpful error message when the input was invalid rather than just silently looping again."
+pitfalls:
+  - "select is a bash/ksh feature, not part of POSIX sh — and the prompt shown before each choice (#? by default) is controlled by PS3, a special variable that's easy to forget exists since it's used nowhere else."
+funFacts:
+  - "select automatically numbers and formats its option list into columns if there are enough items, behavior it inherited conceptually from the Korn shell (ksh), where it originated before bash adopted it."
+relatedConcepts: ["case-statement", "loops", "reading-input"]
+relatedCommands: []
+---
+
+`select` builds a simple numbered menu automatically: list the options after `in`, and it prints them numbered, prompts for a choice, and loops the body with the chosen value available as the loop variable — all without manually printing each option or parsing the user's numeric input yourself. It's commonly paired with a `case` statement inside the loop body to handle each possible choice, and an explicit `break` to exit once the user picks something like "quit."
+
+The prompt shown before each choice is controlled by `PS3` (a less commonly known relative of `PS1`/`PS2`), and `$REPLY` holds whatever the user actually typed — useful for detecting and reporting an invalid selection rather than letting it silently loop back around. `select` is a bash/ksh extension, originating in ksh, not part of strict POSIX `sh`.

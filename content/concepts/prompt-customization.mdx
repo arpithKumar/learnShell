@@ -1,0 +1,26 @@
+---
+slug: prompt-customization
+title: Prompt Customization
+category: shell-environment
+difficulty: intermediate
+summary: Control what your shell prompt looks like — username, directory, git branch, colors — by setting the PS1 variable.
+examples:
+  - description: A simple prompt showing user, host, and current directory
+    input: 'PS1="\\u@\\h:\\w\\$ "'
+    output: "alice@laptop:~/projects$ "
+  - description: PS2 is the prompt shown for an unfinished, continued command
+    input: "echo 'first \\\nline'"
+    output: "> "
+tips:
+  - "Prompt-building frameworks like starship or powerlevel10k exist specifically because hand-writing a PS1 string with git status, colors, and conditional segments gets unwieldy fast — they're worth reaching for once your prompt wishlist grows past the basics."
+pitfalls:
+  - "Colors in PS1 need to be wrapped in \\[ and \\] (bash) so the shell knows those characters don't take up visible space on the line — forgetting this makes the shell miscount the prompt's length, which causes garbled-looking line wrapping and cursor jumps during editing."
+funFacts:
+  - "PS1 and PS2 are named that way because they're literally \"prompt string 1\" and \"prompt string 2\" — there are also PS3 and PS4, used respectively by the select menu builtin and by set -x's debug output prefix."
+relatedConcepts: ["dotfiles", "shell-options", "terminal-colors-and-tput"]
+relatedCommands: []
+---
+
+`PS1` controls what your interactive shell prompt looks like, built from a mix of literal text and special backslash-escaped codes — `\u` for username, `\h` for hostname, `\w` for the current working directory, and many more. Setting it in a dotfile like `.bashrc` is how most people end up with a prompt showing useful context (directory, git branch, exit status of the last command) instead of bash's plain default.
+
+`PS2` is the related, less commonly customized prompt shown when a command continues onto a second line (typically just `> ` by default) — for instance after a line ending in a backslash, or in the middle of an unclosed quote. Building a genuinely full-featured prompt by hand in `PS1` gets unwieldy quickly once you want git status or conditional coloring, which is why dedicated prompt frameworks like starship exist as a popular alternative to writing the whole thing manually.

@@ -1,0 +1,35 @@
+---
+slug: ln
+name: ln
+category: ["filesystem"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Create a link to a file — a shortcut that points to the original.
+syntax: "ln [OPTIONS] TARGET LINK_NAME"
+flags:
+  - flag: "-s"
+    description: Create a symbolic link instead of a hard link (the far more common choice).
+    example: "ln -s /path/to/real/file shortcut"
+  - flag: "-f"
+    description: Overwrite the link name if it already exists.
+    example: "ln -sf /new/target existing-link"
+examples:
+  - description: Create a symbolic link to a file
+    input: "ln -s ~/projects/learn-shell shortcut"
+    output: ""
+  - description: See where a symlink actually points
+    input: "ls -l shortcut"
+    output: "lrwxr-xr-x  1 you  staff  25 Jan  1 10:00 shortcut -> /Users/you/projects/learn-shell"
+shortcuts: []
+tips:
+  - "A symlink (-s) is just a pointer to a path and can cross filesystems or point to a directory — a hard link (the default, no -s) is a much more restrictive, lower-level concept most people never actually need."
+related: ["readlink", "cp"]
+pitfalls:
+  - "Deleting a symlink's target leaves the symlink itself behind, now pointing at nothing — accessing it gives a 'No such file or directory' error, not an error about the link itself."
+---
+
+`ln` creates a link — typically a symbolic link (`-s`), which is essentially a small file that points to another path, similar to a shortcut. Opening the symlink transparently opens whatever it points to, which makes it useful for keeping a stable, convenient path to something that lives somewhere less convenient.
+
+Without `-s`, `ln` creates a "hard link" instead, a different and much rarer concept — both names point to the exact same underlying data on disk, with neither considered the "original." Almost all everyday use of `ln` is the symbolic form; the unqualified hard link is a lower-level filesystem detail most people never actually need to reach for.
+
+Because a symlink is just a path reference, it doesn't notice or care if its target later moves or gets deleted — it simply becomes a "broken" link, which is worth checking for if something that used to work suddenly can't find its target file.

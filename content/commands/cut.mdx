@@ -1,0 +1,48 @@
+---
+slug: cut
+name: cut
+category: ["text-processing"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Extract specific columns or character ranges from each line.
+syntax: "cut [OPTIONS] [FILE...]"
+flags:
+  - flag: "-d"
+    description: Set the field delimiter (default is tab).
+    example: "cut -d ',' -f 1 data.csv"
+  - flag: "-f"
+    description: Select which field(s) to print, by number.
+    example: "cut -d ',' -f 2,3 data.csv"
+  - flag: "-c"
+    description: Select specific character positions instead of fields.
+    example: "cut -c 1-5 codes.txt"
+examples:
+  - description: Pull just the first column from a CSV
+    input: "cut -d ',' -f 1 data.csv"
+    output: "name\nAlice\nBob"
+  - description: Grab the first 5 characters of each line
+    input: "cut -c 1-5 codes.txt"
+    output: "AB123\nCD456"
+shortcuts: []
+tips:
+  - "Fields are 1-indexed, not 0-indexed — the first column is -f 1, never -f 0."
+  - "cut -f 1,3 (with a comma) selects multiple specific fields; cut -f 1-3 (with a dash) selects a contiguous range instead."
+related: ["awk", "sort", "tr"]
+pitfalls:
+  - "cut splits on a single literal delimiter character — if your data has multiple consecutive spaces, inconsistent separators, or quoted fields containing the delimiter itself, awk handles those cases far more reliably."
+---
+
+`cut` pulls out a specific slice of each line — either by field number,
+after splitting the line on a delimiter like a comma or tab, or by raw
+character position regardless of any delimiter at all. It's the
+lightweight option when you just need "column 2 of this CSV" or
+"characters 1 through 5 of every line," without the overhead of
+learning a more powerful tool.
+
+The two modes don't mix: `-f` (field mode) needs a delimiter set with
+`-d`, while `-c` (character mode) ignores delimiters entirely and just
+counts raw character positions. For well-formed, simple delimited data
+— a plain CSV with no quoted fields, for instance — `cut` is faster to
+write than the equivalent `awk` command. The moment the data gets messy
+(extra whitespace, fields that contain the delimiter character inside
+quotes), `awk` becomes the more dependable choice.

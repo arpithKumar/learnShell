@@ -1,0 +1,30 @@
+---
+slug: printf
+name: printf
+category: ["scripting", "text-processing"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Print formatted text, with precise control over spacing, padding, and number formatting.
+syntax: "printf FORMAT [ARGUMENTS...]"
+flags: []
+examples:
+  - description: Print a formatted string with a variable substituted in
+    input: "printf 'Hello, %s!\\n' 'world'"
+    output: "Hello, world!"
+  - description: Pad a number to a fixed width
+    input: "printf '%05d\\n' 42"
+    output: "00042"
+shortcuts: []
+tips:
+  - "Unlike echo, printf never adds a trailing newline automatically — you have to include \\n yourself, which is exactly why it's the more predictable choice inside scripts."
+  - "%s is for strings, %d for integers, %f for decimals — picking the right format specifier is what gives you control echo simply doesn't have."
+related: ["echo", "read"]
+pitfalls:
+  - "Forgetting the trailing \\n is the most common printf mistake — output from consecutive printf calls will run together on one line without it."
+---
+
+`printf` prints text using a format string, the same concept found in C and many other languages: placeholders like `%s` (string) or `%d` (integer) in the format get replaced by the arguments that follow, in order. It gives far more precise control than `echo` — padding numbers with leading zeros, fixing decimal places, aligning columns of text.
+
+The trade-off for that control is that `printf` does exactly what you tell it and nothing more — including not adding a newline at the end automatically. Every `printf` call that should end a line needs an explicit `\n` in the format string, which is also what makes its behavior consistent and predictable across different systems, unlike `echo`, whose default behavior can vary slightly.
+
+For simple "just print this text" cases, `echo` is still the quicker option. `printf` earns its place the moment you need actual formatting — fixed-width fields, padded numbers, or precise decimal output.

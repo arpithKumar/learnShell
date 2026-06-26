@@ -1,0 +1,63 @@
+---
+slug: curl
+name: curl
+category: ["networking"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Transfer data to or from a URL — the standard way to make HTTP requests from a shell.
+syntax: "curl [OPTIONS] URL"
+flags:
+  - flag: "-X"
+    description: Set the HTTP method (GET, POST, PUT, DELETE, etc).
+    example: "curl -X POST https://api.example.com/users"
+  - flag: "-d"
+    description: Send data in the request body (also implies POST).
+    example: "curl -d '{\"name\":\"Alice\"}' https://api.example.com/users"
+  - flag: "-H"
+    description: Add a custom request header.
+    example: "curl -H 'Authorization: Bearer TOKEN' https://api.example.com"
+  - flag: "-o"
+    description: Write the response to a file instead of printing it.
+    example: "curl -o page.html https://example.com"
+  - flag: "-I"
+    description: Fetch only the response headers, not the body.
+    example: "curl -I https://example.com"
+examples:
+  - description: Fetch a URL and print the response body
+    input: "curl https://api.example.com/status"
+    output: "{\"status\":\"ok\"}"
+  - description: Send a JSON POST request with headers
+    input: "curl -X POST -H 'Content-Type: application/json' -d '{\"name\":\"Alice\"}' https://api.example.com/users"
+    output: "{\"id\":1,\"name\":\"Alice\"}"
+shortcuts: []
+tips:
+  - "Add -v (verbose) any time a request isn't behaving as expected — it shows the full outgoing request and incoming response headers, which is usually where the real answer is hiding."
+  - "-s silences the progress meter, which matters when you're piping curl's output straight into another command and don't want extra noise mixed in."
+  - "-L makes curl follow HTTP redirects automatically — without it, a 301 or 302 response is shown as-is instead of following it to the final destination."
+related: ["wget", "ssh"]
+pitfalls:
+  - "curl does not follow redirects by default — add -L explicitly any time the URL you're hitting might respond with a redirect you actually want followed."
+  - "Without -o or shell redirection, curl prints binary responses (like images or other non-text content) directly to your terminal as garbled text — always save those to a file instead."
+---
+
+`curl` is the universal command-line HTTP client. Making an API
+request, downloading a file, or debugging a web service from the
+terminal almost always starts with `curl`, partly because it's
+preinstalled on nearly every system and partly because its flags map
+closely to actual HTTP concepts.
+
+The trio you'll use constantly is `-X` (which HTTP method to send),
+`-H` (add a header, often used for authentication or content type), and
+`-d` (attach a request body, which also implicitly switches the method
+to POST if you haven't already set one). Together, those three cover
+the overwhelming majority of real REST API interactions you'd otherwise
+need a GUI tool like Postman for.
+
+`curl` defaults to printing the response body straight to your
+terminal, which is fine for JSON or text but produces unreadable
+garbage for binary content like images — use `-o filename` to save the
+response to a file instead whenever the content isn't plain text. And
+because it doesn't follow redirects automatically, a request that
+expects to land somewhere else after a 301/302 needs `-L` added, or
+you'll just see the redirect response itself instead of its final
+destination.

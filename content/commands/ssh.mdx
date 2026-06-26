@@ -1,0 +1,55 @@
+---
+slug: ssh
+name: ssh
+category: ["networking"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Securely log in to and run commands on a remote machine.
+syntax: "ssh [OPTIONS] USER@HOST"
+flags:
+  - flag: "-i"
+    description: Use a specific private key file for authentication.
+    example: "ssh -i ~/.ssh/id_ed25519 user@example.com"
+  - flag: "-p"
+    description: Connect on a non-default port.
+    example: "ssh -p 2222 user@example.com"
+  - flag: "-L"
+    description: Forward a local port to a port on the remote machine (port forwarding/tunneling).
+    example: "ssh -L 8080:localhost:80 user@example.com"
+examples:
+  - description: Log in to a remote server
+    input: "ssh alice@192.168.1.10"
+    output: "Welcome to Ubuntu 22.04 LTS"
+  - description: Run a single command on the remote machine without staying logged in
+    input: "ssh alice@example.com 'ls -la'"
+    output: "total 24\ndrwxr-xr-x  5 alice  staff   160 ..."
+shortcuts: []
+tips:
+  - "Set up an entry in ~/.ssh/config for servers you connect to often, so you can type 'ssh myserver' instead of the full user@host every time."
+  - "ssh-copy-id is the easiest way to install your public key onto a remote server, enabling passwordless login afterward."
+related: ["scp", "rsync"]
+pitfalls:
+  - "The first time you connect to a new host, ssh asks you to verify its fingerprint — always check that this matches what you actually expect, since blindly accepting it is a real security risk (it's the mechanism that protects against a particular kind of network attack)."
+  - "Password-based login is being phased out by many providers in favor of key-based authentication (-i) — set up an SSH key pair if you haven't already, rather than typing a password on every connection."
+---
+
+`ssh` ("secure shell") opens an encrypted connection to a remote
+machine and gives you an interactive login as if you were sitting in
+front of it directly. It's foundational to remote server work — nearly
+every cloud provider, hosting platform, and self-managed server expects
+SSH as the primary way to administer it.
+
+Beyond a plain interactive login, `ssh` can also run a single command
+on the remote machine and return immediately, without leaving you
+logged in: `ssh alice@example.com 'ls -la'` connects, runs `ls -la`
+remotely, prints the output, and disconnects, all in one step — handy
+for scripts that need to check or trigger something on a remote
+machine without a full session.
+
+Authentication can use either a password or a key pair (a private key
+you keep locally and a public key installed on the server). Key-based
+login is both more convenient — no typing a password every time — and
+considered more secure, which is why most production environments
+disable password login entirely and require a key. `scp` and `rsync`
+both build directly on the same underlying SSH connection for secure
+file transfer.

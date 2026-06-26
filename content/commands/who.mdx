@@ -1,0 +1,27 @@
+---
+slug: who
+name: who
+category: ["system"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: List users currently logged in to the system.
+syntax: "who"
+flags:
+  - flag: "-a"
+    description: Show all available information, a more detailed report.
+    example: "who -a"
+examples:
+  - description: See who's currently logged in
+    input: "who"
+    output: "alice    console  Jan  1 09:00\nbob      ttys001  Jan  1 10:15"
+shortcuts: []
+tips:
+  - "On a shared or remote server, who is the quick first check before doing anything disruptive — confirming whether anyone else is actively logged in."
+related: ["w", "whoami"]
+pitfalls:
+  - "who only shows logged-in sessions, not every user account that exists on the system — a quiet account with no active session simply won't appear."
+---
+
+`who` lists everyone currently logged in to the system, along with which terminal they're connected through and when their session started. It's most relevant on shared or remote machines, where more than one person might be logged in at the same time.
+
+The related but more detailed `w` command builds on the same information, adding what each user is currently doing — useful when "who's logged in" isn't quite enough and you also want "and what are they running."

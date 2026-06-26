@@ -1,0 +1,33 @@
+---
+slug: globbing
+title: Globbing
+category: expansions-and-substitution
+difficulty: beginner
+summary: Match multiple filenames using wildcard patterns like * and ?, expanded by the shell before a command ever runs.
+examples:
+  - description: Match every .txt file in the current directory
+    input: "ls *.txt"
+    output: "notes.txt\nreport.txt"
+  - description: "? matches exactly one character"
+    input: "ls file?.txt"
+    output: "file1.txt\nfile2.txt"
+tips:
+  - "Globbing is performed entirely by the shell before the command even runs — ls *.txt doesn't ask ls to find .txt files, the shell expands *.txt into a literal list of matching filenames first, and ls just receives that list as arguments."
+pitfalls:
+  - "If a glob pattern matches nothing, most shells pass the literal pattern text through unchanged (e.g. ls *.csv with no .csv files runs ls against the string \"*.csv\" itself, usually producing a 'No such file' error) rather than an empty result — a frequent source of confusing script bugs."
+funFacts:
+  - "The word \"glob\" comes from /etc/glob, a standalone program in very early Unix that expanded wildcards before passing arguments along — it was later folded directly into the shell itself rather than staying a separate utility."
+relatedConcepts:
+  [
+    "quoting",
+    "parameter-expansion",
+    "brace-expansion",
+    "expansion-order",
+    "extended-glob-patterns",
+  ]
+relatedCommands: ["ls", "find", "rm"]
+---
+
+Globbing is wildcard pattern matching against filenames: `*` matches any number of characters, `?` matches exactly one, and `[abc]` matches any single character in that set. Crucially, this expansion happens entirely inside the shell *before* the command runs — `rm *.log` doesn't tell `rm` about a wildcard, the shell first expands `*.log` into the literal list of matching filenames in the current directory, and `rm` simply receives that already-expanded list as its arguments.
+
+This matters most when a pattern matches nothing: rather than disappearing, an unmatched glob is typically passed through to the command as the literal pattern text, which often produces a confusing "no such file" error referencing the wildcard itself. It's also why globbing is conceptually distinct from regular expressions used by tools like `grep` — they look superficially similar but follow different, much simpler matching rules.

@@ -1,0 +1,49 @@
+---
+slug: cat
+name: cat
+category: ["text-processing"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Print the contents of one or more files to the terminal.
+syntax: "cat [OPTIONS] FILE..."
+flags:
+  - flag: "-n"
+    description: Number every output line.
+    example: "cat -n app.log"
+  - flag: "-A"
+    description: Show non-printing characters (tabs, line endings) explicitly.
+    example: "cat -A config.txt"
+examples:
+  - description: Print a file straight to the terminal
+    input: "cat README.md"
+    output: "# Learn Shell\n\nAn interactive catalogue..."
+  - description: Combine multiple files into one
+    input: "cat part1.txt part2.txt > combined.txt"
+    output: ""
+shortcuts: []
+tips:
+  - "For files longer than one screen, pipe into less instead: cat file.txt | less (or just less file.txt directly) so you can scroll instead of having output fly past."
+  - "cat -n is a quick way to add line numbers when you need to reference a specific line to someone, without permanently editing the file."
+related: ["head", "tail", "grep"]
+pitfalls:
+  - "Printing a very large file with cat floods your terminal with scrollback — for big files, less or head/tail are better tools."
+  - "cat is sometimes reached for where a more targeted command would answer the actual question faster (e.g. cat file | grep x instead of just grep x file) — jokingly known as a 'useless use of cat'."
+---
+
+`cat` ("concatenate") is one of the very first commands most people
+learn, and it does exactly what it sounds like: it dumps a file's
+contents straight to your terminal, from start to end, with no
+pagination or scrolling controls of its own.
+
+Its real purpose, though, is hinted at by its name. Give `cat` more
+than one file and it prints them one after another as a single
+continuous stream — which is exactly what you want when joining files
+together: `cat part1.txt part2.txt > combined.txt` merges two files
+into a third in one step, with the `>` redirecting the combined output
+into a new file instead of your screen.
+
+For just reading a single file, `cat` is fine for short files, but it
+has no way to scroll back once text has flown past — that's what `less`
+is for. A useful mental rule: reach for `cat` when you want to *use* a
+file's contents (print it, combine it, pipe it elsewhere), and `less`
+when you want to *read* it.

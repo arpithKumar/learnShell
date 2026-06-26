@@ -1,0 +1,24 @@
+---
+slug: vmstat
+name: vmstat
+category: ["system"]
+difficulty: advanced
+shells: ["bash", "zsh"]
+summary: Report system-wide memory, CPU, and process activity in a compact, repeating snapshot.
+syntax: "vmstat [INTERVAL] [COUNT]"
+flags: []
+examples:
+  - description: Refresh stats every 2 seconds, 5 times
+    input: "vmstat 2 5"
+    output: "procs -----memory---- ---swap-- -----io---- -system-- ------cpu-----\n r  b   swpd   free  buff  cache"
+shortcuts: []
+tips:
+  - "The first line of vmstat's output is often an average since boot, not a current snapshot — when watching for live changes, pay attention from the second line onward."
+related: ["top", "free", "iostat"]
+pitfalls:
+  - "vmstat's column meanings (especially under memory and io) take some learning to read correctly — it rewards familiarity but isn't immediately self-explanatory the way top's display is."
+---
+
+`vmstat` ("virtual memory statistics") prints a compact summary of system activity — processes waiting for CPU, memory usage, swap activity, disk I/O — repeating at a fixed interval if you ask it to. It's denser and more script-friendly than `top`, designed for quickly spotting whether a system is CPU-bound, memory-bound, or I/O-bound.
+
+Running `vmstat 2 5` prints five snapshots, two seconds apart, which is enough to see whether numbers are trending up, down, or holding steady — useful for diagnosing a performance problem in progress rather than relying on a single static reading.

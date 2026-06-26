@@ -1,0 +1,23 @@
+---
+slug: nameref-variables
+title: Nameref Variables
+category: fundamentals
+difficulty: advanced
+summary: A variable that's really a reference to another variable's name, giving shell functions something close to pass-by-reference.
+examples:
+  - description: A function that modifies a caller's variable through a nameref parameter
+    input: 'add_one() { declare -n ref=$1; ref=$((ref + 1)); }; x=5; add_one x; echo "$x"'
+    output: "6"
+tips:
+  - "Nameref parameters are the standard way to write a function that needs to modify a variable the caller passed in by name, rather than just returning one value via echo and command substitution."
+pitfalls:
+  - "Inside the function, the local nameref variable shadows whatever real variable shares its name in the caller's scope — naming the nameref parameter itself the same as a variable you're passing in (declare -n x=x) creates a circular reference that errors out."
+funFacts:
+  - "nameref (declare -n) is a relatively recent bash addition, arriving in bash 4.3 (2014) — for the two decades before that, shell functions had no built-in pass-by-reference mechanism at all, only output-via-echo or global variables."
+relatedConcepts: ["variables", "variable-indirection", "functions"]
+relatedCommands: ["declare"]
+---
+
+`declare -n ref=varname` makes `ref` a nameref: a variable that, instead of holding a value directly, points at another variable by name — reading or writing `ref` actually reads or writes whatever variable it's bound to. Inside a function, this is the closest bash comes to pass-by-reference, letting a function genuinely modify a variable that belongs to its caller, rather than only being able to report a value back via `echo` and command substitution.
+
+This is most useful for utility functions meant to update an existing variable in place — `add_one x` modifying `x` directly, instead of forcing every call site to write `x=$(add_one "$x")`. It's a comparatively recent bash feature (4.3, 2014), and like several other newer conveniences, it has no equivalent at all in strict POSIX `sh`.

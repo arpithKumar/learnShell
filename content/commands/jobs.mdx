@@ -1,0 +1,44 @@
+---
+slug: jobs
+name: jobs
+category: ["process-system"]
+difficulty: intermediate
+shells: ["bash", "zsh", "fish"]
+summary: List background and stopped jobs started from the current shell session.
+syntax: "jobs [OPTIONS]"
+flags:
+  - flag: "-l"
+    description: Include each job's process ID (PID) in the listing.
+    example: "jobs -l"
+examples:
+  - description: See what's running in the background of this session
+    input: "jobs"
+    output: "[1]+  Running    npm run dev &"
+  - description: Include PIDs in the listing
+    input: "jobs -l"
+    output: "[1]+ 4821  Running    npm run dev &"
+shortcuts: []
+tips:
+  - "The %1, %2 job numbers shown by jobs are exactly what bg and fg expect as their argument — you don't need to look up a PID for those two commands specifically."
+  - "A '+' next to a job in the listing marks it as the default 'current' job that bg or fg will act on if you don't specify a number."
+related: ["bg", "fg", "kill"]
+pitfalls:
+  - "jobs only shows processes started from the current shell session — it won't list a background process you started in a different terminal tab or window, even on the same machine."
+---
+
+When you start a command with `&` at the end, like `npm run dev &`, it
+runs in the background and your shell hands the prompt right back to
+you instead of waiting for it to finish. `jobs` lists every background
+or paused process tied to your current shell session, each tagged with
+a small reference number.
+
+That number — shown as `[1]`, `[2]`, and so on — is the same identifier
+`bg` and `fg` use to refer back to a specific job, written as `%1`,
+`%2`. So a typical sequence looks like: start something in the
+background, check `jobs` to confirm it's running and see its number,
+then later use `fg %1` to bring it back to the foreground if you need
+to interact with it directly.
+
+Job tracking is local to one shell session — close that terminal tab,
+and its job list goes with it (the process itself may or may not
+survive, depending on whether it was started with `nohup` or similar).

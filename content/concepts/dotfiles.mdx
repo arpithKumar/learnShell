@@ -1,0 +1,33 @@
+---
+slug: dotfiles
+title: Dotfiles & Startup Files
+category: shell-environment
+difficulty: intermediate
+summary: The hidden config files a shell reads automatically when it starts, depending on whether it's a login or interactive session.
+examples:
+  - description: A typical .bashrc snippet, run on every new interactive shell
+    input: "alias ll='ls -la'\nexport PATH=\"$HOME/bin:$PATH\""
+    output: ""
+tips:
+  - "If a change to .bashrc or .zshrc doesn't seem to take effect, the most common cause is that you edited the file but didn't reload it — run source ~/.bashrc (or open a brand-new terminal) rather than expecting an already-running shell to notice the edit."
+pitfalls:
+  - "Login shells and non-login interactive shells read different startup files by convention (.bash_profile/.profile vs .bashrc) — settings placed in the wrong one can silently not apply depending on how a particular terminal or session was started."
+funFacts:
+  - "The leading dot that hides these files from a plain ls listing isn't special syntax — it's just a Unix-wide convention that ls (and most file managers) happen to respect by default, going all the way back to early Unix."
+relatedConcepts:
+  [
+    "shell-options",
+    "variables",
+    "aliases",
+    "environment-variables",
+    "login-vs-interactive-shells",
+    "prompt-customization",
+    "system-wide-vs-user-config",
+    "restricted-shells",
+  ]
+relatedCommands: ["export", "alias", "source"]
+---
+
+Dotfiles are the hidden configuration files (`.bashrc`, `.zshrc`, `.bash_profile`, `.profile`) a shell reads automatically when it starts, used to set up aliases, environment variables, and prompt customization before you ever type a command. Which file gets read depends on the kind of shell session: a "login shell" (the first shell after logging in, or one started with `--login`) reads `.bash_profile`/`.profile`, while an ordinary interactive shell opened afterward (a new terminal tab, for instance) reads `.bashrc`.
+
+This login-vs-non-login distinction is a frequent source of confusion — a setting placed in the wrong file might work in some terminals and silently not apply in others, depending on how each one happens to start its shell. Editing a dotfile also doesn't affect any shell session already running; you need to `source` the file again or open a new session for the change to take effect.

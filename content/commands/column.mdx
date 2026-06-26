@@ -1,0 +1,30 @@
+---
+slug: column
+name: column
+category: ["text-processing"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Format text into neatly aligned columns.
+syntax: "column [OPTIONS] [FILE]"
+flags:
+  - flag: "-t"
+    description: Auto-detect columns and align them as a table.
+    example: "column -t data.txt"
+  - flag: "-s"
+    description: Set the input field separator (used with -t).
+    example: "column -t -s ',' data.csv"
+examples:
+  - description: Align space-separated data into a readable table
+    input: "column -t data.txt"
+    output: "NAME   AGE  CITY\nAlice  29   Boston\nBob    34   Austin"
+shortcuts: []
+tips:
+  - "column -t -s ',' is a quick way to preview a CSV file as an aligned table directly in the terminal, without opening a spreadsheet."
+related: ["cut", "paste"]
+pitfalls:
+  - "column needs -t to actually treat input as table data — without it, it just rearranges words into a multi-column layout rather than aligning fields, which isn't usually what you want."
+---
+
+`column` takes input with consistent fields — whitespace or a custom delimiter — and reformats it into a neatly aligned table, padding each column to match the widest value. It turns raw, unevenly-spaced text into something genuinely readable at a glance.
+
+The flag to remember is `-t`, which tells `column` to treat the input as table data rather than just flowing words into a multi-column page layout (its default, less useful behavior). Paired with `-s` to set a custom separator, `column -t -s ','` is a fast way to sanity-check a CSV file's structure directly in the terminal.

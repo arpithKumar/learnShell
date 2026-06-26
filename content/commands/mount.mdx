@@ -1,0 +1,33 @@
+---
+slug: mount
+name: mount
+category: ["system"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Attach a filesystem (a drive, partition, or network share) to a directory.
+syntax: "mount [OPTIONS] DEVICE MOUNTPOINT"
+flags:
+  - flag: "-t"
+    description: Specify the filesystem type explicitly.
+    example: "mount -t nfs server:/share /mnt/share"
+  - flag: "-o"
+    description: Pass mount options, like read-only.
+    example: "mount -o ro /dev/sdb1 /mnt/usb"
+examples:
+  - description: See every currently mounted filesystem
+    input: "mount"
+    output: "/dev/disk1s1 on / (apfs, local, journaled)"
+  - description: Mount a specific device to a directory
+    input: "mount /dev/sdb1 /mnt/usb"
+    output: ""
+shortcuts: []
+tips:
+  - "Run mount with no arguments to list every currently mounted filesystem — that's often the actual reason people reach for it, rather than mounting something new."
+related: ["df", "umount"]
+pitfalls:
+  - "The mount point directory must already exist before mounting into it — mount won't create it for you, and mounting onto a non-empty directory hides its existing contents until you unmount."
+---
+
+`mount` attaches a filesystem — a disk partition, a USB drive, a network share — to a specific directory, making its contents accessible at that path. Modern desktop operating systems handle most everyday mounting automatically (plugging in a USB drive just works), so `mount` tends to come up more for network shares, unusual filesystems, or server administration.
+
+Run with no arguments at all, `mount` lists every filesystem currently mounted on the system, which is a genuinely common reason to run it — checking what's attached and where, rather than attaching something new. When mounting manually, the target directory needs to already exist, and anything already inside it becomes temporarily inaccessible (not deleted, just hidden) until the filesystem is unmounted again with `umount`.

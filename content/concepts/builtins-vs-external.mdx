@@ -1,0 +1,23 @@
+---
+slug: builtins-vs-external
+title: Builtins vs External Commands
+category: shell-environment
+difficulty: intermediate
+summary: Some commands (cd, echo, test) are compiled directly into the shell itself; others (grep, ls, curl) are separate programs the shell finds and launches.
+examples:
+  - description: Check whether a command is a shell builtin or a separate program
+    input: "type cd\ntype grep"
+    output: "cd is a shell builtin\ngrep is /usr/bin/grep"
+tips:
+  - "cd has to be a builtin — a separate external program could change ITS OWN current directory, but it could never change the directory of the shell that launched it, since a child process can't modify its parent's state."
+pitfalls:
+  - "Some commands exist as both a builtin and a separate external program with the same name (echo is a classic example) — they can behave subtly differently, and type tells you which one your shell will actually run by default."
+funFacts:
+  - "Builtins run with zero process-creation overhead since there's no separate program to launch — it's part of why heavily builtin-based scripts (using [[ ]] instead of calling out to test, for instance) can be noticeably faster in tight loops."
+relatedConcepts: ["aliases", "functions", "command-hashing"]
+relatedCommands: ["type", "which"]
+---
+
+A shell builtin is a command implemented directly inside the shell's own code — `cd`, `echo`, `test`, `read`, and `export` are all builtins in bash. An external command, by contrast, is a separate executable file the shell locates via `$PATH` and launches as its own new process — `grep`, `ls`, and `curl` all work this way.
+
+Some commands genuinely have to be builtins to work at all: `cd` changes the shell's own current directory, and a separate child process could never do that to its parent, only to itself. `type command` is the standard way to check which kind something is — useful since a few commands, like `echo`, exist as both a builtin and a separate program with the same name, and they can behave slightly differently depending on which one actually runs.

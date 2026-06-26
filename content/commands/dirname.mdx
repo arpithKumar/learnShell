@@ -1,0 +1,24 @@
+---
+slug: dirname
+name: dirname
+category: ["filesystem", "scripting"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Strip the filename from a path, leaving just the directory portion.
+syntax: "dirname PATH"
+flags: []
+examples:
+  - description: Get just the directory containing a file
+    input: "dirname /Users/you/projects/notes.txt"
+    output: "/Users/you/projects"
+shortcuts: []
+tips:
+  - "dirname and basename are a natural pair — together they split a full path into its directory and filename components, which scripts often need to handle separately."
+related: ["basename", "realpath"]
+pitfalls:
+  - "dirname only operates on the text of the path — it doesn't verify the directory actually exists, the same caveat that applies to basename."
+---
+
+`dirname` is `basename`'s complement: instead of returning the filename, it returns everything *except* the filename — the directory the file lives in. `dirname /a/b/c.txt` returns `/a/b`.
+
+The two are frequently used together inside scripts that need to work with both pieces of a path separately — moving a file relative to its own directory, for instance, or constructing a new path alongside an existing one. Like `basename`, it's a purely textual operation with no awareness of whether the path actually exists on disk.

@@ -1,0 +1,66 @@
+---
+slug: grep
+name: grep
+category: ["text-processing", "search"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Search text using patterns and print matching lines.
+syntax: "grep [OPTIONS] PATTERN [FILE...]"
+flags:
+  - flag: "-i"
+    description: Ignore case when matching.
+    example: "grep -i error log.txt"
+  - flag: "-r"
+    description: Recursively search directories.
+    example: "grep -r TODO ./src"
+  - flag: "-n"
+    description: Print line numbers with matches.
+    example: "grep -n main app.c"
+  - flag: "-v"
+    description: Invert match — print non-matching lines.
+    example: "grep -v DEBUG app.log"
+  - flag: "-E"
+    description: Use extended regular expressions.
+    example: "grep -E '[0-9]+' file.txt"
+  - flag: "-c"
+    description: Print only a count of matching lines.
+    example: "grep -c error app.log"
+examples:
+  - description: Find all lines containing "error", case-insensitive
+    input: "grep -i error app.log"
+    output: "2024-01-01 ERROR: disk full"
+  - description: Recursively find TODOs in source code
+    input: "grep -rn TODO ./src"
+    output: "src/index.ts:42:// TODO: handle edge case"
+shortcuts: []
+tips:
+  - "grep -i ignores case, which is usually what you want when searching human-written log messages or comments."
+  - "Combine -r (recursive) with -l to list just the filenames containing a match, instead of printing every matching line — useful when you only care which files are affected."
+  - "For more complex patterns, -E (extended regex) lets you use +, ?, and | without backslash-escaping them, which is closer to the regex syntax most people already know from other languages."
+related: ["find", "sed", "awk"]
+pitfalls:
+  - "Forgetting to quote the pattern can let the shell glob-expand it unexpectedly before grep ever sees it — always quote patterns that contain special characters."
+  - "grep is line-oriented — it can't natively match a pattern that spans multiple lines without extra flags like -z, or a different tool like pcregrep."
+---
+
+`grep` (Global Regular Expression Print) scans its input line by line
+and prints whichever lines match a given pattern. It's one of the most
+heavily used Unix utilities in existence, and for many people it's the
+very first regular-expression tool they ever learn, since the basic
+case — `grep "word" file.txt` — needs no regex knowledge at all to be
+immediately useful.
+
+Three flags turn plain `grep` into something you'll reach for
+constantly: `-i` for case-insensitive matching, `-n` to show line
+numbers alongside each result, and `-r` to search an entire folder
+recursively instead of one file. `grep -rn "TODO" ./src` is a genuinely
+common way to survey a codebase for outstanding work.
+
+Beyond literal text, `grep` understands regular expressions, which let
+you match patterns rather than exact strings — digits, optional
+characters, alternatives. The `-E` flag enables "extended" regex syntax,
+which is closer to what you'd see in most programming languages and
+avoids having to escape characters like `+` and `?` with backslashes.
+`grep` is also frequently the first half of a longer pipeline — finding
+candidate lines that get fed into `sed`, `awk`, or `cut` for further
+processing.

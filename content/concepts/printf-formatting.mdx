@@ -1,0 +1,29 @@
+---
+slug: printf-formatting
+title: Printf Formatting
+category: expansions-and-substitution
+difficulty: intermediate
+summary: Format output precisely using % specifiers, the same conventions C and many other languages use for printf.
+examples:
+  - description: Pad a number to a fixed width with leading zeros
+    input: 'printf "%03d\n" 7'
+    output: "007"
+  - description: Format a floating-point number to two decimal places
+    input: 'printf "%.2f\n" 3.14159'
+    output: "3.14"
+  - description: Combine multiple specifiers in one format string
+    input: 'printf "%-10s %5d\n" "apples" 42'
+    output: "apples        42"
+tips:
+  - "printf recycles its format string if given more arguments than the format string has specifiers — printf \"%s\\n\" a b c prints each of a, b, c on its own line from a single call, which is a handy shortcut for simple list printing."
+pitfalls:
+  - "echo's behavior around escape sequences and trailing newlines varies subtly between shells and options (-e, -n) — printf is the more predictable, portable choice whenever exact output formatting actually matters."
+funFacts:
+  - "printf's format-specifier syntax is deliberately the same as C's printf function — it was designed that way specifically so the conventions (%d, %s, %.2f) would already be familiar to anyone who'd written C."
+relatedConcepts: ["string-manipulation", "ansi-c-quoting"]
+relatedCommands: ["printf", "echo"]
+---
+
+`printf` formats output using `%` specifiers borrowed directly from C's `printf` function: `%s` for a string, `%d` for an integer, `%f` for a floating-point number, with optional width and precision modifiers like `%03d` (zero-padded to 3 digits) or `%.2f` (2 decimal places). This gives far more precise control over output formatting than `echo`, which has no concept of padding, alignment, or fixed decimal precision at all.
+
+A less obvious feature: if you supply more arguments than the format string has specifiers for, `printf` cycles back to the start of the format string and keeps consuming arguments — `printf "%s\n" a b c` prints all three on separate lines from one call. Because `echo`'s exact behavior (escape sequences, trailing newline handling) varies subtly between shells and even shell options, `printf` is generally the safer, more portable choice whenever output formatting needs to be exact.

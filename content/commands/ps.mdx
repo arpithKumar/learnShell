@@ -1,0 +1,47 @@
+---
+slug: ps
+name: ps
+category: ["process-system"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: List currently running processes.
+syntax: "ps [OPTIONS]"
+flags:
+  - flag: "aux"
+    description: Show every process from every user, with detailed info (a very common combo, not individual flags).
+    example: "ps aux"
+  - flag: "-ef"
+    description: A POSIX-style equivalent to aux, showing all processes in full format.
+    example: "ps -ef"
+examples:
+  - description: See every running process with details
+    input: "ps aux"
+    output: "USER  PID  %CPU  %MEM  COMMAND\nyou   501  0.2   1.1   node server.js"
+  - description: Find a specific process by name
+    input: "ps aux | grep node"
+    output: "you   501  0.2   1.1   node server.js"
+shortcuts: []
+tips:
+  - "pgrep is a more direct alternative to 'ps aux | grep' when all you need is a PID for a process by name — it skips the extra grep step entirely."
+  - "ps aux's CPU and memory columns are an instantaneous snapshot, not a trend — for watching usage change over time, use top instead."
+related: ["kill", "top", "jobs"]
+pitfalls:
+  - "ps shows a single snapshot at the moment you run it, not a live, continuously updating view — if you need that, reach for top or htop instead."
+---
+
+`ps` ("process status") lists what's currently running on your system
+right now, including each process's ID (its PID) — information you'll
+need any time you want to stop, inspect, or otherwise interact with
+that specific process later, often with `kill`.
+
+The combination almost everyone learns is `ps aux | grep SOMETHING`:
+list every process from every user, in detailed form, then filter that
+list down to lines matching a name you're looking for. It's a quick
+way to answer "is this program actually running, and what's its PID?"
+without needing a graphical task manager.
+
+Because `ps` only captures a single moment in time, it's a poor fit for
+watching resource usage change — a process that's idle right now might
+spike a second later, and `ps` alone won't show you that. For ongoing
+monitoring, `top` (or a more modern equivalent like `htop`) gives you
+the same kind of information, but continuously refreshed.

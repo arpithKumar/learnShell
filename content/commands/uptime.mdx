@@ -1,0 +1,27 @@
+---
+slug: uptime
+name: uptime
+category: ["system"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Show how long the system has been running, plus current load averages.
+syntax: "uptime"
+flags:
+  - flag: "-p"
+    description: Print just the uptime duration, in a plain "up X hours, Y minutes" format.
+    example: "uptime -p"
+examples:
+  - description: See how long the system has been up, and the current load
+    input: "uptime"
+    output: "14:32  up 3 days, 2:14, 2 users, load averages: 1.84 1.92 2.05"
+shortcuts: []
+tips:
+  - "The three load average numbers represent the 1, 5, and 15-minute averages — comparing them tells you whether load is rising, falling, or steady right now."
+related: ["top", "free"]
+pitfalls:
+  - "A load average needs context to interpret — a load of 4 means something very different on a 2-core machine versus a 32-core server, since it roughly represents how many processes are competing for CPU time."
+---
+
+`uptime` answers two questions in one short line: how long has this machine been running since its last reboot, and how busy is it right now, expressed as load averages over the last 1, 5, and 15 minutes.
+
+A long uptime is a quick sanity check that a server hasn't unexpectedly restarted. The load averages take a bit more context to read — they roughly indicate how many processes are competing for the CPU at once, so what counts as "high" depends entirely on how many CPU cores the machine actually has.

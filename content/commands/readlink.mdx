@@ -1,0 +1,30 @@
+---
+slug: readlink
+name: readlink
+category: ["filesystem"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Print the target a symbolic link actually points to.
+syntax: "readlink [OPTIONS] LINK"
+flags:
+  - flag: "-f"
+    description: Resolve the link fully to its final absolute, canonical path.
+    example: "readlink -f shortcut"
+examples:
+  - description: See exactly what a symlink points to
+    input: "readlink shortcut"
+    output: "/Users/you/projects/learn-shell"
+  - description: Resolve it to a guaranteed absolute path
+    input: "readlink -f shortcut"
+    output: "/Users/you/projects/learn-shell"
+shortcuts: []
+tips:
+  - "readlink -f and realpath solve overlapping problems — readlink is specifically about resolving a symlink, while realpath resolves any path (symlink or not) to its canonical absolute form."
+related: ["ln", "realpath"]
+pitfalls:
+  - "Running readlink on something that isn't actually a symlink (a regular file or directory) produces no useful output or an error, depending on the system — it's specifically for inspecting links, not general path resolution."
+---
+
+`readlink` prints the actual target a symbolic link points to — useful for confirming exactly where a shortcut leads, especially when `ls -l`'s inline display of the same information is part of a longer line you'd rather parse cleanly in a script.
+
+With `-f`, it goes a step further and resolves the link all the way down to a final, absolute, canonical path — even through a chain of multiple symlinks pointing to each other. For that same "give me the canonical absolute path" need on paths that aren't necessarily symlinks at all, `realpath` is the more general tool.

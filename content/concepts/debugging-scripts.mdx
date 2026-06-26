@@ -1,0 +1,26 @@
+---
+slug: debugging-scripts
+title: Debugging Scripts
+category: shell-environment
+difficulty: intermediate
+summary: See exactly what a script is actually doing — every command it runs, after expansion — using set -x and a few related tools.
+examples:
+  - description: Print every command before it runs
+    input: "set -x\nname=\"Alice\"\necho \"Hi, $name\""
+    output: "+ name=Alice\n+ echo 'Hi, Alice'\nHi, Alice"
+  - description: Run a one-off script with tracing, without editing it
+    input: "bash -x myscript.sh"
+    output: ""
+tips:
+  - "PS4 controls the prefix shown before each traced line in set -x output (+ by default) — setting PS4='+ $LINENO: ' adds the line number to every traced command, which makes tracking down where things went wrong much faster in a longer script."
+pitfalls:
+  - "set -x output goes to stderr, not stdout — if you've redirected a script's stdout to a file to inspect it later, the trace output won't be in that file unless you also redirect stderr (2>&1) or specifically capture it."
+funFacts:
+  - "The + prefix on each traced line isn't arbitrary — it directly reflects the script's current subshell nesting depth, so deeply nested function calls or subshells show up with multiple ++++ in front during a trace."
+relatedConcepts: ["shell-options", "error-trap"]
+relatedCommands: ["trap"]
+---
+
+`set -x` turns on command tracing: the shell prints every command it's about to run, after all expansions (variables, globs, command substitution) have already happened, prefixed with `+`. This is the single most useful debugging tool in shell scripting, since it shows you what the script is *actually* executing rather than what you assumed the source code would produce.
+
+`bash -x script.sh` applies the same tracing to a whole script run from the outside, without needing to edit the script to add `set -x` (and a matching `set +x` to turn it back off) internally. Customizing `PS4` (the prefix shown on each traced line, `+` by default) to include `$LINENO` is a small but genuinely useful addition for finding exactly where in a longer script something unexpected happened.

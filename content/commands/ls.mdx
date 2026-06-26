@@ -1,0 +1,59 @@
+---
+slug: ls
+name: ls
+category: ["filesystem"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: List directory contents.
+syntax: "ls [OPTIONS] [FILE...]"
+flags:
+  - flag: "-l"
+    description: Use long listing format (permissions, owner, size, date).
+    example: "ls -l /etc"
+  - flag: "-a"
+    description: Show hidden files (those starting with a dot).
+    example: "ls -a ~"
+  - flag: "-h"
+    description: Print sizes in human-readable form (with -l).
+    example: "ls -lh /var/log"
+  - flag: "-t"
+    description: Sort by modification time, newest first.
+    example: "ls -lt ./downloads"
+  - flag: "-R"
+    description: List subdirectories recursively.
+    example: "ls -R ./src"
+examples:
+  - description: Long listing of hidden and visible files with readable sizes
+    input: "ls -lah"
+    output: "drwxr-xr-x  5 user  staff   160B Jan  1 09:00 ."
+  - description: Most recently modified files first
+    input: "ls -lt"
+    output: "-rw-r--r--  1 user  staff  1.2K Jan  2 10:00 notes.txt"
+shortcuts: []
+tips:
+  - "ls -la is the single most common combination — list everything, including hidden dotfiles, in detailed (-l) form."
+  - "ls -lt is the fastest way to answer 'what did I just change?' — it sorts by modification time, newest first."
+  - "Most shells' default ls already colors files and folders differently; if yours doesn't, look for a --color or color.ui setting to turn that on."
+related: ["find", "tree", "du"]
+pitfalls:
+  - "ls -l shows apparent file size, not actual disk usage — use du if you need to know real disk consumption."
+  - "Aliasing ls (e.g. alias ls='ls --color') can break scripts that try to parse its output — never rely on ls's output format programmatically; use find or stat instead for scripting."
+---
+
+`ls` is usually the very first command anyone runs in a new directory,
+and for good reason: it lists what's there. On its own it just prints
+filenames, which is fine for a quick glance, but the real value shows
+up once you start combining flags.
+
+`-a` reveals "hidden" files — anything whose name starts with a dot,
+like `.gitignore` or `.env`, which `ls` otherwise omits to keep
+everyday listings clean. `-l` switches to a detailed, one-file-per-line
+format showing permissions, owner, size, and modification date. Add
+`-h` alongside `-l` to make those sizes human-readable (so you see "1.2K"
+instead of "1234"), since raw byte counts are slow to parse mentally.
+
+Put together, `ls -lah` is close to a universal habit among shell
+users: everything, in detail, with readable sizes. `ls -lt` is the
+other combination worth knowing early — it sorts by modification time
+instead of name, which makes "what did I just touch" instantly visible
+at the top of the list.

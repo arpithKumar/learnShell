@@ -1,0 +1,30 @@
+---
+slug: nl
+name: nl
+category: ["text-processing"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Number the lines of a file.
+syntax: "nl [OPTIONS] [FILE]"
+flags:
+  - flag: "-b"
+    description: "Set which lines to number: 'a' for all, 't' for non-empty only (default)."
+    example: "nl -b a file.txt"
+  - flag: "-s"
+    description: Set the separator between the line number and the text.
+    example: "nl -s ': ' file.txt"
+examples:
+  - description: Number every non-empty line of a file
+    input: "nl file.txt"
+    output: "     1\tfirst line\n     2\tsecond line"
+shortcuts: []
+tips:
+  - "cat -n does the same basic job with less configurability — nl is worth reaching for specifically when you need control over numbering style, like skipping blank lines or changing the separator."
+related: ["cat", "wc"]
+pitfalls:
+  - "By default nl skips numbering blank lines — if you need every single line numbered including empty ones, pass -b a explicitly."
+---
+
+`nl` adds line numbers to a file's output, similar to `cat -n` but with more control over exactly how numbering works — which lines get numbered, what separator appears between the number and the text, and how the numbers are formatted.
+
+For the common case of "just number every line," `cat -n` is simpler to type. `nl` earns its place when you need something `cat -n` can't do, like skipping blank lines (its actual default behavior) or customizing the separator with `-s`.

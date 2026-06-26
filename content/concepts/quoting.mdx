@@ -1,0 +1,31 @@
+---
+slug: quoting
+title: Quoting
+category: fundamentals
+difficulty: beginner
+summary: Control how the shell treats spaces, special characters, and variable expansion in a string.
+examples:
+  - description: Double quotes still expand variables
+    input: 'name="Alice"; echo "Hi $name"'
+    output: "Hi Alice"
+  - description: Single quotes expand nothing at all
+    input: "name=\"Alice\"; echo 'Hi $name'"
+    output: "Hi $name"
+  - description: Unquoted variables holding spaces split into separate words
+    input: 'f="my file.txt"; touch $f'
+    output: "touch: my: No such file or directory\ntouch: file.txt: No such file or directory"
+tips:
+  - "A simple rule of thumb: use double quotes by default for anything holding a variable or filename, and reach for single quotes specifically when you want the text to stay completely literal (like a regex pattern passed to grep)."
+pitfalls:
+  - "Leaving a variable unquoted is the single most common shell scripting bug — if the value contains a space, the shell splits it into multiple words/arguments, which silently breaks commands like touch, rm, or cp on filenames with spaces in them."
+  - "Single and double quotes behave very differently — single quotes suppress all expansion, including variables and command substitution, while double quotes still expand $variable and $(command) but suppress word-splitting and globbing."
+funFacts:
+  - "Single quotes can't contain a literal single quote at all, even with a backslash in front of it — the classic workaround closes the quoted string, inserts one escaped literal quote, then immediately reopens a new quoted string."
+relatedConcepts:
+  ["variables", "parameter-expansion", "globbing", "ansi-c-quoting", "word-splitting"]
+relatedCommands: ["echo", "printf", "eval"]
+---
+
+Quoting tells the shell how literally to treat a piece of text. Without quotes, the shell applies word-splitting (breaking on spaces) and globbing (expanding `*` and similar wildcards) to whatever you type, which is rarely what you actually want once a value can contain spaces or special characters.
+
+Double quotes (`"..."`) suppress word-splitting and globbing but still allow `$variable` and `$(command)` expansion inside the string — the safe, usual choice. Single quotes (`'...'`) suppress everything, including variable expansion, making the text completely literal — useful for things like a regex pattern you don't want the shell touching before it reaches `grep` or `sed`. Forgetting to quote a variable that might contain a space is the single most common way a working-looking script breaks on real-world input.

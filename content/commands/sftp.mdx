@@ -1,0 +1,27 @@
+---
+slug: sftp
+name: sftp
+category: ["networking"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Transfer files over an interactive, secure session — like FTP, but encrypted over SSH.
+syntax: "sftp USER@HOST"
+flags: []
+examples:
+  - description: Start an interactive secure file transfer session
+    input: "sftp alice@example.com"
+    output: "Connected to example.com.\nsftp>"
+  - description: Inside an sftp session, download a file
+    input: "get report.pdf"
+    output: ""
+shortcuts: []
+tips:
+  - "Inside an sftp session, the commands feel like a simplified shell — ls, cd, get (download), and put (upload) cover most of what you'll actually do."
+related: ["ssh", "scp"]
+pitfalls:
+  - "sftp and scp solve a similar problem differently — scp is a single non-interactive command per transfer, while sftp opens an ongoing interactive session. For one-off copies, scp is usually quicker; for browsing around a remote filesystem first, sftp is more convenient."
+---
+
+`sftp` opens an interactive file transfer session over the same secure, encrypted connection `ssh` uses, letting you browse a remote filesystem and transfer files back and forth — the secure, modern successor to plain FTP, which transmits everything unencrypted.
+
+Once connected, it behaves like a small dedicated shell: `ls` and `cd` to navigate the remote filesystem, `get filename` to download, `put filename` to upload. For a single, scripted file copy, `scp` is usually faster to type; `sftp`'s interactive session earns its place when you want to look around a remote directory first before deciding what to transfer.

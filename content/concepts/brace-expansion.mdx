@@ -1,0 +1,26 @@
+---
+slug: brace-expansion
+title: Brace Expansion
+category: expansions-and-substitution
+difficulty: beginner
+summary: Generate multiple literal strings from one compact pattern, expanded entirely by the shell before anything runs.
+examples:
+  - description: Expand a numeric range
+    input: "echo file{1..3}.txt"
+    output: "file1.txt file2.txt file3.txt"
+  - description: Expand a comma-separated list of alternatives
+    input: "mkdir project/{src,tests,docs}"
+    output: ""
+tips:
+  - "Brace expansion happens before globbing and before the command even runs, and unlike globbing, it doesn't check whether anything actually matches on disk — {1..3} always expands to 1 2 3 regardless of what files exist."
+pitfalls:
+  - "Brace expansion is a bash/zsh extension, not POSIX sh — a script declared #!/bin/sh can't rely on {1..5} expanding at all, and on some systems it'll be passed through completely literally instead."
+funFacts:
+  - "Brace expansion was a csh feature originally — bash adopted (and extended) it specifically because so many users coming from csh missed it when they switched."
+relatedConcepts: ["globbing", "loops", "expansion-order"]
+relatedCommands: ["mkdir", "echo", "seq"]
+---
+
+Brace expansion generates multiple literal strings from one compact pattern — `{1..3}` becomes `1 2 3`, and `{a,b,c}` becomes `a b c` — entirely as a text-generation step, before the shell even considers globbing or running anything. `mkdir project/{src,tests,docs}` is a common real use: one command creating three sibling directories at once.
+
+It's easy to confuse with globbing since both use special characters to "expand" into multiple things, but they're conceptually different: globbing matches existing files on disk and produces nothing if there's no match, while brace expansion is pure text generation that doesn't look at the filesystem at all and always produces its full expansion. It's also a bash/zsh feature, not part of strict POSIX `sh`.

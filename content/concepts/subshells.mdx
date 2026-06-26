@@ -1,0 +1,26 @@
+---
+slug: subshells
+title: Subshells
+category: process-control
+difficulty: intermediate
+summary: A child copy of the current shell that runs commands in its own isolated environment.
+examples:
+  - description: Parentheses run a command list in a subshell
+    input: 'x=1; (x=2; echo "inside: $x"); echo "outside: $x"'
+    output: "inside: 2\noutside: 1"
+  - description: Command substitution also runs in a subshell
+    input: 'today=$(date +%A); echo "Today is $today"'
+    output: "Today is Wednesday"
+tips:
+  - "If a variable set inside a loop or block seems to silently reset/disappear afterward, check whether that block is part of a pipeline or command substitution — both implicitly create subshells, which is a frequent cause of this exact confusion."
+pitfalls:
+  - "Piping into a while loop (cmd | while read line; do ...; done) runs the loop in a subshell in most shells, so variables it sets are lost once the pipeline ends — process substitution (done < <(cmd)) avoids this by keeping the loop in the current shell."
+funFacts:
+  - "$(...) command substitution was standardized by POSIX specifically to replace backticks, which couldn't be nested without increasingly awkward backslash escaping — $(...) nests cleanly with no special handling needed."
+relatedConcepts: ["pipes", "job-control", "command-substitution"]
+relatedCommands: ["exec", "source", "jobs"]
+---
+
+A subshell is a separate child process that inherits a copy of the current shell's variables and working directory, but any changes it makes — to variables, `cd`, or anything else — don't propagate back to the parent shell once it exits. Wrapping a command list in parentheses, like `(cd /tmp && ls)`, explicitly runs it in a subshell, so the `cd` doesn't affect your actual current directory once the parentheses close.
+
+Command substitution (`$(...)`) and pipelines also run their components in subshells under most shells, which is exactly why a variable set inside a `while read line; do count=$((count+1)); done < file | cat` pipeline might mysteriously not be visible after the pipeline finishes — the loop ran in a subshell created for that pipeline stage, and its changes to `count` died with it. Recognizing "this ran in a subshell" is often the key to debugging a variable that "should" have changed but didn't.

@@ -1,0 +1,30 @@
+---
+slug: xxd
+name: xxd
+category: ["text-processing"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Show a file's raw bytes as a hex dump, alongside their character representation.
+syntax: "xxd [OPTIONS] FILE"
+flags:
+  - flag: "-l"
+    description: Limit output to the first N bytes.
+    example: "xxd -l 64 file.bin"
+  - flag: "-r"
+    description: Reverse the operation — convert a hex dump back into binary.
+    example: "xxd -r dump.hex file.bin"
+examples:
+  - description: View the raw bytes of a file's beginning
+    input: "xxd -l 32 file.bin"
+    output: "00000000: 8950 4e47 0d0a 1a0a 0000 000d 4948 4452  .PNG........IHDR"
+shortcuts: []
+tips:
+  - "The left column shows hex byte values, the right column shows the same bytes as ASCII where printable — comparing the two is how you spot a file's format signature (e.g. PNG files start with a recognizable byte pattern)."
+related: ["file", "od"]
+pitfalls:
+  - "Reading a raw hex dump usefully takes some practice — for most everyday 'what kind of file is this' questions, the higher-level file command gives a faster, plain-English answer."
+---
+
+`xxd` displays a file's exact raw bytes in hexadecimal, alongside the same bytes shown as ASCII characters wherever they're printable. It's a genuinely low-level tool, useful when you need to see precisely what's actually stored in a file rather than how some program chooses to interpret it.
+
+This level of detail matters when debugging binary file formats, inspecting the exact bytes of network data, or confirming a file's format signature — many file types start with a specific, recognizable sequence of bytes that `file` checks for automatically, but `xxd` lets you verify directly with your own eyes.

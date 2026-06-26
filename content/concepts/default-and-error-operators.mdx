@@ -1,0 +1,29 @@
+---
+slug: default-and-error-operators
+title: Default & Error Operators
+category: expansions-and-substitution
+difficulty: intermediate
+summary: A family of eight parameter-expansion operators (-, :-, =, :=, +, :+, ?, :?) for handling unset or empty variables, each with a subtly different rule.
+examples:
+  - description: ":- substitutes a default without changing the variable"
+    input: 'echo "${name:-Guest}"'
+    output: "Guest"
+  - description: ":= substitutes AND assigns the default"
+    input: 'echo "${name:=Guest}"; echo "$name"'
+    output: "Guest\nGuest"
+  - description: ":? errors out with a custom message if unset or empty"
+    input: 'echo "${API_KEY:?API_KEY must be set}"'
+    output: "bash: API_KEY: API_KEY must be set"
+tips:
+  - "Adding a colon (turning - into :-, = into :=, and so on) changes the trigger condition from \"only if unset\" to \"if unset OR empty\" — that colon is the entire difference between each pair, and it's easy to lose track of which variant you actually meant."
+pitfalls:
+  - "${var:?message} doesn't just print a message — it actually exits the script (or the function) with a nonzero status if the check fails, making it a real validation gate, not just a warning."
+funFacts:
+  - "All eight of these operators (-, :-, =, :=, +, :+, ?, :?) were already present in the original 1979 Bourne shell — they're some of the oldest still-unchanged syntax in any modern shell, predating even functions and arrays."
+relatedConcepts: ["parameter-expansion", "variables", "exit-status"]
+relatedCommands: ["test"]
+---
+
+Beyond the commonly-used `${var:-default}`, parameter expansion has a small family of related operators for handling unset or empty variables, each answering a slightly different question. `-` and `:-` substitute a fallback value without changing the variable; `=` and `:=` do the same but also assign that fallback back into the variable; `+` and `:+` invert the logic, substituting a value only when the variable *is* set (or non-empty); and `?` and `:?` exit with an error message when the variable isn't set (or is empty).
+
+The colon in each pair is the entire distinction: without it, the operator only triggers when the variable is completely unset; with it, the operator also triggers when the variable is set but empty. `${var:?message}` in particular is a genuinely useful validation pattern — placed near the top of a script, it turns a missing required variable into an immediate, clear failure instead of a confusing error much later when that empty value finally gets used.

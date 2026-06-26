@@ -1,0 +1,30 @@
+---
+slug: base64
+name: base64
+category: ["security", "text-processing"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Encode binary data as plain text, or decode it back — not encryption, just a text-safe representation.
+syntax: "base64 [OPTIONS] [FILE]"
+flags:
+  - flag: "-d"
+    description: Decode base64-encoded input back to its original form.
+    example: "base64 -d encoded.txt"
+examples:
+  - description: Encode a string
+    input: "echo 'hello' | base64"
+    output: "aGVsbG8K"
+  - description: Decode it back
+    input: "echo 'aGVsbG8K' | base64 -d"
+    output: "hello"
+shortcuts: []
+tips:
+  - "base64 is not encryption and provides no security — anyone can decode it instantly. It exists purely to represent binary data safely in contexts that only support plain text, like embedding an image in a JSON payload or an email attachment."
+related: ["openssl"]
+pitfalls:
+  - "Because base64 looks deliberately obscured, it's sometimes mistaken for a security measure — it isn't one. Don't use it to 'hide' anything sensitive; it offers zero protection against anyone who looks."
+---
+
+`base64` converts binary data into a text-safe representation made up only of letters, numbers, and a few symbols — and converts it back again with `-d`. It exists because many text-only systems (email, JSON, URLs) can't safely carry raw binary data, so encoding it as base64 text first lets it pass through unmodified.
+
+It's worth being clear about what this is not: base64 provides no security or confidentiality whatsoever. Anyone, including an automated tool, can decode it in a fraction of a second. It's purely a format conversion — useful for embedding an image in a data URL, or attaching a file to something that only accepts text — never a substitute for actual encryption.

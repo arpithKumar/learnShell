@@ -1,0 +1,27 @@
+---
+slug: umask
+name: umask
+category: ["filesystem", "permissions"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Set the default permission mask applied to every newly created file and directory.
+syntax: "umask [MASK]"
+flags: []
+examples:
+  - description: See the current mask
+    input: "umask"
+    output: "0022"
+  - description: Set a stricter default mask for this session
+    input: "umask 0077"
+    output: ""
+shortcuts: []
+tips:
+  - "umask works by subtraction, not addition — a mask of 022 removes write permission for group and others from the default 666 (files) or 777 (directories), landing at the familiar 644/755."
+related: ["chmod"]
+pitfalls:
+  - "umask only affects files created AFTER it's set, in the current shell session — it has no effect on files that already exist, and changing it doesn't retroactively apply anywhere."
+---
+
+`umask` controls the default permissions applied to every file and directory you create from that point on, by specifying which permission bits to *remove* from the system's own defaults. It's the quiet setting behind why newly created files typically come out as `644` (readable by everyone, writable only by you) without anyone explicitly running `chmod` on them.
+
+The math is subtractive: files start from a default of `666` and directories from `777`, and the umask value is subtracted from that. A common mask of `022` removes write permission for group and others, landing at the familiar `644` for files and `755` for directories. Setting a stricter mask like `077` removes essentially all access for anyone but you, which matters in shared environments where you want new files private by default.

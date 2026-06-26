@@ -1,0 +1,24 @@
+---
+slug: telnet
+name: telnet
+category: ["networking"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Open a raw, unencrypted connection to a remote host and port — mostly used today for quick protocol debugging.
+syntax: "telnet HOST PORT"
+flags: []
+examples:
+  - description: Check whether a web server is responding on port 80
+    input: "telnet example.com 80"
+    output: "Trying 93.184.216.34...\nConnected to example.com."
+shortcuts: []
+tips:
+  - "Once connected, typing a raw HTTP request manually (GET / HTTP/1.1, then a blank line) is a classic way to see exactly what a web server sends back, with nothing else interpreting it."
+related: ["nc", "ssh", "curl"]
+pitfalls:
+  - "telnet sends everything, including any password you might type, completely unencrypted — it should never be used for actual remote login over an untrusted network. ssh replaced it for that purpose decades ago."
+---
+
+`telnet` opens a raw, unencrypted connection to a host and port, originally designed as a remote login protocol — a role `ssh` has long since taken over for any real use, since `telnet` transmits everything, including passwords, in plain text with zero encryption.
+
+Where `telnet` still earns a place today is protocol debugging: connecting directly to a port and typing raw commands by hand to see exactly how a server responds, without any client library or tool interpreting the conversation for you. It's `nc`'s older, more protocol-aware cousin for that specific kind of low-level poking around.

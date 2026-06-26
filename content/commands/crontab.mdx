@@ -1,0 +1,35 @@
+---
+slug: crontab
+name: crontab
+category: ["scripting", "system"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Schedule commands to run automatically at fixed times or intervals.
+syntax: "crontab [OPTIONS]"
+flags:
+  - flag: "-e"
+    description: Edit the current user's crontab in a text editor.
+    example: "crontab -e"
+  - flag: "-l"
+    description: List the current user's scheduled cron jobs.
+    example: "crontab -l"
+examples:
+  - description: Open your crontab for editing
+    input: "crontab -e"
+    output: ""
+  - description: Show your current scheduled jobs
+    input: "crontab -l"
+    output: "0 2 * * * /home/alice/backup.sh"
+shortcuts: []
+tips:
+  - "A crontab line has five time fields before the command — minute, hour, day-of-month, month, day-of-week — each able to be a number, a range, or * for 'any.' '0 2 * * *' means 'every day at 2:00 AM.'"
+related: ["systemctl"]
+pitfalls:
+  - "A cron job runs with a much more minimal environment than your interactive shell — no PATH customizations, no aliases, sometimes not even the same working directory. Scripts that work fine when run manually can fail silently under cron until paths are made explicit."
+---
+
+`crontab` schedules commands to run automatically at fixed times — every night at 2 AM, every Monday morning, every five minutes — without anyone needing to trigger them manually. It's the standard way recurring tasks like backups, cleanup scripts, or scheduled reports get automated on Unix-like systems.
+
+Each scheduled line has five time fields followed by the command to run: minute, hour, day of month, month, and day of week, each either a specific value, a range, or `*` meaning "any." `0 2 * * *` reads as "at minute 0 of hour 2, every day" — once daily at 2 AM.
+
+The most common source of "it works when I run it manually but not under cron" confusion is environment: cron jobs run with a far more minimal environment than an interactive shell, often missing `PATH` customizations or assuming a different working directory. Scripts intended to run under cron should generally use full, explicit paths rather than relying on anything from a normal interactive session.

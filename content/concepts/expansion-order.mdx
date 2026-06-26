@@ -1,0 +1,35 @@
+---
+slug: expansion-order
+title: Order of Expansions
+category: expansions-and-substitution
+difficulty: advanced
+summary: The shell applies brace expansion, tilde expansion, variable/command/arithmetic expansion, word splitting, and globbing in a fixed, specific order — not all at once.
+examples:
+  - description: Brace expansion happens before variable expansion, so this works
+    input: 'n=3; echo {1..$n}'
+    output: "{1..3}"
+  - description: A glob produced by expanding a variable still gets matched against real files
+    input: 'pattern="*.txt"; echo $pattern'
+    output: "notes.txt report.txt"
+tips:
+  - "When something expands 'in the wrong order' and produces a confusing literal result instead of what you expected, checking this exact sequence is usually the fastest way to understand why."
+pitfalls:
+  - "Brace expansion happens too early to use a variable as a range bound — {1..$n} does NOT expand the way you'd want, because brace expansion runs before parameter expansion, so $n is still just literal text when braces are evaluated. seq or a C-style for loop are the usual workarounds."
+funFacts:
+  - "This exact processing order is explicitly documented in bash's own manual as a numbered list — it isn't folklore or reverse-engineered behavior, it's specified."
+relatedConcepts:
+  [
+    "brace-expansion",
+    "tilde-expansion",
+    "parameter-expansion",
+    "command-substitution",
+    "arithmetic-expansion",
+    "word-splitting",
+    "globbing",
+  ]
+relatedCommands: []
+---
+
+The shell doesn't perform all its text-transformation tricks in one undifferentiated pass — it applies them in a fixed sequence: brace expansion first, then tilde expansion, then parameter/variable expansion, command substitution, and arithmetic expansion (these three together, left to right), then word splitting, then pathname expansion (globbing), and finally quote removal at the very end.
+
+Knowing this order explains otherwise-confusing results, like why `{1..$n}` doesn't expand a range based on a variable — brace expansion runs *before* parameter expansion, so `$n` is still literal, unexpanded text at the moment braces are processed, and the whole thing falls through unchanged. This sequence is explicitly documented in bash's manual rather than being inferred behavior, which makes it worth treating as a reliable fact to reason from rather than a rule of thumb.

@@ -1,0 +1,26 @@
+---
+slug: until-loop
+title: Until Loop
+category: control-flow
+difficulty: beginner
+summary: Repeat a block of commands until a condition finally becomes true — the inverse of a while loop's "while true, keep going."
+examples:
+  - description: Wait until a file appears
+    input: 'until [ -f ready.txt ]; do echo "waiting..."; sleep 1; done'
+    output: "waiting...\nwaiting..."
+  - description: Count up to a target
+    input: 'i=0; until [ "$i" -eq 3 ]; do echo "$i"; i=$((i + 1)); done'
+    output: "0\n1\n2"
+tips:
+  - "Anywhere you find yourself writing while [ ! -f ready.txt ]; do ..., consider until [ -f ready.txt ]; do ... instead — until with the positive condition is usually easier to read than while with a negated one."
+pitfalls:
+  - "until and while are exact mirror images of each other (until runs while the condition is FALSE, while runs while it's TRUE) — mixing up which one you meant is an easy, simple bug, especially since either one will run, just with inverted logic."
+funFacts:
+  - "until has no equivalent at all in many other programming languages — most languages only offer the while/until split as while plus a manually negated condition, rather than a dedicated keyword for it."
+relatedConcepts: ["loops", "conditionals", "break-and-continue"]
+relatedCommands: []
+---
+
+`until` repeats a block of commands for as long as its condition keeps failing, stopping the moment the condition finally succeeds — the exact mirror image of `while`, which repeats for as long as the condition keeps succeeding. `until [ -f ready.txt ]; do sleep 1; done` is a simple polling pattern: keep waiting while the file doesn't exist yet, stop once it does.
+
+It's mostly a readability choice rather than a capability `while` lacks entirely — anything written with `until` could also be written as `while` with the condition negated. But for conditions that read more naturally as "keep going until X happens" rather than "keep going while NOT X," `until` avoids the double-negative phrasing and is usually the clearer choice.

@@ -1,0 +1,26 @@
+---
+slug: history-expansion
+title: History Expansion
+category: shell-environment
+difficulty: intermediate
+summary: Quick shorthand for reusing pieces of previous commands, like !! for the last command or !$ for its last argument.
+examples:
+  - description: Rerun the previous command, commonly used with sudo
+    input: "apt update\nsudo !!"
+    output: ""
+  - description: Reuse the last argument of the previous command
+    input: "mkdir /tmp/newdir\ncd !$"
+    output: ""
+tips:
+  - "!:p appended to any of these prints the expanded command without running it — handy for checking exactly what !! or !$ resolved to before committing to actually executing it."
+pitfalls:
+  - "History expansion happens at the shell level, before the command runs — it isn't a feature of the program you're running, and it doesn't work the same way (or at all) inside a non-interactive script, where it's commonly disabled by default."
+funFacts:
+  - "History expansion (the ! syntax) originated in the C shell (csh) in the late 1970s, alongside job control — both were major reasons csh was popular for interactive use even though Bourne shell remained dominant for scripting."
+relatedConcepts: ["job-control", "prompt-customization"]
+relatedCommands: ["history", "sudo"]
+---
+
+History expansion is shorthand for referencing pieces of previous commands without retyping them: `!!` expands to the entire previous command (classically used as `sudo !!` after forgetting `sudo` the first time), `!$` expands to the last argument of the previous command, and `!n` expands to the command at a specific position from `history`'s numbered list.
+
+It's purely an interactive-shell convenience, expanded before the resulting command actually runs — appending `:p` to any of these (`!!:p`) prints what it would expand to without executing it, useful for double-checking before running something potentially destructive. Like job control, this `!`-based syntax traces back to the C shell, predating its later adoption into bash.

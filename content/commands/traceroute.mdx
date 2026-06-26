@@ -1,0 +1,27 @@
+---
+slug: traceroute
+name: traceroute
+category: ["networking"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Show the network path (each hop) a packet takes to reach a destination.
+syntax: "traceroute HOST"
+flags:
+  - flag: "-m"
+    description: Limit the maximum number of hops to follow.
+    example: "traceroute -m 15 example.com"
+examples:
+  - description: Trace the network path to a host
+    input: "traceroute example.com"
+    output: " 1  192.168.1.1  1.2 ms\n 2  10.0.0.1  8.4 ms\n 3  93.184.216.34  24.1 ms"
+shortcuts: []
+tips:
+  - "Where ping just tells you whether a host is reachable, traceroute shows WHERE along the path a connection is slow or failing — genuinely different, complementary information."
+related: ["ping", "netstat"]
+pitfalls:
+  - "Some routers along the path deliberately don't respond to traceroute's probes, showing up as '* * *' — that doesn't necessarily mean the connection is broken there, just that hop is configured to stay silent."
+---
+
+`traceroute` reveals every network hop — every router — a packet passes through on its way from your machine to a destination, along with the time each hop took. Where `ping` answers a binary "is this host reachable," `traceroute` answers a more diagnostic question: "and if there's a problem, roughly where along the path is it?"
+
+A hop that suddenly shows much higher latency than its neighbors, or starts timing out entirely, points to where a slowdown or outage is actually happening — useful information `ping` alone can't give you, since it only sees the final destination, not the path leading there.

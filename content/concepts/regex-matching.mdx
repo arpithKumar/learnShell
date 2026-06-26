@@ -1,0 +1,26 @@
+---
+slug: regex-matching
+title: Regex Matching
+category: control-flow
+difficulty: intermediate
+summary: Test a string against a full regular expression inside a condition, using bash's =~ operator — a different tool from glob patterns.
+examples:
+  - description: Match a string against a regex pattern
+    input: 'email="user@example.com"; [[ $email =~ ^[^@]+@[^@]+\.[a-z]+$ ]] && echo "looks valid"'
+    output: "looks valid"
+  - description: Captured groups are available afterward in BASH_REMATCH
+    input: '[[ "v1.2.3" =~ v([0-9]+)\.([0-9]+) ]]; echo "${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"'
+    output: "1.2"
+tips:
+  - "After a successful =~ match, BASH_REMATCH[0] holds the whole matched text and BASH_REMATCH[1], [2], etc. hold each parenthesized capture group — useful for pulling structured pieces out of a matched string without a separate sed/awk call."
+pitfalls:
+  - "=~ is a bash/zsh extension inside [[ ]] specifically — it doesn't exist in [ ] or in POSIX sh at all, and the regex flavor it uses (POSIX extended regex, by default) isn't identical to PCRE, so patterns relying on PCRE-only features won't work."
+funFacts:
+  - "=~ was added to bash relatively late, in version 3.0 (2004) — for years before that, the only way to regex-match inside a shell script was to shell out to grep or sed and check their exit status or output."
+relatedConcepts: ["globbing", "conditionals", "case-statement"]
+relatedCommands: ["grep"]
+---
+
+The `=~` operator, used inside `[[ ... ]]`, tests a string against a full regular expression rather than a simple glob pattern — `[[ "$str" =~ ^[0-9]+$ ]]` checks whether `$str` is entirely digits, something globbing alone can't express. It's a meaningfully different tool from `case` or glob-based tests: regex supports anchors, character classes, repetition counts, and capture groups that glob patterns don't have any equivalent for.
+
+After a successful match, bash populates the `BASH_REMATCH` array automatically — index `0` holds the entire matched substring, and `1`, `2`, etc. hold whatever each parenthesized group in the pattern captured. This makes `=~` genuinely useful for pulling structured data (like a version number's individual components) directly out of a string without invoking a separate `grep` or `sed` process just to extract it.

@@ -1,0 +1,30 @@
+---
+slug: trap
+name: trap
+category: ["scripting", "process-system"]
+difficulty: advanced
+shells: ["bash", "zsh"]
+summary: Run a command automatically when a script receives a signal, like Ctrl+C or exit.
+syntax: "trap COMMAND SIGNAL"
+flags: []
+examples:
+  - description: Clean up a temp file even if the script is interrupted
+    input: "trap 'rm -f /tmp/scratch.$$' EXIT"
+    output: ""
+  - description: Print a message when the user presses Ctrl+C
+    input: "trap 'echo Interrupted!' INT"
+    output: ""
+shortcuts: []
+tips:
+  - "trap ... EXIT is the standard way to guarantee cleanup code (deleting temp files, releasing a lock) runs no matter how a script ends — normal completion, an error, or being killed."
+  - "Use trap '' SIGNAL (an empty command) to make a script ignore a specific signal entirely, rather than running a handler for it."
+related: ["kill", "nohup"]
+pitfalls:
+  - "A trap set for EXIT runs on every kind of exit, including normal successful completion — if your cleanup command assumes something went wrong, check that assumption rather than relying on EXIT alone."
+---
+
+`trap` registers a command to run automatically when a script receives a particular signal — Ctrl+C sends `INT`, a script finishing (for any reason) triggers `EXIT`, and so on. It's how a script defends itself against being interrupted mid-task without cleaning up after itself.
+
+The most common, genuinely useful pattern is `trap 'cleanup_command' EXIT`, which guarantees that cleanup logic runs whether the script finishes normally, hits an error, or gets killed by the user — covering cases a simple "put cleanup code at the end of the script" approach would miss entirely, since that code never runs if something exits early.
+
+`trap` can also be used to deliberately ignore a signal, by setting an empty command for it, which prevents a script from being interrupted at an inconvenient moment — though this is a sharper tool, worth using selectively rather than as a default habit.

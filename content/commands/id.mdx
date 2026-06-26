@@ -1,0 +1,33 @@
+---
+slug: id
+name: id
+category: ["system", "permissions"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Show the current user's username, user ID, and group memberships.
+syntax: "id [USER]"
+flags:
+  - flag: "-u"
+    description: Print just the numeric user ID.
+    example: "id -u"
+  - flag: "-g"
+    description: Print just the numeric primary group ID.
+    example: "id -g"
+examples:
+  - description: See full identity details for the current user
+    input: "id"
+    output: "uid=501(alice) gid=20(staff) groups=20(staff),12(everyone)"
+  - description: Check another user's identity
+    input: "id bob"
+    output: "uid=502(bob) gid=20(staff) groups=20(staff)"
+shortcuts: []
+tips:
+  - "Group membership (the 'groups=' part of the output) is often the real answer to 'why can't this user access that file' — file permissions frequently depend on group, not just individual ownership."
+related: ["whoami", "chmod", "chown"]
+pitfalls:
+  - "Group membership changes (e.g. after being added to a new group) don't take effect in an already-open shell session — you typically need to log out and back in, or start a new session, for id to reflect the change."
+---
+
+`id` reports a fuller picture of identity than `whoami` — not just the username, but the numeric user ID, primary group, and every group the user belongs to. Since file permissions in Unix are checked against both user and group, this is often the more genuinely useful command when something looks like a permissions problem.
+
+Checking `id` for both yourself and the user that owns a file you can't access is a reasonable first diagnostic step: if neither your user ID nor any of your groups match what the file's permissions actually allow, that's the answer to "why can't I open this."

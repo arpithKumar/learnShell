@@ -1,0 +1,27 @@
+---
+slug: strings
+name: strings
+category: ["text-processing"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Extract readable text fragments from a binary file.
+syntax: "strings [OPTIONS] FILE"
+flags:
+  - flag: "-n"
+    description: Only show sequences at least N characters long (default is usually 4).
+    example: "strings -n 8 binary-file"
+examples:
+  - description: Pull readable text out of a compiled binary
+    input: "strings /usr/bin/some-program"
+    output: "/lib64/ld-linux.so.2\nGLIBC_2.2.5\nUsage: %s [options]"
+shortcuts: []
+tips:
+  - "strings is a quick first step when investigating an unfamiliar binary — error messages, version strings, and embedded URLs or file paths often surface immediately."
+related: ["file", "grep"]
+pitfalls:
+  - "strings only finds sequences that happen to look like printable text — it has no understanding of the binary's actual structure or behavior, so it's a starting point for investigation, not a complete picture."
+---
+
+`strings` scans a binary file and prints every sequence of characters that looks like readable text, ignoring everything else. Compiled programs often embed plain-text fragments — error messages, version numbers, file paths, configuration keys — that `strings` surfaces even though the file as a whole isn't meant to be read directly.
+
+It's a common first step when investigating an unfamiliar executable or binary file: running `strings` over it frequently reveals clues about what it does, what libraries it depends on, or where it expects to find its configuration, well before any deeper analysis.

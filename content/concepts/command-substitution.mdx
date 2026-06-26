@@ -1,0 +1,26 @@
+---
+slug: command-substitution
+title: Command Substitution
+category: expansions-and-substitution
+difficulty: beginner
+summary: Run a command and substitute its output directly into another command line, as if you'd typed the output yourself.
+examples:
+  - description: Capture a command's output into a variable
+    input: 'today=$(date +%A); echo "Today is $today"'
+    output: "Today is Wednesday"
+  - description: Use it directly inline, without a variable
+    input: 'echo "There are $(ls | wc -l) files here"'
+    output: "There are 12 files here"
+tips:
+  - "$(...) nests cleanly — $(cmd1 $(cmd2)) just works — while the older backtick syntax `cmd1 \\`cmd2\\`` needs escaping to nest, which is the main practical reason $(...) is preferred today."
+pitfalls:
+  - "Command substitution strips trailing newlines from the captured output, but not other whitespace — and unquoted, the result still gets word-split, so result=$(cmd) followed by using $result unquoted can split on internal spaces just like any other unquoted variable."
+funFacts:
+  - "Command substitution runs the command in a subshell — any variables it sets internally don't survive past the substitution, only its printed output does."
+relatedConcepts: ["subshells", "variables", "quoting"]
+relatedCommands: ["echo", "date"]
+---
+
+Command substitution runs a command and replaces `$(command)` with whatever that command printed to standard output — letting you weave a command's result directly into another command, a variable assignment, or a string. It's one of the most-used pieces of shell syntax, since it's the standard way to capture a value computed by some other tool.
+
+The older backtick syntax, `` `command` ``, does the same thing but is harder to nest (each level needs backslash-escaping) and visually easy to confuse with a regular quote mark — `$(...)` is the modern, POSIX-standardized replacement and is almost always the better choice in new scripts.

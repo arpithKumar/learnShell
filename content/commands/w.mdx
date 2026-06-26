@@ -1,0 +1,24 @@
+---
+slug: w
+name: w
+category: ["system"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Show who's logged in and what command each user is currently running.
+syntax: "w [USER]"
+flags: []
+examples:
+  - description: See every logged-in user and their current activity
+    input: "w"
+    output: "USER  TTY  LOGIN@  IDLE  WHAT\nalice console 09:00  -    -bash\nbob   ttys001 10:15  2:30 vim notes.txt"
+shortcuts: []
+tips:
+  - "w is essentially who plus a live activity column — reach for it specifically when you need to know not just who's connected, but what they're doing right now."
+related: ["who", "ps", "top"]
+pitfalls:
+  - "Like who, w only reflects active login sessions — it won't show background processes a user started and then disconnected from."
+---
+
+`w` reports who's logged in to the system, similar to `who`, but adds an extra column showing what command each user's session is currently running. It's a quick way to see both *who* is connected and *what they're actively doing* in a single glance.
+
+This makes it slightly more useful than `who` alone on a shared system when you specifically want to know whether someone else is mid-task before doing something that might affect them.

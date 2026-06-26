@@ -1,0 +1,41 @@
+---
+slug: brew
+name: brew
+category: ["package-management"]
+difficulty: beginner
+shells: ["bash", "zsh", "fish"]
+summary: Install and manage command-line software and apps on macOS (and Linux), via Homebrew.
+syntax: "brew COMMAND [PACKAGE]"
+flags:
+  - flag: "install"
+    description: Install a package.
+    example: "brew install wget"
+  - flag: "uninstall"
+    description: Remove an installed package.
+    example: "brew uninstall wget"
+  - flag: "update"
+    description: Refresh Homebrew's own list of available packages.
+    example: "brew update"
+  - flag: "upgrade"
+    description: Upgrade every installed package to its latest version.
+    example: "brew upgrade"
+examples:
+  - description: Install a command-line tool
+    input: "brew install tree"
+    output: ""
+  - description: See what's installed
+    input: "brew list"
+    output: "tree\nwget\njq"
+shortcuts: []
+tips:
+  - "brew is how most command-line tools referenced casually in tutorials and documentation (including several on this site, like tree) actually get installed on macOS, since they aren't built in by default."
+related: ["apt", "npm"]
+pitfalls:
+  - "Unlike apt, brew deliberately doesn't need sudo for most operations — it installs into a user-writable location rather than system directories, which is a different (and intentional) design choice from Linux package managers."
+---
+
+`brew` (Homebrew) is the most widely used package manager for installing command-line tools and applications on macOS, filling a gap the operating system itself doesn't cover — many common Unix tools referenced in tutorials, like `tree` or a newer version of `bash`, simply aren't installed by default and need `brew install` to add them.
+
+Unlike `apt` on Linux, `brew` deliberately installs into a location your regular user account already owns, which is why it doesn't need `sudo` for normal operations — a conscious design choice that keeps system directories untouched.
+
+`brew update` refreshes Homebrew's own package list, and `brew upgrade` then installs newer versions of whatever you already have — the same two-step pattern as `apt`, just without needing elevated privileges along the way.

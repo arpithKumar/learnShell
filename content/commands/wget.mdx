@@ -1,0 +1,51 @@
+---
+slug: wget
+name: wget
+category: ["networking"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Download files from the web, with built-in support for retries and recursion.
+syntax: "wget [OPTIONS] URL"
+flags:
+  - flag: "-O"
+    description: Save the downloaded file under a specific name.
+    example: "wget -O install.sh https://example.com/setup"
+  - flag: "-c"
+    description: Resume a partially downloaded file instead of starting over.
+    example: "wget -c https://example.com/big-file.zip"
+  - flag: "-r"
+    description: Recursively download an entire site/folder structure.
+    example: "wget -r https://example.com/docs/"
+examples:
+  - description: Download a file, keeping its original name
+    input: "wget https://example.com/file.zip"
+    output: "Saving to: 'file.zip'"
+  - description: Download and save under a different name
+    input: "wget -O setup.sh https://example.com/install"
+    output: "Saving to: 'setup.sh'"
+shortcuts: []
+tips:
+  - "wget -c is genuinely valuable on flaky connections — it resumes an interrupted download from where it left off instead of starting completely over."
+  - "Use --limit-rate if you need to avoid saturating a shared network connection while downloading something large in the background."
+related: ["curl", "ssh"]
+pitfalls:
+  - "wget isn't installed by default on macOS — curl is the built-in equivalent there, and the usual substitute for simple one-off downloads on that platform."
+---
+
+`wget` exists for one core job: downloading files, and it handles that
+job with a few conveniences that `curl` doesn't bother with by default.
+It automatically retries on a flaky connection, can resume an
+interrupted download from where it stopped with `-c`, and can
+recursively mirror an entire website or directory structure with `-r`.
+
+For straightforward one-off API calls, most people still reach for
+`curl`, since it has become the de facto standard for that. But for
+"reliably download this exact file, and don't lose progress if my
+connection drops," `wget` is purpose-built for the job in a way `curl`
+technically can also do, but with more manual flag-juggling.
+
+By default `wget` saves the downloaded file using the name from the
+URL itself. The `-O` flag overrides that, letting you choose the saved
+filename directly — useful when a URL's final path segment isn't a
+sensible filename on its own (a common situation with install scripts
+served from a generic endpoint).

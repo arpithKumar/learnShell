@@ -1,0 +1,24 @@
+---
+slug: getopts
+name: getopts
+category: ["scripting"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh"]
+summary: Parse short command-line flags inside a shell script, following standard conventions.
+syntax: "getopts OPTSTRING NAME"
+flags: []
+examples:
+  - description: Parse -v and -f flags, with -f taking an argument
+    input: 'while getopts "vf:" opt; do case $opt in v) verbose=1;; f) file=$OPTARG;; esac; done'
+    output: ""
+shortcuts: []
+tips:
+  - "A leading colon in the option string before the letter (like f:) means that flag requires an argument, available afterward in $OPTARG."
+related: ["shift", "test"]
+pitfalls:
+  - "getopts only handles short, single-letter flags (-v, -f) — it doesn't natively support long flags like --verbose, which require additional manual parsing or a different approach entirely."
+---
+
+`getopts` parses the short, single-letter flags passed to a script — like `-v` for verbose or `-f filename` — following the same conventions used by most standard command-line tools. It's typically run in a `while` loop, processing one flag per iteration and reporting which letter it found.
+
+In the option string passed to `getopts`, a letter followed by a colon, like `f:`, signals that flag expects an accompanying argument, which becomes available in the `$OPTARG` variable inside the loop. This is the standard, conventional way to give a shell script flag-based options rather than relying purely on positional arguments handled with `shift`.

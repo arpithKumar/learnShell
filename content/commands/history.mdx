@@ -1,0 +1,31 @@
+---
+slug: history
+name: history
+category: ["scripting"]
+difficulty: beginner
+shells: ["bash", "zsh"]
+summary: List previously run commands from this shell session.
+syntax: "history [N]"
+flags:
+  - flag: "-c"
+    description: Clear the entire command history.
+    example: "history -c"
+examples:
+  - description: Show your recent command history
+    input: "history"
+    output: "  501  cd ~/projects\n  502  ls -la\n  503  git status"
+  - description: Show just the last 10 commands
+    input: "history 10"
+    output: "  494  npm install\n  495  npm run dev"
+shortcuts:
+  - keys: "Ctrl+R"
+    description: Search backward through history interactively as you type.
+    context: readline
+related: ["alias"]
+pitfalls:
+  - "history shows commands from the current shell's in-memory list — commands from a different terminal tab or a session that hasn't saved yet won't necessarily appear."
+---
+
+`history` lists the commands you've already typed in the current shell session, each with a number you can use to reference it again (`!503` reruns command #503, for example). It's a quick way to look back at what you just did, or to find a long command you don't want to retype.
+
+In day-to-day use, most people interact with history through `Ctrl+R` rather than typing `history` directly — it searches backward through the same list interactively as you type, which is usually faster than scrolling a printed list looking for one specific line.

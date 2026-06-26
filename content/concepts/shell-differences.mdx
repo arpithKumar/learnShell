@@ -1,0 +1,26 @@
+---
+slug: shell-differences
+title: Shell Differences (bash vs zsh vs sh vs fish)
+category: shell-environment
+difficulty: intermediate
+summary: Why a script written for one shell sometimes doesn't run correctly in another, and which features are safe to assume.
+examples:
+  - description: An array works in bash but not in strict POSIX sh
+    input: "#!/bin/sh\narr=(1 2 3)\necho \"${arr[0]}\""
+    output: "sh: 1: Syntax error: \"(\" unexpected"
+  - description: The exact same script works fine under bash
+    input: "#!/bin/bash\narr=(1 2 3)\necho \"${arr[0]}\""
+    output: "1"
+tips:
+  - "When portability genuinely matters (the script might run on a minimal system where /bin/sh is dash, not bash), tools like shellcheck can flag bash-specific syntax that won't work under a strict POSIX shell, before it ever becomes a runtime surprise."
+pitfalls:
+  - "/bin/sh isn't a fixed, single shell — on different systems it's a symlink to dash, bash running in POSIX-compatibility mode, or something else entirely, each with slightly different edge-case behavior. A script that works when tested with #!/bin/bash can break when actually run as #!/bin/sh on another system."
+funFacts:
+  - "fish deliberately breaks POSIX compatibility in its syntax (no $(...)  for command substitution, different variable syntax) specifically in the name of being friendlier and more consistent to write — a genuinely different design philosophy from bash/zsh/ksh's shared, POSIX-rooted lineage."
+relatedConcepts: ["shebang", "arrays", "brace-expansion"]
+relatedCommands: []
+---
+
+Bash, zsh, dash/sh, and fish are all "shells," but they differ meaningfully in syntax and feature support. Bash and zsh share most extensions (arrays, brace expansion, `[[ ]]`) and are largely interchangeable for everyday scripting; strict POSIX `sh` (often actually `dash` under the hood) supports only the more minimal, standardized feature set, lacking arrays and several conveniences bash scripts take for granted; fish deliberately abandons POSIX syntax compatibility entirely in favor of its own, different design.
+
+The shebang line declares *intent*, not a guarantee — a script saying `#!/bin/bash` will only work correctly if bash is actually installed at that path, and a script saying `#!/bin/sh` needs to avoid every bash-only feature, since `/bin/sh` might be a genuinely more limited shell on a given system. Most real-world confusion in this area comes from writing and testing a script under bash, then having it unexpectedly run under a stricter `/bin/sh` elsewhere — knowing this category of risk exists is most of the battle.

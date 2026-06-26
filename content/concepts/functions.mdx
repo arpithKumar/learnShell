@@ -1,0 +1,26 @@
+---
+slug: functions
+title: Functions
+category: control-flow
+difficulty: intermediate
+summary: Bundle a sequence of commands under a name so it can be called repeatedly, with its own arguments.
+examples:
+  - description: Define and call a function with an argument
+    input: 'greet() { echo "Hi, $1"; }; greet "Alice"'
+    output: "Hi, Alice"
+  - description: Functions use exit status, not a return value, to report success
+    input: 'is_even() { [ $(( $1 % 2 )) -eq 0 ]; }; is_even 4 && echo "even"'
+    output: "even"
+tips:
+  - "Inside a function, $1, $2, etc. refer to the arguments passed to the function itself, not the script's own arguments — they're shadowed for the duration of the function call."
+pitfalls:
+  - "Variables created inside a function are global by default unless explicitly declared with local — a function's internal loop counter or temp variable can silently clobber a same-named variable used elsewhere in the script."
+funFacts:
+  - "local isn't part of POSIX sh at all — strict POSIX shell functions have no variable scoping mechanism, which is one reason bash/ksh/zsh remain far more popular than plain sh for anything beyond trivial scripts."
+relatedConcepts: ["variables", "conditionals", "loops", "exit-vs-return", "recursion"]
+relatedCommands: ["local", "declare"]
+---
+
+A function groups a sequence of commands under a single callable name, defined as `name() { commands; }`. Once defined, calling it by name runs that block, with any words after the function name available inside as `$1`, `$2`, and so on — the same positional-parameter convention a whole script uses for its own arguments, just scoped to the function call.
+
+Functions don't have a `return value` in the way other languages mean it — `return N` sets the function's exit status (0–255), which is what `if` and `&&`/`||` check, not a value you capture directly. To actually get a computed value back out, the usual pattern is having the function `echo` it and capturing that with command substitution: `result=$(my_function)`. Variables a function creates are global by default unless explicitly marked `local`, which is the standard defensive habit for any function with its own working variables.

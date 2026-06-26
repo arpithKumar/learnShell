@@ -1,0 +1,24 @@
+---
+slug: whoami
+name: whoami
+category: ["system"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Print the username of the currently logged-in user.
+syntax: "whoami"
+flags: []
+examples:
+  - description: Check which user you're currently running as
+    input: "whoami"
+    output: "alice"
+shortcuts: []
+tips:
+  - "whoami is a quick sanity check after sudo -u or su to a different user — confirming you're actually operating as the account you intended to switch to."
+related: ["id", "who"]
+pitfalls:
+  - "whoami only reports your effective username — it doesn't show group memberships or permission details, which is exactly what id provides instead."
+---
+
+`whoami` prints exactly one thing: the username of the account you're currently running commands as. It's a small, single-purpose command, most useful as a quick sanity check after switching users with `su` or running something with `sudo -u`, confirming you're actually operating as the account you meant to be.
+
+For anything beyond just the username — group memberships, numeric user and group IDs — `id` is the more complete tool.

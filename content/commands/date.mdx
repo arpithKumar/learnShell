@@ -1,0 +1,35 @@
+---
+slug: date
+name: date
+category: ["system"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Print or format the current date and time.
+syntax: "date [OPTIONS] [+FORMAT]"
+flags:
+  - flag: "+FORMAT"
+    description: Print the date using a custom format string instead of the default.
+    example: "date +%Y-%m-%d"
+  - flag: "-u"
+    description: Print the date in UTC instead of local time.
+    example: "date -u"
+examples:
+  - description: Print the current date and time
+    input: "date"
+    output: "Mon Jan  1 10:30:00 EST 2024"
+  - description: Print just the date in ISO format, useful in filenames
+    input: "date +%Y-%m-%d"
+    output: "2024-01-01"
+shortcuts: []
+tips:
+  - "date +%Y-%m-%d is a common pattern for generating timestamped filenames in backup scripts, e.g. backup-$(date +%Y-%m-%d).tar.gz."
+related: ["touch"]
+pitfalls:
+  - "Date formatting syntax and available flags differ between GNU date (Linux) and BSD date (macOS) — a script using date -d (GNU-only) for relative date math will fail on macOS without adjustment."
+---
+
+`date` prints the current date and time, and with a format string, lets you shape that output into almost any structure you need — useful both for quick reference and for generating consistent timestamps inside scripts.
+
+The format string starts with `+` and uses letter codes prefixed with `%`: `%Y` for a 4-digit year, `%m` for month, `%d` for day, and so on. `date +%Y-%m-%d` is a genuinely common pattern for building a sortable, timestamped filename, like `backup-$(date +%Y-%m-%d).tar.gz`.
+
+One real platform gotcha: GNU `date` (standard on Linux) and BSD `date` (standard on macOS) support different flags for things like date math — a script written and tested on one won't necessarily run unmodified on the other.

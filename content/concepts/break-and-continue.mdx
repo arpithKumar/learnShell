@@ -1,0 +1,26 @@
+---
+slug: break-and-continue
+title: Break and Continue
+category: control-flow
+difficulty: beginner
+summary: Exit a loop early with break, or skip straight to the next iteration with continue.
+examples:
+  - description: Stop the loop as soon as a match is found
+    input: 'for n in 1 2 3 4 5; do if [ "$n" -eq 3 ]; then break; fi; echo "$n"; done'
+    output: "1\n2"
+  - description: Skip just this iteration and keep going
+    input: 'for n in 1 2 3 4 5; do if [ $((n % 2)) -eq 0 ]; then continue; fi; echo "$n"; done'
+    output: "1\n3\n5"
+tips:
+  - "Both break and continue accept an optional number — break 2 exits two nested loops at once instead of just the innermost one, which is useful when a loop is nested inside another."
+pitfalls:
+  - "break and continue only affect the loop they're directly inside — putting one inside an if block doesn't change that, since if isn't a loop; it's easy to misjudge nesting depth when the two are combined with several levels of if."
+funFacts:
+  - "The numeric-argument form (break N / continue N) for escaping multiple nested loops at once is a feature plenty of long-time bash users have never actually used, despite it existing since very early versions."
+relatedConcepts: ["loops", "until-loop", "conditionals"]
+relatedCommands: []
+---
+
+`break` exits a loop immediately, skipping any remaining iterations entirely — useful once you've found what you were looking for and don't need to keep checking the rest. `continue` instead skips just the current iteration and jumps straight to the next one, useful for "skip this case but keep going" logic without wrapping the rest of the loop body in an `if`.
+
+Both work inside `for`, `while`, and `until` loops alike, and both accept an optional numeric argument for breaking or continuing an outer loop from inside a nested one — `break 2` exits two levels of nesting at once rather than just the innermost loop.

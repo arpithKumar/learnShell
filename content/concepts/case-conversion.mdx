@@ -1,0 +1,29 @@
+---
+slug: case-conversion
+title: Case Conversion
+category: expansions-and-substitution
+difficulty: intermediate
+summary: Uppercase or lowercase a variable's value inline with ${var^^} and ${var,,}, without calling out to tr or awk.
+examples:
+  - description: Uppercase an entire string
+    input: 'name="alice"; echo "${name^^}"'
+    output: "ALICE"
+  - description: Lowercase an entire string
+    input: 'name="ALICE"; echo "${name,,}"'
+    output: "alice"
+  - description: Capitalize just the first character
+    input: 'name="alice"; echo "${name^}"'
+    output: "Alice"
+tips:
+  - "The single-character forms (^ and ,) only affect the first character of the string, while the doubled forms (^^ and ,,) affect every character — the same doubling convention used elsewhere in parameter expansion for \"apply this everywhere, not just once\"."
+pitfalls:
+  - "These operators are a bash-only addition (4.0+) — they don't exist in POSIX sh or in older bash versions, so a portable script falls back to tr '[:lower:]' '[:upper:]' or awk for the same job instead."
+funFacts:
+  - "Case conversion was one of the more requested bash features for years before it finally arrived in bash 4.0 (2009) — until then, even something as simple as uppercasing a string required shelling out to tr."
+relatedConcepts: ["parameter-expansion", "string-manipulation"]
+relatedCommands: ["tr"]
+---
+
+`${var^^}` uppercases an entire string, `${var,,}` lowercases it, and the single-character versions (`${var^}`, `${var,}`) affect only the first character — handy for normalizing user input or capitalizing a name, entirely inline without spawning a separate `tr` process. Bash 4.0 also supports targeting only characters matching a pattern, like `${var^^[aeiou]}` to uppercase just the vowels, though the plain whole-string forms cover the overwhelming majority of real use cases.
+
+This is a bash-specific extension (4.0+), not part of POSIX parameter expansion, so it's unavailable both in older bash versions and in strict `sh` — `tr '[:lower:]' '[:upper:]'` remains the portable fallback when a script needs to support either of those.

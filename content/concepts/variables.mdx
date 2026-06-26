@@ -1,0 +1,39 @@
+---
+slug: variables
+title: Variables
+category: fundamentals
+difficulty: beginner
+summary: Store and reuse values in a shell session by giving them a name.
+examples:
+  - description: Assign a value and use it later
+    input: 'name="Alice"; echo "Hello, $name"'
+    output: "Hello, Alice"
+  - description: Assignment has no spaces around the equals sign
+    input: "x = 5"
+    output: "x: command not found"
+tips:
+  - "Always double-quote a variable when using it ($\"name\" not $name) unless you specifically want word-splitting — unquoted expansion is one of the most common sources of shell scripting bugs."
+  - "Variable names are case-sensitive, and by convention, environment variables you intend to export are UPPERCASE while local script variables are lowercase."
+pitfalls:
+  - "Spaces around the = in an assignment break it completely — name = \"Alice\" is parsed as running a command called name with arguments = and \"Alice\", not an assignment."
+  - "Variables are untyped strings by default — x=5; y=3; echo $x+$y prints 5+3, not 8, because + is just another character in a string unless you use arithmetic syntax like $((x + y))."
+funFacts:
+  - "The no-spaces-around-= assignment syntax traces all the way back to the original Bourne shell (1979) — it's one of the oldest, least-changed pieces of shell syntax still in daily use."
+relatedConcepts:
+  [
+    "quoting",
+    "parameter-expansion",
+    "arrays",
+    "positional-parameters",
+    "environment-variables",
+    "special-variables",
+    "readonly-variables",
+    "variable-indirection",
+    "nameref-variables",
+  ]
+relatedCommands: ["declare", "local", "export", "read", "unset"]
+---
+
+A shell variable is a name bound to a value, created with a plain assignment like `name="Alice"` — no spaces around the `=`, since the shell parses that exact pattern as an assignment rather than a command. Once set, the value is retrieved by prefixing the name with `$`, as in `$name`, or `${name}` when it needs to be unambiguously separated from surrounding text.
+
+By default, a variable only exists inside the current shell session or script — it isn't visible to programs the shell launches. `export` promotes a variable into the environment so child processes inherit it, which is the mechanism behind things like `$PATH` being visible to every command you run. Variables are untyped strings under the hood; arithmetic needs explicit syntax like `$((x + 1))` rather than relying on `+` to add numbers the way it would in a typed language.

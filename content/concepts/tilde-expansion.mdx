@@ -1,0 +1,26 @@
+---
+slug: tilde-expansion
+title: Tilde Expansion
+category: expansions-and-substitution
+difficulty: beginner
+summary: A leading ~ expands to a home directory, so you rarely have to type a full /home/username path.
+examples:
+  - description: Your own home directory
+    input: "echo ~"
+    output: "/home/alice"
+  - description: Another user's home directory
+    input: "echo ~bob"
+    output: "/home/bob"
+tips:
+  - "~+ expands to the current working directory and ~- expands to the previous one (the directory you cd'd from) — handy shorthands that exist alongside the more familiar plain ~."
+pitfalls:
+  - "Tilde expansion only happens at the start of a word — cd path/~ does NOT expand, since the ~ isn't the first character of that word. Only a leading ~ is special."
+funFacts:
+  - "Tilde expansion is purely a shell-level text substitution, performed before the command runs — a program like ls never actually sees a tilde character, it only ever receives the already-expanded full path."
+relatedConcepts: ["expansion-order", "variables"]
+relatedCommands: ["cd"]
+---
+
+A `~` at the start of a word expands to a home directory: plain `~` expands to your own (`$HOME`), and `~username` expands to that specific user's home directory. It's purely a convenience the shell performs before running anything — `cd ~/projects` is really just shorthand for `cd /home/alice/projects`, substituted in before `cd` ever sees the argument.
+
+This only applies when `~` is the very first character of a word — `path/~/file` doesn't expand, since the tilde isn't leading. A couple of less common variants exist too: `~+` for the current directory and `~-` for the previous one, both maintained automatically by the shell as you `cd` around.

@@ -1,0 +1,44 @@
+---
+slug: tree
+name: tree
+category: ["filesystem"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Display a directory's contents as an indented, visual tree.
+syntax: "tree [OPTIONS] [PATH]"
+flags:
+  - flag: "-L"
+    description: Limit how many directory levels deep to display.
+    example: "tree -L 2"
+  - flag: "-a"
+    description: Include hidden files (those starting with a dot).
+    example: "tree -a"
+  - flag: "-I"
+    description: Ignore files/folders matching a pattern (e.g. exclude node_modules).
+    example: "tree -I node_modules"
+examples:
+  - description: View a project's structure two levels deep
+    input: "tree -L 2"
+    output: ".\n├── src\n│   ├── app\n│   └── components\n└── package.json"
+shortcuts: []
+tips:
+  - "tree -I 'node_modules|.git' is a handy default that keeps the noisiest folders out of the output."
+  - "Combine with -L 2 on large projects to avoid an overwhelming wall of nested output."
+related: ["ls", "find"]
+pitfalls:
+  - "tree isn't installed by default on every system — on macOS you may need to install it separately (e.g. via Homebrew: brew install tree)."
+---
+
+`tree` is `ls`'s more visual cousin. Instead of a flat file listing, it
+draws a directory's structure as an indented tree, complete with branch
+lines connecting parents to their children — which makes it much
+easier to build a mental map of an unfamiliar project at a glance than
+scrolling through a plain listing.
+
+It's purely a convenience tool: everything `tree` shows could in
+principle be reconstructed from `find` or a recursive `ls`, just far
+less readably. The most common adjustment people make is excluding
+noisy folders like `node_modules` or `.git` with `-I`, since otherwise
+a typical web project's tree output is dominated by dependency files
+that aren't actually relevant to the structure you're trying to
+understand.

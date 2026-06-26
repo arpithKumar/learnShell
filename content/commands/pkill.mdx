@@ -1,0 +1,33 @@
+---
+slug: pkill
+name: pkill
+category: ["process-system"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Kill processes by name, instead of looking up a PID first.
+syntax: "pkill [OPTIONS] NAME"
+flags:
+  - flag: "-9"
+    description: Send SIGKILL (force-terminate) instead of the default SIGTERM.
+    example: "pkill -9 node"
+  - flag: "-f"
+    description: Match against the full command line, not just the process name.
+    example: "pkill -f 'npm run dev'"
+examples:
+  - description: Stop every process matching a name
+    input: "pkill node"
+    output: ""
+  - description: Force-kill anything matching a fuller command pattern
+    input: "pkill -9 -f 'npm run dev'"
+    output: ""
+shortcuts: []
+tips:
+  - "pkill saves the two-step 'ps aux | grep, then kill that PID' workflow into a single command — genuinely faster once you trust it."
+related: ["kill", "pgrep", "ps"]
+pitfalls:
+  - "pkill matches by name pattern, which can match more processes than you intend — running pkill node kills EVERY process named node, not just the one you had in mind. Double-check with pgrep first if you're not certain."
+---
+
+`pkill` finds processes by name and sends them a signal — by default, the same polite `SIGTERM` that plain `kill` sends — without needing to look up a process ID first. It collapses the common two-step "find the PID, then kill it" workflow into one command.
+
+The trade-off for that convenience is precision: `pkill` matches by name pattern, so if more than one process shares that name, all of them get signaled, not just the one you meant. Running `pgrep` first (the read-only counterpart that just lists matches) is a safer way to confirm exactly what `pkill` would affect before actually running it.

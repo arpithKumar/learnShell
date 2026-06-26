@@ -1,0 +1,38 @@
+---
+slug: gpg
+name: gpg
+category: ["security"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Encrypt, decrypt, and digitally sign files and messages using public-key cryptography.
+syntax: "gpg [OPTIONS] FILE"
+flags:
+  - flag: "--encrypt"
+    description: Encrypt a file for a specific recipient's public key.
+    example: "gpg --encrypt --recipient alice@example.com file.txt"
+  - flag: "--decrypt"
+    description: Decrypt a file encrypted for you.
+    example: "gpg --decrypt file.txt.gpg"
+  - flag: "--sign"
+    description: Digitally sign a file, proving it came from you and wasn't altered.
+    example: "gpg --sign file.txt"
+examples:
+  - description: Encrypt a file for a specific recipient
+    input: "gpg --encrypt --recipient alice@example.com secrets.txt"
+    output: "secrets.txt.gpg"
+  - description: Decrypt a file that was encrypted for you
+    input: "gpg --decrypt secrets.txt.gpg"
+    output: ""
+shortcuts: []
+tips:
+  - "GPG encryption is asymmetric — you encrypt FOR someone using their public key, and only their matching private key can decrypt it. Sharing your public key is safe and expected; your private key never should be."
+related: ["ssh-keygen", "openssl"]
+pitfalls:
+  - "Losing your private key (or its passphrase) means losing access to anything encrypted for you permanently — there's no recovery mechanism by design, since that's exactly what makes the encryption meaningful."
+---
+
+`gpg` (GNU Privacy Guard) implements public-key cryptography for encrypting files, verifying signatures, and proving a message or file genuinely came from a specific person unaltered. It's the open-source standard behind PGP-style encrypted email and signed software releases.
+
+The core idea is a key pair, like SSH's: a public key you share freely, and a private key you guard absolutely. Anyone can encrypt a message *for* you using your public key, but only your private key can decrypt it — meaning you never need to share anything secret just to receive encrypted messages. Signing works in the complementary direction: you sign something with your private key, and anyone with your public key can verify the signature is genuinely yours and the content hasn't been tampered with.
+
+Because there's no recovery path for a lost private key by design — that's what makes the whole system trustworthy — backing it up securely is a real, non-optional responsibility once you start relying on GPG for anything important.

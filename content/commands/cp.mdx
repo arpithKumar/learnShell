@@ -1,0 +1,55 @@
+---
+slug: cp
+name: cp
+category: ["filesystem"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Copy files and directories.
+syntax: "cp [OPTIONS] SOURCE DEST"
+flags:
+  - flag: "-r"
+    description: Copy directories recursively, including everything inside them.
+    example: "cp -r ./src ./backup"
+  - flag: "-i"
+    description: Ask for confirmation before overwriting an existing file.
+    example: "cp -i notes.txt notes-old.txt"
+  - flag: "-v"
+    description: Print each file as it's copied (verbose).
+    example: "cp -v *.log ./archive"
+  - flag: "-p"
+    description: Preserve the original file's permissions and timestamps.
+    example: "cp -p config.yml config.yml.bak"
+examples:
+  - description: Copy a single file with a new name
+    input: "cp notes.txt notes-backup.txt"
+    output: ""
+  - description: Copy an entire folder and its contents
+    input: "cp -r ./photos ./photos-backup"
+    output: ""
+shortcuts: []
+tips:
+  - "Add -v when copying many files at once so you can see exactly what's happening, rather than waiting silently."
+  - "cp -n (no-clobber) skips any file that already exists at the destination instead of overwriting it — a safer default for bulk copies."
+  - "When the destination is an existing directory, a trailing slash on it doesn't change anything for cp — but it does matter for similar tools like rsync, which is an easy mix-up later on."
+related: ["mv", "rm", "rsync"]
+pitfalls:
+  - "Without -r, cp refuses to copy a directory — a common first error for beginners trying to copy a whole folder."
+  - "cp silently overwrites the destination file if it already exists (unless -i is used) — there's no undo, so double-check before copying over something important."
+---
+
+`cp` copies files, and the basic shape is always the same:
+`cp SOURCE DESTINATION`. If the destination is an existing directory,
+the source gets copied *into* it under its original name. If the
+destination is a new filename instead, the copy is created with that
+name — effectively letting you copy-and-rename in one step.
+
+Copying a single file is the easy case. Copying a whole folder needs the
+`-r` (recursive) flag, since `cp` otherwise has no instructions for what
+to do with the files and subfolders a directory might contain — without
+`-r`, it just refuses and tells you the source is a directory.
+
+There's no built-in "are you sure?" by default: if the destination file
+already exists, `cp` overwrites it immediately. The `-i` flag adds an
+interactive confirmation prompt before that happens, which is worth
+using any time you're not completely certain the destination is safe to
+overwrite.

@@ -1,0 +1,27 @@
+---
+slug: iostat
+name: iostat
+category: ["system"]
+difficulty: advanced
+shells: ["bash", "zsh"]
+summary: Report CPU and disk I/O statistics, useful for diagnosing storage bottlenecks.
+syntax: "iostat [INTERVAL] [COUNT]"
+flags:
+  - flag: "-x"
+    description: Show extended statistics, with more detail per device.
+    example: "iostat -x 2"
+examples:
+  - description: Show disk I/O stats every 2 seconds
+    input: "iostat 2"
+    output: "Device  tps  kB_read/s  kB_wrtn/s\nsda     12.5  340.2      120.8"
+shortcuts: []
+tips:
+  - "iostat is the tool to reach for specifically when top or vmstat suggests a system is waiting on disk rather than CPU or memory — it isolates that one dimension in more detail."
+related: ["vmstat", "top", "df"]
+pitfalls:
+  - "iostat's first reported line is typically an average since boot, the same caveat as vmstat — later lines reflect the actual current interval more accurately."
+---
+
+`iostat` focuses specifically on disk input/output activity, reporting how busy each storage device is and how much data is being read and written. It's the right tool when general monitoring (`top`, `vmstat`) suggests the bottleneck is disk-related rather than CPU or memory, and you need device-level detail to confirm it.
+
+Run with an interval and count, like `iostat 2 5`, it gives repeated snapshots over time, making it easier to see whether disk activity is a sustained problem or a brief spike.

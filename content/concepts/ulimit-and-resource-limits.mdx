@@ -1,0 +1,26 @@
+---
+slug: ulimit-and-resource-limits
+title: Ulimit & Resource Limits
+category: process-control
+difficulty: advanced
+summary: Cap how much of a resource — open files, memory, CPU time — a process and its children are allowed to use, set with the ulimit builtin.
+examples:
+  - description: Check the current limit on open file descriptors
+    input: "ulimit -n"
+    output: "256"
+  - description: Lower the maximum CPU time a process tree can consume
+    input: "ulimit -t 10"
+    output: ""
+tips:
+  - "ulimit -a prints every resource limit currently in effect at once — a quick way to see the full picture before tightening or loosening any single one."
+pitfalls:
+  - "Limits set with ulimit only get stricter from where they currently are, by default, for an unprivileged user — there's a separate \"hard\" limit (ulimit -H) that caps how high a \"soft\" limit can be raised back to, and a regular user generally can't exceed it without elevated privileges."
+funFacts:
+  - "Resource limits set via ulimit are inherited by every child process the shell launches afterward — it's a common technique for sandboxing a potentially runaway or untrusted script, capping its memory or CPU time before it ever starts."
+relatedConcepts: ["job-control", "command-timeouts"]
+relatedCommands: []
+---
+
+`ulimit` sets a ceiling on how much of a particular system resource the current shell, and every process it launches afterward, is allowed to consume — the number of open file descriptors (`-n`), maximum CPU time in seconds (`-t`), maximum memory (`-v`), and several others. Once set, these limits are inherited by child processes, making `ulimit` a practical way to contain a script or program that might otherwise consume more of a resource than intended.
+
+There's a meaningful distinction between "soft" limits (the currently enforced ceiling, which an unprivileged process can usually lower further but not raise past the hard limit) and "hard" limits (the absolute ceiling, settable only with elevated privileges). This two-tier structure is what stops a misbehaving or malicious script from simply raising its own limits back up after they've been intentionally tightened.

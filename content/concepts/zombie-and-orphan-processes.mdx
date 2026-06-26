@@ -1,0 +1,23 @@
+---
+slug: zombie-and-orphan-processes
+title: Zombie & Orphan Processes
+category: process-control
+difficulty: advanced
+summary: A child process that finished but hasn't been cleaned up (zombie), and one whose parent ended first (orphan) — two different edge cases in the parent-child process lifecycle.
+examples:
+  - description: Spot a zombie process in a process listing
+    input: "ps aux | grep Z"
+    output: "alice  4821  0.0  0.0      0     0 ??  Z    1:02PM   0:00.00 (myscript)"
+tips:
+  - "A zombie process holds essentially no resources beyond its exit status and an entry in the process table — it isn't consuming CPU or memory, so a handful of them is harmless, but a script that spawns many children without ever waiting on them can accumulate quite a few."
+pitfalls:
+  - "You can't kill -9 a zombie process — it's already finished running, so there's no running process left to signal. The fix is making the parent process call wait (or just letting the parent itself exit, which reparents the zombie to init and lets it finally be cleaned up)."
+funFacts:
+  - "An orphan process isn't actually a problem on its own — it just gets automatically adopted by init (or systemd as PID 1 on modern Linux), which then takes over the job of eventually reaping it once it finishes."
+relatedConcepts: ["job-control", "signals"]
+relatedCommands: ["wait", "ps", "kill"]
+---
+
+A zombie process is one that has already finished running but still has an entry in the process table, because its parent hasn't yet called `wait` to collect its final exit status — it shows up in `ps` with a `Z` state, consuming essentially no resources but still technically present. An orphan process is the opposite situation: its parent process ended first, leaving the child still running with no parent to eventually `wait` on it.
+
+Neither is usually a cause for alarm in small numbers — orphans get automatically adopted by `init` (or `systemd` as PID 1), which takes over responsibility for eventually cleaning them up, and a few short-lived zombies are completely normal. They become worth investigating only when a long-running process (commonly a server or daemon) accumulates many zombies over time, which usually points to a real bug: that process is spawning children and never calling `wait` on them.

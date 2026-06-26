@@ -1,0 +1,35 @@
+---
+slug: ssh-keygen
+name: ssh-keygen
+category: ["security", "networking"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Generate a new SSH key pair, for passwordless authentication to remote servers.
+syntax: "ssh-keygen [OPTIONS]"
+flags:
+  - flag: "-t"
+    description: Set the key type (ed25519 is the modern recommended default).
+    example: "ssh-keygen -t ed25519"
+  - flag: "-f"
+    description: Set the output file path for the key.
+    example: "ssh-keygen -t ed25519 -f ~/.ssh/work_key"
+  - flag: "-C"
+    description: Add a comment (often an email or label) to identify the key.
+    example: "ssh-keygen -t ed25519 -C 'me@example.com'"
+examples:
+  - description: Generate a new ed25519 key pair, the current recommended default
+    input: "ssh-keygen -t ed25519 -C 'me@example.com'"
+    output: "Your identification has been saved in /Users/you/.ssh/id_ed25519"
+shortcuts: []
+tips:
+  - "ed25519 is the modern recommended key type — shorter, faster, and at least as secure as the older RSA default many tutorials still reference."
+related: ["ssh", "scp"]
+pitfalls:
+  - "ssh-keygen generates two files — a private key (no extension) and a public key (.pub). The private key should never be shared or committed to a repository; only the .pub file gets copied to servers you want to access."
+---
+
+`ssh-keygen` generates a new public/private key pair for SSH authentication, replacing the need to type a password every time you connect to a server. The private key stays on your machine and is never shared; the public key gets copied to any server you want passwordless access to.
+
+`ssh-keygen -t ed25519` is the modern recommended invocation — `ed25519` is a newer key type that's shorter and faster than the older RSA default many older guides still show, with no security trade-off. Once generated, `ssh-copy-id` is the easiest way to install the resulting public key on a remote server.
+
+The single most important habit: the private key file (with no extension, just `id_ed25519`) must never be shared, emailed, or committed to a repository. Only the `.pub` file is meant to be distributed.

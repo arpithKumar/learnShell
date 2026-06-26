@@ -1,0 +1,42 @@
+---
+slug: npm
+name: npm
+category: ["package-management"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Install and manage JavaScript/Node.js packages and project dependencies.
+syntax: "npm COMMAND [PACKAGE]"
+flags:
+  - flag: "install"
+    description: Install a package, or every dependency listed in package.json.
+    example: "npm install express"
+  - flag: "run"
+    description: Run a script defined in package.json.
+    example: "npm run build"
+  - flag: "-g"
+    description: Install a package globally, available system-wide rather than just in this project.
+    example: "npm install -g typescript"
+examples:
+  - description: Install every dependency listed in a project's package.json
+    input: "npm install"
+    output: ""
+  - description: Add a new dependency to the project
+    input: "npm install express"
+    output: ""
+  - description: Run a script defined in package.json
+    input: "npm run build"
+    output: ""
+shortcuts: []
+tips:
+  - "npm install with no package name reads package.json and installs everything listed there — almost always the first command run after cloning a Node.js project."
+  - "npm run is how project-specific scripts (build, test, dev server) get invoked — check package.json's 'scripts' section to see what's actually available."
+related: ["pip"]
+pitfalls:
+  - "Installing a package without -g adds it to the current project only (in node_modules); -g installs it system-wide. Mixing these up is a common source of 'command not found' or version mismatch confusion."
+---
+
+`npm` (Node Package Manager) installs and manages dependencies for JavaScript and Node.js projects, and also runs custom scripts a project defines for tasks like building, testing, or starting a dev server. It's the standard entry point for working with almost any Node.js codebase.
+
+`npm install` with no arguments is usually the very first command run after cloning a project — it reads `package.json`'s dependency list and downloads everything needed into a local `node_modules` folder. Adding a specific package name instead (`npm install express`) both installs it and adds it to that dependency list for next time.
+
+The `-g` flag changes scope entirely, installing a package globally rather than into the current project — useful for command-line tools you want available everywhere, but easy to confuse with a regular project-scoped install if you're not paying attention to which one you actually need.

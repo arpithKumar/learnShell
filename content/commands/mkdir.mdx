@@ -1,0 +1,43 @@
+---
+slug: mkdir
+name: mkdir
+category: ["filesystem"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Create new directories.
+syntax: "mkdir [OPTIONS] DIRECTORY..."
+flags:
+  - flag: "-p"
+    description: Create parent directories as needed, and don't error if the directory already exists.
+    example: "mkdir -p src/components/ui"
+  - flag: "-v"
+    description: Print a message for each directory created (verbose).
+    example: "mkdir -v logs"
+examples:
+  - description: Create a single folder
+    input: "mkdir logs"
+    output: ""
+  - description: Create a nested path in one go
+    input: "mkdir -p src/components/ui"
+    output: ""
+shortcuts: []
+tips:
+  - "mkdir -p is almost always what you want in scripts, since it won't fail if the directory already exists — making your script safe to re-run."
+  - "You can create several sibling folders in one command: mkdir src tests docs."
+related: ["cd", "rm", "touch"]
+pitfalls:
+  - "Without -p, mkdir fails if any parent folder in the path doesn't already exist — for example, mkdir a/b/c errors out if a/b doesn't exist yet."
+---
+
+`mkdir` ("make directory") creates one or more new folders. In its
+plainest form, it expects every folder in the path except the very last
+one to already exist — `mkdir projects/new-app` only works if
+`projects` is already there; `new-app` is the one piece it's allowed to
+create.
+
+The `-p` flag removes that restriction. It creates any missing parent
+folders along the way, and — just as usefully — won't complain if the
+target directory already exists. That combination makes `mkdir -p` the
+safer default any time you're scripting, since a script that creates
+directories should usually be able to run more than once without
+erroring out on the second run.

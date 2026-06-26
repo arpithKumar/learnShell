@@ -1,0 +1,43 @@
+---
+slug: test
+name: test
+category: ["scripting"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Evaluate a condition and exit with a success or failure status — the engine behind every shell "if".
+syntax: "test EXPRESSION  (or equivalently: [ EXPRESSION ])"
+flags:
+  - flag: "-f"
+    description: True if the given path exists and is a regular file.
+    example: "test -f notes.txt"
+  - flag: "-d"
+    description: True if the given path exists and is a directory.
+    example: "test -d ./src"
+  - flag: "-z"
+    description: True if the given string is empty.
+    example: "test -z \"$name\""
+  - flag: "-eq"
+    description: True if two numbers are equal (used between two arguments).
+    example: "test 5 -eq 5"
+examples:
+  - description: Check whether a file exists, inside an if statement
+    input: 'if test -f notes.txt; then echo "found"; fi'
+    output: "found"
+  - description: The same check using the more familiar bracket syntax
+    input: 'if [ -f notes.txt ]; then echo "found"; fi'
+    output: "found"
+shortcuts: []
+tips:
+  - "The square-bracket form, [ EXPRESSION ], is literally just test in disguise — [ is a command, and the closing ] is its required final argument, not special syntax."
+  - "Always quote variables inside a test expression (test -z \"$name\", not test -z $name) — an empty or multi-word variable can otherwise break the expression into the wrong number of arguments."
+related: ["grep"]
+pitfalls:
+  - "Using = to compare numbers (test 5 = 05) does a string comparison, not a numeric one, and can give surprising results — use -eq, -lt, -gt and friends for numbers specifically."
+  - "Unquoted variables in a test expression are a classic source of 'unary operator expected' errors when the variable happens to be empty or contains spaces."
+---
+
+`test` evaluates a condition — does this file exist, are these two strings equal, is this number greater than that one — and reports the result purely through its exit status: success if the condition is true, failure if it isn't. It doesn't print anything; its entire job is to be checked by something else, almost always an `if` statement.
+
+The square-bracket syntax most people actually type, `[ -f file.txt ]`, is `test` wearing a more readable disguise — `[` is genuinely a command (an alias for `test`), and the trailing `]` is a required argument that closes it, not special shell syntax. Both forms behave identically; the brackets just read more like a familiar conditional from other languages.
+
+Because `test` is fundamentally about strings and arguments, unquoted variables are its most common failure mode — if a variable is empty or contains spaces, `test -z $name` can silently fall apart into the wrong number of arguments. Quoting consistently (`test -z "$name"`) avoids the entire category of bug.

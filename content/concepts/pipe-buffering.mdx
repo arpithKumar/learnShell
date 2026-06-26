@@ -1,0 +1,23 @@
+---
+slug: pipe-buffering
+title: Pipe Buffering
+category: io-and-pipelines
+difficulty: advanced
+summary: A pipe has a fixed-size kernel buffer — a writer blocks once it fills up, and a reader blocks once it's empty, which shapes how pipelines actually behave.
+examples:
+  - description: A slow reader makes a fast writer wait once the pipe buffer fills
+    input: "yes | sleep 100"
+    output: ""
+tips:
+  - "If a pipeline seems to 'hang' for no obvious reason, consider whether the reading side has stalled — the writing side isn't broken, it's simply blocked because the pipe's buffer is full and nothing is draining it."
+pitfalls:
+  - "Many command-line tools (including some implementations of common utilities) buffer their own output in larger chunks when writing to a pipe instead of a terminal, which is why a long-running pipeline's output sometimes appears to lag noticeably behind real-time, then arrive all at once."
+funFacts:
+  - "On Linux, a pipe's buffer is commonly 64KB by default — small enough that a sufficiently fast producer and slow consumer will hit this blocking behavior within a fraction of a second of starting."
+relatedConcepts: ["pipes", "named-pipes"]
+relatedCommands: []
+---
+
+A pipe isn't an unlimited conduit — the kernel gives it a fixed-size buffer (commonly 64KB on Linux), and once that buffer fills up, the writing process blocks (pauses) until the reading process drains some of it. This is exactly why `yes | sleep 100` doesn't spin forever generating infinite output: `yes` writes as fast as it can until the buffer is full, then simply waits, using essentially no CPU, since nothing is reading from the other end.
+
+This buffering behavior is part of why pipeline output sometimes seems to lag — many tools buffer their own writes in larger chunks specifically when writing to a pipe (as opposed to an interactive terminal, where they often flush line by line), which can make a long pipeline appear to pause and then dump a burst of output all at once rather than streaming smoothly.

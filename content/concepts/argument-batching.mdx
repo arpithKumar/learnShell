@@ -1,0 +1,26 @@
+---
+slug: argument-batching
+title: Argument Batching
+category: io-and-pipelines
+difficulty: intermediate
+summary: Convert a long stream of piped lines into a manageable number of command invocations, each handling several items at once.
+examples:
+  - description: Pass piped filenames as arguments to a single rm call, in batches
+    input: "find . -name '*.tmp' | xargs rm"
+    output: ""
+  - description: Limit how many arguments go to each individual invocation
+    input: "find . -name '*.tmp' | xargs -n 5 echo"
+    output: "file1.tmp file2.tmp file3.tmp file4.tmp file5.tmp\nfile6.tmp file7.tmp"
+tips:
+  - "xargs -P N runs up to N invocations in parallel instead of one after another — a real, simple way to speed up a slow per-item operation across many piped inputs, without writing any explicit parallelism logic yourself."
+pitfalls:
+  - "Without -0/-print0 on the producing side (and -0 on xargs itself), filenames containing spaces or newlines get split incorrectly — find . -print0 | xargs -0 ... is the safe combination, plain find | xargs is not, for filenames that aren't guaranteed simple."
+funFacts:
+  - "xargs exists specifically because, historically, command-line argument lists had a hard length limit at the operating-system level — passing thousands of filenames directly as arguments could simply fail, and batching them into smaller groups was the practical workaround."
+relatedConcepts: ["pipes", "loops"]
+relatedCommands: ["xargs", "find"]
+---
+
+A command like `rm` or `grep` can normally only operate on whatever arguments you give it directly — it has no concept of "read filenames from a pipe." Argument batching, most commonly done with `xargs`, bridges that gap: it reads piped input and converts it into actual command-line arguments, invoking the target command (potentially several times, in batches) rather than once per line in a loop.
+
+Batching matters because passing thousands of arguments to a single invocation can hit real operating-system limits on command-line length, so tools like `xargs` split a very long input into multiple, appropriately-sized invocations automatically. `xargs -P` takes this further, running multiple batches concurrently — a straightforward way to parallelize a slow per-item operation across a large piped input without writing any parallel-execution logic by hand.

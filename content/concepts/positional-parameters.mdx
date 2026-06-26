@@ -1,0 +1,26 @@
+---
+slug: positional-parameters
+title: Positional Parameters
+category: fundamentals
+difficulty: beginner
+summary: The arguments passed to a script or function, available as numbered variables like $1, $2, and a few special collective forms.
+examples:
+  - description: Access individual arguments and the total count
+    input: 'echo "$0 was called with $# args: $1, $2"'
+    output: "./script.sh was called with 2 args: foo, bar"
+  - description: "\"$@\" expands each argument as its own separate word"
+    input: 'set -- "first arg" "second arg"; for a in "$@"; do echo "[$a]"; done'
+    output: "[first arg]\n[second arg]"
+tips:
+  - "Always use \"$@\" (in double quotes) when forwarding a script's own arguments to another command — it preserves each argument exactly as received, even ones containing spaces. $* or unquoted $@ both flatten everything into one word-split string instead."
+pitfalls:
+  - "$0 is the script's own name/path, not the first argument — $1 is the first actual argument. Off-by-one confusion here is a common early mistake."
+funFacts:
+  - "$@ and $* look nearly identical and behave identically when unquoted, but diverge sharply once quoted — that one-character difference (\"$@\" vs \"$*\") is one of the most-cited shell scripting gotchas."
+relatedConcepts: ["variables", "loops", "argument-validation"]
+relatedCommands: ["getopts", "shift"]
+---
+
+Positional parameters are how a script or function receives its arguments: `$1`, `$2`, `$3`, and so on for each individual argument, `$#` for the total count, and `$0` for the script's own name (not an argument at all, just where it lives by convention). A function's positional parameters are separate from the enclosing script's — calling `myfunc a b` resets `$1`/`$2` inside that function to `a`/`b` for the duration of the call.
+
+The two collective forms, `$@` and `$*`, both represent "all the arguments," but behave differently once quoted: `"$@"` expands to each argument as its own separate, correctly preserved word, while `"$*"` joins everything into a single string. This distinction matters enormously when forwarding arguments to another command — `"$@"` is almost always the correct choice.

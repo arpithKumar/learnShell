@@ -1,0 +1,26 @@
+---
+slug: variable-indirection
+title: Variable Indirection
+category: fundamentals
+difficulty: advanced
+summary: Look up a variable's value using a name that's itself stored in another variable, with the ${!name} syntax.
+examples:
+  - description: Use one variable's value as the name of another to read
+    input: 'color_red="crimson"; key="color_red"; echo "${!key}"'
+    output: "crimson"
+  - description: List every variable name starting with a given prefix
+    input: 'color_red=1; color_blue=1; echo "${!color_*}"'
+    output: "color_red color_blue"
+tips:
+  - "Before reaching for ${!name} indirection, consider whether an associative array would actually fit the problem better — a map from key to value is often a clearer, less confusing way to express the same lookup-by-name idea."
+pitfalls:
+  - "${!key} reads the value of whatever variable name is stored in key — it's easy to misread at a glance as just another way of writing $key, when it actually does something meaningfully different (one extra level of lookup)."
+funFacts:
+  - "${!prefix*} and ${!prefix@} (listing every variable name starting with a prefix) use the exact same ! syntax as single-variable indirection, but mean something quite different — context (a trailing * or @ versus nothing) is what distinguishes the two forms."
+relatedConcepts: ["variables", "nameref-variables", "associative-arrays"]
+relatedCommands: []
+---
+
+`${!name}` performs one extra level of variable lookup: instead of returning the literal text stored in `name`, it treats that text as the name of *another* variable and returns that one's value instead. If `key="color_red"` and `color_red="crimson"`, then `${!key}` returns `crimson` — `key` points to a name, and indirection follows that pointer.
+
+This shows up most often when generating variable names dynamically, like looping over a numbered or prefixed set of variables computed at runtime rather than known in advance. A separate but related form, `${!prefix*}`, instead lists every variable name that starts with a given prefix — genuinely useful for discovering what's been set, though it's easy to confuse with the single-name indirection form since both share the same leading `!`.

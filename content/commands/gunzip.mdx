@@ -1,0 +1,30 @@
+---
+slug: gunzip
+name: gunzip
+category: ["archives"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Decompress a .gz file (the counterpart to gzip).
+syntax: "gunzip [OPTIONS] FILE.gz"
+flags:
+  - flag: "-k"
+    description: Keep the compressed .gz file instead of deleting it after decompressing.
+    example: "gunzip -k file.txt.gz"
+  - flag: "-l"
+    description: List the contents and compression ratio without decompressing.
+    example: "gunzip -l file.txt.gz"
+examples:
+  - description: Decompress a .gz file
+    input: "gunzip file.txt.gz"
+    output: "file.txt"
+shortcuts: []
+tips:
+  - "gunzip file.gz is exactly equivalent to gzip -d file.gz — they're the same tool under different names, so use whichever is easier to remember."
+related: ["gzip", "tar"]
+pitfalls:
+  - "Like gzip, gunzip deletes the compressed .gz file by default once it's done — use -k if you want to keep it around."
+---
+
+`gunzip` is `gzip`'s mirror image: where `gzip` compresses a file into a `.gz`, `gunzip` decompresses it back. They're really the same underlying program with different default behavior — `gunzip file.gz` and `gzip -d file.gz` do exactly the same thing.
+
+The most common scenario is unpacking something you downloaded: a `.gz` file lands in a folder, `gunzip` turns it back into the original plain file. As with `gzip`, the compressed version is removed once decompression finishes unless you tell it to keep it with `-k`.

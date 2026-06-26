@@ -1,0 +1,30 @@
+---
+slug: useradd
+name: useradd
+category: ["system", "security"]
+difficulty: advanced
+shells: ["bash", "zsh"]
+summary: Create a new user account on a Linux system.
+syntax: "useradd [OPTIONS] USERNAME"
+flags:
+  - flag: "-m"
+    description: Create a home directory for the new user.
+    example: "useradd -m alice"
+  - flag: "-s"
+    description: Set the new user's login shell.
+    example: "useradd -m -s /bin/bash alice"
+examples:
+  - description: Create a new user with a home directory and bash as their shell
+    input: "sudo useradd -m -s /bin/bash alice"
+    output: ""
+shortcuts: []
+tips:
+  - "A newly created account typically has no password set and can't log in until passwd is run for it separately — useradd and passwd are usually used as a pair."
+related: ["passwd", "sudo", "groups"]
+pitfalls:
+  - "useradd requires root privileges (typically via sudo) — running it as a regular user fails with a permission error, since creating accounts is a privileged system operation."
+---
+
+`useradd` creates a new user account on a Linux system, typically as one step in provisioning a new account alongside setting up a home directory and login shell. It's a privileged operation requiring root access, usually run with `sudo`.
+
+A freshly created account has no password set by default and can't log in until one is assigned with `passwd`. The `-m` flag is commonly used to also create a home directory, since without it the new account has nowhere to store personal files.

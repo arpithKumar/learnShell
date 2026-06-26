@@ -1,0 +1,27 @@
+---
+slug: conditionals
+title: Conditionals
+category: control-flow
+difficulty: beginner
+summary: Branch a script's behavior based on whether a test or command succeeds.
+examples:
+  - description: Basic if / else based on a file existence test
+    input: 'if [ -f "report.txt" ]; then echo "found"; else echo "missing"; fi'
+    output: "found"
+  - description: A conditional based on a command's own exit status, not a test
+    input: 'if grep -q error log.txt; then echo "errors present"; fi'
+    output: "errors present"
+tips:
+  - "if doesn't test a 'truthy' value the way many programming languages do — it checks the exit status of a command. if [ \"$x\" = \"yes\" ] works because [ is itself a command (an alias for test) that returns exit status 0 (true) or 1 (false)."
+pitfalls:
+  - "if [ $x = \"yes\" ] without quotes around $x breaks with a syntax error if x is empty or contains spaces, because the test command then receives the wrong number of arguments — always quote variables inside [ ... ] tests."
+funFacts:
+  - "Bash's [[ ... ]] extended test was introduced specifically to fix [ ... ]'s long-standing quoting and word-splitting footguns — it's a bash/ksh/zsh feature, not part of POSIX sh."
+relatedConcepts:
+  ["loops", "variables", "quoting", "case-statement", "comparison-operators"]
+relatedCommands: ["test", "expr"]
+---
+
+`if` in shell scripting doesn't evaluate a boolean expression the way it would in most programming languages — it runs a command and branches based on that command's exit status: `0` means success (the `then` branch runs), anything else means failure. The square-bracket test `[ ... ]` that usually follows `if` is itself just a command (literally an alias for `test`), which is why `if [ -f file ]; then` and `if grep -q pattern file; then` are really the same mechanism applied to two different commands.
+
+This explains a common point of confusion for newcomers: there's no special "if syntax" for testing values versus testing commands, just `if` always checking an exit status, with `[ ... ]` or `test` being the everyday tool for comparing strings, numbers, and file attributes. Quoting variables inside a test is important for the same reason quoting matters everywhere else — an empty or space-containing value can change how many arguments `[ ... ]` actually receives, breaking the comparison.

@@ -1,0 +1,30 @@
+---
+slug: signals
+title: Signals
+category: process-control
+difficulty: intermediate
+summary: Asynchronous notifications sent to a running process, used to interrupt, terminate, or instruct it.
+examples:
+  - description: Ctrl-C sends SIGINT, asking a process to stop
+    input: "sleep 100\n^C"
+    output: ""
+  - description: Send a signal directly by process ID
+    input: "kill -9 1234"
+    output: ""
+  - description: Run cleanup code when a script receives a signal
+    input: "trap 'echo cleaning up; exit' INT TERM"
+    output: ""
+tips:
+  - "SIGTERM (the kill command's default) asks a process to shut down gracefully, while SIGKILL (kill -9) terminates it immediately with no chance to clean up — reach for -9 only when a process genuinely won't respond to a plain SIGTERM."
+pitfalls:
+  - "kill -9 (SIGKILL) can't be caught, blocked, or handled by the receiving process at all — a script's trap on SIGTERM/SIGINT for cleanup is completely bypassed if something sends SIGKILL instead, so temp files or locks may be left behind."
+funFacts:
+  - "kill -9's reputation as the sysadmin 'nuclear option' comes directly from the signal number — 9 is SIGKILL, and the meme is old enough that plenty of admins say 'kill dash nine it' as a verb on its own."
+relatedConcepts:
+  ["job-control", "error-trap", "zombie-and-orphan-processes", "command-timeouts"]
+relatedCommands: ["trap", "kill", "pkill", "nice"]
+---
+
+A signal is a short, asynchronous notification sent to a running process — `Ctrl-C` at a terminal sends `SIGINT` ("please stop"), and `kill PID` sends `SIGTERM` by default ("please terminate") to a specific process by its ID. Most signals can be caught and handled by the receiving program, which is what lets a process clean up open files or temporary state before actually exiting rather than being cut off mid-operation.
+
+`SIGKILL` (`kill -9`) is the notable exception — it terminates a process immediately at the operating-system level and cannot be intercepted, blocked, or handled, which makes it the last resort for a genuinely stuck process rather than the default choice. Inside a shell script, `trap 'commands' SIGNAL` registers a handler that runs when the script receives a given signal, commonly used to guarantee cleanup code runs even if the script is interrupted partway through.

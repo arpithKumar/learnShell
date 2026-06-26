@@ -1,0 +1,27 @@
+---
+slug: sha256sum
+name: sha256sum
+category: ["security"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Compute the SHA-256 checksum of a file — the modern, secure standard for verifying file integrity.
+syntax: "sha256sum FILE"
+flags:
+  - flag: "-c"
+    description: Verify files against a previously saved list of checksums.
+    example: "sha256sum -c checksums.txt"
+examples:
+  - description: Get a file's SHA-256 checksum
+    input: "sha256sum installer.dmg"
+    output: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  installer.dmg"
+shortcuts: []
+tips:
+  - "Most software you download for security-sensitive use (OS images, package managers) publishes a SHA-256 checksum specifically because it's currently considered safe against deliberate tampering, unlike MD5."
+related: ["md5sum"]
+pitfalls:
+  - "A checksum only proves the file matches what the checksum represents — if an attacker compromises both the file and the published checksum together, the comparison won't catch it. Checksums protect against corruption and accidental tampering, not a fully compromised source."
+---
+
+`sha256sum` computes a SHA-256 checksum of a file, the same basic concept as `md5sum` but using a cryptographic hash algorithm that's currently considered secure against deliberate tampering. It's the standard choice today for verifying that a downloaded file is exactly what the publisher intended.
+
+Usage is identical to `md5sum`: compute a checksum, compare it against the one the publisher provides. The meaningful difference is trust — SHA-256 doesn't have MD5's known weaknesses, which is why operating system installers, package repositories, and security-conscious downloads publish SHA-256 checksums rather than MD5 ones.

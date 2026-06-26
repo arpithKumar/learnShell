@@ -1,0 +1,26 @@
+---
+slug: associative-arrays
+title: Associative Arrays
+category: fundamentals
+difficulty: advanced
+summary: An array indexed by arbitrary string keys instead of sequential numbers — a basic key-value map, declared explicitly before use.
+examples:
+  - description: Declare and use a key-value map
+    input: 'declare -A colors; colors[apple]="red"; colors[banana]="yellow"; echo "${colors[apple]}"'
+    output: "red"
+  - description: List every key
+    input: 'declare -A colors=([apple]=red [banana]=yellow); echo "${!colors[@]}"'
+    output: "apple banana"
+tips:
+  - "${!array[@]} expands to every key in an associative array, while ${array[@]} expands to every value — the ! is what flips it from values to keys."
+pitfalls:
+  - "Associative arrays must be explicitly declared with declare -A before use — colors[apple]=\"red\" without that declaration creates a regular indexed array instead, silently treating \"apple\" as the number 0 rather than a string key."
+funFacts:
+  - "Associative arrays are a much more recent bash addition than indexed arrays — they only arrived in bash 4.0 (2009), whereas indexed arrays date back to bash 2.0 (1996). zsh had them well before that."
+relatedConcepts: ["arrays", "variables"]
+relatedCommands: ["declare"]
+---
+
+An associative array maps arbitrary string keys to values, the same basic idea as a dictionary or hash map in other languages — declared with `declare -A name` before any keys can be assigned. Once declared, `name[key]=value` sets an entry and `${name[key]}` reads it back, with `${!name[@]}` expanding every key and `${name[@]}` expanding every value.
+
+This is a genuinely newer feature than ordinary indexed arrays — bash didn't get associative arrays until version 4.0 in 2009, more than a decade after indexed arrays arrived. Forgetting the `declare -A` step is a common, quiet mistake: without it, `name[apple]=red` still "works" but creates a regular indexed array instead, where the string `apple` gets silently coerced to the number `0` as the index rather than acting as a real key.

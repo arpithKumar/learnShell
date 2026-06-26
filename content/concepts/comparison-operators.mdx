@@ -1,0 +1,29 @@
+---
+slug: comparison-operators
+title: Comparison Operators
+category: control-flow
+difficulty: beginner
+summary: Shell tests use different operators for comparing numbers versus comparing strings — = and -eq are not interchangeable.
+examples:
+  - description: String comparison uses = and !=
+    input: 'a="cat"; [ "$a" = "cat" ] && echo "match"'
+    output: "match"
+  - description: Numeric comparison uses -eq, -lt, -gt, etc.
+    input: '[ 10 -gt 9 ] && echo "ten is bigger"'
+    output: "ten is bigger"
+  - description: Using = for numbers compares them as text, not values
+    input: '[ "10" = "010" ] && echo "equal" || echo "not equal"'
+    output: "not equal"
+tips:
+  - "Inside [[ ... ]] (bash/zsh's extended test) you can also use -eq/-lt for numbers, but you can additionally use plain < and > for string comparison, and even == for pattern-style matching — [[ ]] supports a strict superset of what [ ] does."
+pitfalls:
+  - "Using = or == to compare two things you think of as numbers compares them as plain text instead — \"10\" = \"010\" is false, since those are different strings, even though they're numerically equal. -eq is the correct operator for that case."
+funFacts:
+  - "The numeric operators (-eq, -ne, -lt, -gt, -le, -ge) read oddly today, but they exist because the shell reserved =, !=, <, and > for other long-standing jobs first (string comparison and redirection) by the time numeric tests were added."
+relatedConcepts: ["conditionals", "arithmetic-expansion"]
+relatedCommands: ["test", "expr"]
+---
+
+Shell tests split comparison into two separate sets of operators depending on what you're comparing. For strings: `=` (or `==` inside `[[ ]]`) for equality, `!=` for inequality. For integers: `-eq`, `-ne`, `-lt`, `-gt`, `-le`, `-ge` — spelled-out abbreviations rather than symbols, since `<` and `>` were already taken by redirection and `=` was already taken by string comparison by the time numeric tests needed their own syntax.
+
+Mixing the two up is a genuinely easy mistake with a quiet failure mode: `[ "$x" = "10" ]` checks whether `$x` is the literal text `"10"`, not whether it numerically equals ten — `"10"` and `"10.0"` or `"010"` would all fail that check despite being the same number. Reaching for `-eq` whenever the comparison is conceptually about numbers, not text, avoids this category of bug entirely.

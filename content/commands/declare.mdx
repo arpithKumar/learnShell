@@ -1,0 +1,36 @@
+---
+slug: declare
+name: declare
+category: ["scripting"]
+difficulty: advanced
+shells: ["bash", "zsh"]
+summary: Declare a variable with specific attributes, like making it an integer, array, or read-only.
+syntax: "declare [OPTIONS] NAME[=VALUE]"
+flags:
+  - flag: "-i"
+    description: Treat the variable as an integer, enabling arithmetic without $((...)).
+    example: "declare -i count=0"
+  - flag: "-a"
+    description: Declare the variable as an indexed array.
+    example: "declare -a fruits=(apple banana)"
+  - flag: "-r"
+    description: Make the variable read-only after this point.
+    example: "declare -r MAX_RETRIES=3"
+examples:
+  - description: Declare an integer variable, then use it in arithmetic directly
+    input: "declare -i count=0; count+=1; echo $count"
+    output: "1"
+  - description: Declare a constant that can't be changed afterward
+    input: "declare -r MAX_RETRIES=3"
+    output: ""
+shortcuts: []
+tips:
+  - "Plain variable assignment (x=5) works fine for most scripts — declare earns its place when you specifically need a typed behavior, like integer arithmetic, an array, or genuine immutability with -r."
+related: ["local", "export"]
+pitfalls:
+  - "Attempting to reassign a variable declared with -r (read-only) fails with an error — that's the explicit point of the flag, but it can be a surprise if you forget a variable was locked earlier in a long script."
+---
+
+`declare` creates a variable with explicit attributes attached, going beyond a plain assignment's default behavior of "just a string." With `-i`, a variable behaves as an integer, supporting arithmetic directly without the usual `$((...))` wrapper; with `-a`, it becomes an array; with `-r`, it becomes read-only, genuinely immutable for the rest of the script.
+
+Most everyday shell variables don't need any of this — a plain `name=value` assignment is perfectly fine. `declare` is worth reaching for specifically when you need one of those particular behaviors, most commonly `-r` for defining a constant that shouldn't be accidentally overwritten later in a long script.

@@ -1,0 +1,39 @@
+---
+slug: nohup
+name: nohup
+category: ["process-system"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Run a command so it keeps running even after you close the terminal.
+syntax: "nohup COMMAND [ARGS...] &"
+flags: []
+examples:
+  - description: Start a long-running script that survives closing the terminal
+    input: "nohup ./long-script.sh &"
+    output: "nohup: ignoring input and appending output to 'nohup.out'"
+shortcuts: []
+tips:
+  - "On systems with tmux or screen available, starting a long job inside one of those persistent sessions is often a more flexible alternative to nohup, since you can reattach later and interact with it as if you'd never left."
+  - "Redirect both stdout and stderr explicitly, e.g. nohup ./script.sh > out.log 2>&1 &, if you don't want a generic nohup.out file accumulating in your working directory."
+related: ["jobs", "bg", "kill"]
+pitfalls:
+  - "nohup by itself doesn't background the process — you still need to add & at the end, or the command blocks your terminal until it finishes, exactly as it would without nohup."
+  - "Output that isn't explicitly redirected gets appended to a file called nohup.out in the current directory, which can quietly grow large over time if the command produces a lot of output."
+---
+
+Normally, closing a terminal sends a "hang up" signal to every process
+you started inside it, which causes them to stop too. `nohup` ("no hang
+up") tells a command to ignore that specific signal, so it keeps
+running in the background even after you log out, disconnect an SSH
+session, or close the terminal window entirely.
+
+The classic use case is kicking off a long-running task on a remote
+server over SSH and then disconnecting without waiting for it to
+finish — without `nohup`, closing that SSH connection would normally
+kill the job along with it.
+
+`nohup` is a fairly narrow tool, though: it solves exactly the "survive
+terminal closure" problem and nothing more. If you also want to be able
+to reconnect later and watch the job's live output, interact with it,
+or restart it after a crash, a persistent terminal multiplexer like
+`tmux` or `screen` covers more ground than `nohup` alone.

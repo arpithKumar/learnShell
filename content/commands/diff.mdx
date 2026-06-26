@@ -1,0 +1,35 @@
+---
+slug: diff
+name: diff
+category: ["text-processing"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Compare two files line by line and show the differences.
+syntax: "diff [OPTIONS] FILE1 FILE2"
+flags:
+  - flag: "-u"
+    description: Show output in unified format, with context lines (the format used by patches and git diff).
+    example: "diff -u old.txt new.txt"
+  - flag: "-r"
+    description: Recursively compare two directories.
+    example: "diff -r ./v1 ./v2"
+  - flag: "-q"
+    description: Just report whether files differ, without showing the actual differences.
+    example: "diff -q old.txt new.txt"
+examples:
+  - description: See what changed between two versions of a file
+    input: "diff -u old.txt new.txt"
+    output: "--- old.txt\n+++ new.txt\n@@ -1,3 +1,3 @@\n-old line\n+new line"
+shortcuts: []
+tips:
+  - "-u (unified diff format) is the version most people actually want to read — it's the same format git diff and patch files use, with +/- prefixes showing additions and removals in context."
+related: ["sed", "patch"]
+pitfalls:
+  - "diff's default output format (no flags) is less readable than -u for most purposes — get in the habit of adding -u unless you have a specific reason not to."
+---
+
+`diff` compares two files and reports exactly where they differ — which lines were added, removed, or changed. It's the foundation underneath version control diffs, patch files, and code review tools, even when you're not aware it's running underneath them.
+
+The output format you actually want almost every time is unified diff (`-u`): each differing section is shown with a few lines of surrounding context, additions marked with `+` and removals with `-`. This is the exact same format `git diff` produces and that the `patch` command consumes, which makes it worth defaulting to over plain `diff`'s harder-to-read default output.
+
+`-r` extends the same comparison to entire directory trees, reporting which files differ (or exist only on one side) across two folder structures — useful for confirming a deployment matches a backup, or that a refactor didn't change more than intended.

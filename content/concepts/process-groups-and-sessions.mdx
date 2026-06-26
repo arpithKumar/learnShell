@@ -1,0 +1,23 @@
+---
+slug: process-groups-and-sessions
+title: Process Groups & Sessions
+category: process-control
+difficulty: advanced
+summary: Processes are organized into groups and sessions above the individual PID level — which is why Ctrl-C can stop several processes at once, not just one.
+examples:
+  - description: A pipeline's processes share one process group
+    input: "sleep 100 | sleep 200 &\nps -o pid,pgid,comm"
+    output: "PID   PGID  COMMAND\n4821  4821  sleep\n4822  4821  sleep"
+tips:
+  - "When Ctrl-C seems to kill 'more than expected,' remember it sends SIGINT to the entire foreground process GROUP, not to one single process — every command in a pipeline you just Ctrl-C'd gets the signal simultaneously."
+pitfalls:
+  - "kill PID only signals one specific process, but kill -- -PID (with a leading dash before the number) signals the entire process GROUP that PID belongs to — confusing the two when trying to stop a whole pipeline at once is a common, frustrating mistake."
+funFacts:
+  - "A session can contain multiple process groups, but only one of them is the 'foreground' group at any moment — that's the formal mechanism behind a terminal only forwarding Ctrl-C to whichever job is currently in the foreground, not background ones."
+relatedConcepts: ["job-control", "signals", "zombie-and-orphan-processes"]
+relatedCommands: ["kill", "ps"]
+---
+
+Processes aren't just a flat list of independent PIDs — they're organized into process groups (commonly, every process in one pipeline shares a group) and sessions (typically, everything started from one terminal login). This hierarchy is what makes job control actually work: pressing `Ctrl-C` sends `SIGINT` to the entire foreground process group at once, which is why a multi-stage pipeline you interrupt stops as a whole, not just its first command.
+
+This distinction matters practically when trying to stop something more complex than a single process — `kill PID` only reaches one process, while `kill -- -PID` (note the leading dash) targets the entire process group that PID is the leader of. A session can hold several process groups simultaneously, but only one is ever the active foreground group receiving terminal-generated signals at any given moment; the rest run in the background, insulated from `Ctrl-C` entirely.

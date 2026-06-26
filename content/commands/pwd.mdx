@@ -1,0 +1,43 @@
+---
+slug: pwd
+name: pwd
+category: ["filesystem", "navigation"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Print the full path of the current working directory.
+syntax: "pwd [OPTIONS]"
+flags:
+  - flag: "-L"
+    description: Print the logical path, following symlinks (default).
+    example: "pwd -L"
+  - flag: "-P"
+    description: Print the physical path, resolving any symlinks.
+    example: "pwd -P"
+examples:
+  - description: Show where you currently are
+    input: "pwd"
+    output: "/Users/you/projects/learn-shell"
+shortcuts: []
+tips:
+  - "Your shell prompt often already shows the current directory — pwd is most useful when you need that path as an actual value, like inside a script."
+  - "Capture it into a variable inside a script with HERE=$(pwd), so later commands can refer back to where the script started."
+related: ["cd", "ls"]
+pitfalls:
+  - "If you've cd'd through a symlink, pwd -L and pwd -P can print different paths — -P always shows the real, resolved location, while -L shows the path you actually typed to get there."
+---
+
+`pwd` stands for "print working directory," and it answers a question
+that comes up constantly when working in a terminal: where, exactly, am
+I right now? Unlike a graphical file manager, a shell gives you no
+visual breadcrumb trail by default — `pwd` is that breadcrumb, on
+demand.
+
+It becomes especially important once you start writing shell scripts.
+A script doesn't know where it'll be run from, so when it needs to
+reference its own location reliably, capturing the result of `pwd` (or
+a related technique) is often part of the setup.
+
+Most of the time the plain command is all you need. The `-L` vs `-P`
+distinction only matters if your path passes through a symbolic link —
+`-L` shows the "logical" path including the symlink, while `-P` resolves
+it down to the real underlying directory.

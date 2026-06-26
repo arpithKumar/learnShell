@@ -1,0 +1,30 @@
+---
+slug: file
+name: file
+category: ["filesystem"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Identify a file's actual type by examining its content, not just its extension.
+syntax: "file PATH"
+flags:
+  - flag: "-i"
+    description: Print the MIME type instead of a plain-English description.
+    example: "file -i photo.jpg"
+examples:
+  - description: Check what kind of file something actually is
+    input: "file mystery-download"
+    output: "mystery-download: gzip compressed data"
+  - description: Get the MIME type instead
+    input: "file -i photo.jpg"
+    output: "photo.jpg: image/jpeg; charset=binary"
+shortcuts: []
+tips:
+  - "file is especially useful for a file with no extension, or a misleading one — it inspects the actual content (looking for known file signatures) rather than trusting the name."
+related: ["stat", "tar"]
+pitfalls:
+  - "file's identification is based on heuristics and known file signatures — it's reliable for common formats but can occasionally misidentify obscure or corrupted files."
+---
+
+`file` looks at a file's actual content — not its name or extension — and reports what kind of file it really is: a JPEG image, a gzip archive, a plain text file, an executable. This matters because a file extension is just a naming convention; nothing stops a `.txt` file from actually containing binary data, or a downloaded file from having no extension at all.
+
+It's most useful exactly in that situation: a file with a missing, generic, or untrustworthy extension, where you need to know what you're actually dealing with before opening or processing it. `file -i` gives the same answer as a formal MIME type instead of a plain description, which is sometimes the more useful form for scripting.

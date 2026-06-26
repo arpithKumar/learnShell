@@ -1,0 +1,30 @@
+---
+slug: which
+name: which
+category: ["scripting"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Show the full path of the executable that would run for a given command name.
+syntax: "which COMMAND"
+flags:
+  - flag: "-a"
+    description: Show every matching executable on PATH, not just the first.
+    example: "which -a python"
+examples:
+  - description: Find out where a command actually lives
+    input: "which python3"
+    output: "/usr/bin/python3"
+  - description: See every matching version on your PATH
+    input: "which -a python3"
+    output: "/usr/local/bin/python3\n/usr/bin/python3"
+shortcuts: []
+tips:
+  - "If which returns nothing at all, the command either isn't installed or isn't on your PATH — that's a useful first diagnostic when a command 'isn't found.'"
+related: ["type"]
+pitfalls:
+  - "which only searches for executable files on PATH — it won't tell you about aliases, shell functions, or builtins, which is exactly where type is the more complete tool."
+---
+
+`which` searches your `PATH` and reports the full path of the executable file that would run when you type a given command name. It answers a narrower but very common question: "where exactly is this program installed?"
+
+This is especially useful when more than one version of a tool might be installed — `which -a python3` lists every match on your `PATH`, in the order the shell would try them, which helps explain why running `python3` picks up an unexpected version. For anything that isn't a plain executable file — aliases, shell functions, builtins — `which` won't see it at all; `type` is the broader tool for that.

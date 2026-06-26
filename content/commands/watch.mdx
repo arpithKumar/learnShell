@@ -1,0 +1,34 @@
+---
+slug: watch
+name: watch
+category: ["system"]
+difficulty: intermediate
+shells: ["bash", "zsh"]
+summary: Run a command repeatedly, showing the live, refreshing output on screen.
+syntax: "watch [OPTIONS] COMMAND"
+flags:
+  - flag: "-n"
+    description: Set the refresh interval in seconds (default is 2).
+    example: "watch -n 5 df -h"
+  - flag: "-d"
+    description: Highlight the differences between successive updates.
+    example: "watch -d free -h"
+examples:
+  - description: Keep an eye on disk usage, refreshing every 5 seconds
+    input: "watch -n 5 df -h"
+    output: ""
+  - description: Watch a process list update live, highlighting changes
+    input: "watch -d 'ps aux | head'"
+    output: ""
+shortcuts:
+  - keys: "Ctrl+C"
+    description: Stop watching and return to the shell.
+    context: readline
+related: ["top", "tail"]
+pitfalls:
+  - "watch re-runs the entire command from scratch on every refresh — it's not a substitute for tools like tail -f that stream output incrementally."
+---
+
+`watch` takes any command that doesn't already update live — `df -h`, `ls -l`, almost anything — and reruns it repeatedly, refreshing the screen with the latest output every couple of seconds. It turns a static snapshot command into something closer to a live dashboard.
+
+`-n` controls how often it refreshes, and `-d` highlights what changed between updates, which makes it easier to spot a value moving (disk usage climbing, a process count changing) without having to compare numbers yourself. It's a lightweight alternative to writing a manual loop with `sleep` for the common case of "just keep showing me this."

@@ -1,0 +1,26 @@
+---
+slug: terminal-colors-and-tput
+title: Terminal Colors & tput
+category: shell-environment
+difficulty: intermediate
+summary: Add color and basic formatting to script output using ANSI escape codes, ideally generated portably with tput rather than hardcoded.
+examples:
+  - description: Print colored text using a raw ANSI escape code
+    input: 'echo -e "\\033[31mThis is red\\033[0m"'
+    output: "This is red"
+  - description: The more portable way, using tput
+    input: 'echo "$(tput setaf 1)This is red$(tput sgr0)"'
+    output: "This is red"
+tips:
+  - "Always reset formatting afterward (tput sgr0, or the raw \\033[0m code) — forgetting to reset can leave a user's entire terminal stuck in a colored or bold state well after your script has finished running."
+pitfalls:
+  - "Not every terminal or context supports color — output piped to a file or another program, or a genuinely minimal terminal, can end up with literal garbage escape-code characters in it. Checking [ -t 1 ] (is stdout a real terminal?) before emitting color codes avoids polluting non-interactive output."
+funFacts:
+  - "tput reads the current terminal's actual capabilities from the terminfo database rather than assuming ANSI codes will work everywhere — it's the more portable choice specifically because not every terminal type uses identical escape sequences for the same effect."
+relatedConcepts: ["prompt-customization", "printf-formatting"]
+relatedCommands: []
+---
+
+Adding color to script output means sending the terminal special ANSI escape sequences embedded in the text itself — `\033[31m` switches to red, `\033[0m` resets back to normal. `tput` provides a more portable way to generate the same effect (`tput setaf 1` for red, `tput sgr0` to reset), looking up the correct sequence for the actual terminal type via the `terminfo` database rather than assuming every terminal understands identical raw ANSI codes.
+
+Two practical habits matter here: always resetting formatting after use, since a forgotten reset can leave a user's terminal stuck looking colored or bold long after the script exits, and checking whether stdout is actually a terminal (`[ -t 1 ]`) before emitting any color codes at all — piping colored output into a file or another program embeds literal, meaningless escape characters in data that was never meant to be displayed directly.

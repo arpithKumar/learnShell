@@ -1,0 +1,55 @@
+---
+slug: chmod
+name: chmod
+category: ["filesystem", "permissions"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Change a file or directory's read, write, and execute permissions.
+syntax: "chmod [OPTIONS] MODE FILE..."
+flags:
+  - flag: "+x"
+    description: Add execute permission (a mode shorthand, not a traditional flag).
+    example: "chmod +x deploy.sh"
+  - flag: "-R"
+    description: Apply the change recursively to a directory and its contents.
+    example: "chmod -R 755 ./public"
+  - flag: "u+w"
+    description: Add write permission for the file's owner only.
+    example: "chmod u+w readonly.txt"
+examples:
+  - description: Make a script executable so you can run it directly
+    input: "chmod +x deploy.sh"
+    output: ""
+  - description: Set permissions numerically (owner rwx, others r-x)
+    input: "chmod 755 deploy.sh"
+    output: ""
+shortcuts: []
+tips:
+  - "Think in terms of who (owner / group / others) and what (read / write / execute), rather than trying to memorize every numeric combination by rote."
+  - "644 for regular files and 755 for directories and scripts are the two patterns you'll reach for the vast majority of the time."
+  - "Be cautious with chmod -R on a whole directory — it applies the same mode to every file and folder inside, including ones where it doesn't make sense (like making a plain text file 'executable'). find with -exec gives finer-grained control when you need it."
+related: ["chown", "ls"]
+pitfalls:
+  - "Permissions are split into three groups — owner, group, others — each with their own read/write/execute bits. A common beginner mistake is reaching for chmod 777 (full access for absolutely everyone) when a much narrower permission would do; treat 777 as a red flag, not a quick fix."
+  - "A newly created or downloaded script usually isn't executable by default — that's why running ./script.sh fails with 'permission denied' until you chmod +x it first."
+---
+
+Every file on a Unix-like system carries a set of permissions: who can
+read it, who can write to it, and who can execute it as a program.
+`chmod` ("change mode") is how you adjust those permissions, and you'll
+most often meet it for one specific reason — making a script you just
+wrote or downloaded actually runnable.
+
+Permissions can be set two ways. The symbolic form reads almost like
+English: `chmod +x file` adds execute permission for everyone,
+`chmod u+w file` adds write permission for just the owner. The numeric
+form represents the same thing as a sum: read = 4, write = 2,
+execute = 1, added together separately for owner, group, and others.
+`755` breaks down as `7` (4+2+1, full access) for the owner, and `5`
+(4+1, read and execute but not write) for everyone else.
+
+If you're new to this, it's worth resisting the urge to just throw
+`777` at a permissions error to make it go away — that grants
+read/write/execute to literally everyone who can reach the file, which
+is rarely actually what the situation calls for. Take the extra moment
+to figure out which specific permission was actually missing.

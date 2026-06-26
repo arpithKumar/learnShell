@@ -1,0 +1,27 @@
+---
+slug: host
+name: host
+category: ["networking"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Look up a domain's DNS records, with simpler output than dig.
+syntax: "host DOMAIN"
+flags:
+  - flag: "-t"
+    description: Query a specific record type.
+    example: "host -t MX example.com"
+examples:
+  - description: Resolve a domain to its IP address
+    input: "host example.com"
+    output: "example.com has address 93.184.216.34"
+shortcuts: []
+tips:
+  - "host's output is simpler and more immediately readable than dig's — reach for host for a quick lookup, and dig when you need the full diagnostic detail."
+related: ["dig", "ping"]
+pitfalls:
+  - "host is a thinner, simpler tool than dig — for advanced DNS troubleshooting (querying a specific name server, inspecting full record TTLs), dig is the more capable option."
+---
+
+`host` performs a DNS lookup and prints the result in a short, plain-English line — "example.com has address 93.184.216.34" — rather than `dig`'s more detailed, technical report. It's the quicker option when you just want a straightforward answer.
+
+The two tools overlap heavily in purpose; `host` favors readability for simple lookups, while `dig` offers more control and detail for actual DNS troubleshooting. Knowing both means picking whichever fits the moment.

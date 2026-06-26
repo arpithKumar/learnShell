@@ -1,0 +1,33 @@
+---
+slug: join
+name: join
+category: ["text-processing"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Merge two files by matching a common field, like a database join.
+syntax: "join [OPTIONS] FILE1 FILE2"
+flags:
+  - flag: "-t"
+    description: Set the field delimiter (default is whitespace).
+    example: "join -t ',' a.csv b.csv"
+  - flag: "-1"
+    description: Set which field in the first file to join on (default is field 1).
+    example: "join -1 2 a.txt b.txt"
+  - flag: "-2"
+    description: Set which field in the second file to join on (default is field 1).
+    example: "join -2 1 a.txt b.txt"
+examples:
+  - description: Join two files on their first field
+    input: "join users.txt emails.txt"
+    output: "1 alice alice@example.com\n2 bob bob@example.com"
+shortcuts: []
+tips:
+  - "Unlike paste, join actually matches rows by a shared key field, the way a SQL JOIN does — but both files need to be sorted on that key first, or matches will be missed."
+related: ["paste", "sort", "cut"]
+pitfalls:
+  - "join requires both input files to be sorted on the join field beforehand — running sort on each file first (sort -k 1 file.txt) is a near-mandatory preceding step, easy to forget."
+---
+
+`join` merges two files by matching a shared field between them, the same concept as a database join — rows with the same key from each file get combined into one. This is a real step up from `paste`, which only merges by line position with no awareness of whether the data actually corresponds.
+
+The catch, and the reason `join` sees less everyday use than its usefulness would suggest, is that both input files must already be sorted on the join field. Forgetting that step is the most common reason `join` silently produces incomplete results — rows that should have matched simply don't, because the sort order assumption wasn't met.

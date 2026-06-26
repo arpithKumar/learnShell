@@ -1,0 +1,35 @@
+---
+slug: sudo
+name: sudo
+category: ["security", "permissions"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Run a single command with administrator (root) privileges.
+syntax: "sudo COMMAND"
+flags:
+  - flag: "-i"
+    description: Start an interactive root shell, instead of running just one command.
+    example: "sudo -i"
+  - flag: "-u"
+    description: Run the command as a specific user, instead of root.
+    example: "sudo -u alice whoami"
+examples:
+  - description: Run a command that requires administrator privileges
+    input: "sudo systemctl restart nginx"
+    output: ""
+  - description: Edit a system file that your regular user can't write to
+    input: "sudo nano /etc/hosts"
+    output: ""
+shortcuts: []
+tips:
+  - "sudo asks for YOUR password, not the root account's — it's verifying that you, a permitted user, are the one running the command, not asking for some separate administrator credential."
+related: ["chmod", "chown"]
+pitfalls:
+  - "sudo runs exactly one command with elevated privileges, by default — it doesn't change anything about your regular shell. A common beginner confusion is expecting later commands in the same session to stay elevated; they don't, unless you specifically run sudo -i."
+---
+
+`sudo` ("substitute user, do" — though the popular reading is "superuser do") runs a single command with administrator privileges, for the operations a regular user account isn't permitted to perform: installing system-wide software, editing protected configuration files, restarting system services.
+
+It asks for your own account's password as proof you're authorized to use elevated privileges at all — not some separate "root password," which on many modern systems doesn't even exist as a usable login. Crucially, `sudo` elevates just the one command that follows it; your shell itself stays as your regular user afterward, which is the source of a common beginner mix-up when someone expects the *next* command to also run with elevated permissions.
+
+Because of how much damage a mistyped command can do with full system privileges, it's worth reading a command twice before prefixing it with `sudo` — the same caution that applies to `rm -rf` applies even more once root access removes the usual permission safety net.

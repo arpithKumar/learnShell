@@ -1,0 +1,26 @@
+---
+slug: extended-glob-patterns
+title: Extended Glob Patterns
+category: expansions-and-substitution
+difficulty: advanced
+summary: A richer set of wildcard patterns — repetition, alternation, negation — enabled with shopt -s extglob, beyond what plain globbing supports.
+examples:
+  - description: Match one or more occurrences of a pattern
+    input: "shopt -s extglob\nls +([0-9]).txt"
+    output: "1.txt 23.txt 456.txt"
+  - description: Match anything EXCEPT a given pattern
+    input: "shopt -s extglob\nls !(*.txt)"
+    output: "readme.md script.sh"
+tips:
+  - "Extended globs need to be turned on explicitly with shopt -s extglob before they work at all — without that, bash silently treats patterns like !(*.txt) using plain globbing rules instead, which don't mean the same thing."
+pitfalls:
+  - "Extended globbing is a bash-specific shopt option, not part of POSIX sh and not on by default even in bash — a script relying on it needs to enable extglob first, and that script won't be portable to a stricter shell at all."
+funFacts:
+  - "Extended glob syntax (the +(...), !(...), @(...) family) is deliberately modeled on regular-expression-style repetition and alternation operators, brought into globbing specifically because plain wildcards (* and ?) can't express \"one or more\" or \"none of these\" on their own."
+relatedConcepts: ["globbing", "regex-matching"]
+relatedCommands: []
+---
+
+Plain globbing (`*`, `?`, `[abc]`) can match characters and runs of characters, but it has no way to express ideas like "one or more repetitions" or "anything except this." Extended glob patterns fill that gap once enabled with `shopt -s extglob`: `+(pattern)` matches one or more occurrences, `*(pattern)` matches zero or more, `?(pattern)` matches zero or one, `@(pattern)` matches exactly one of several alternatives, and `!(pattern)` matches anything that *doesn't* match.
+
+This is a bash-specific option, off by default, and meaningfully more powerful than plain globbing for filtering filenames by a more precise shape — separating numbered files from non-numbered ones, for instance, in a way plain wildcards genuinely can't express. It still isn't full regular-expression power, though; for cases extended globs can't quite reach, `=~` regex matching inside `[[ ]]` is the next step up.

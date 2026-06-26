@@ -1,0 +1,39 @@
+---
+slug: systemctl
+name: systemctl
+category: ["system", "process-system"]
+difficulty: advanced
+shells: ["bash", "zsh"]
+summary: Start, stop, and inspect system services managed by systemd.
+syntax: "systemctl COMMAND SERVICE"
+flags:
+  - flag: "status"
+    description: Show whether a service is running and its recent log lines.
+    example: "systemctl status nginx"
+  - flag: "start"
+    description: Start a service.
+    example: "systemctl start nginx"
+  - flag: "restart"
+    description: Stop and immediately start a service again.
+    example: "systemctl restart nginx"
+  - flag: "enable"
+    description: Configure a service to start automatically on boot.
+    example: "systemctl enable nginx"
+examples:
+  - description: Check whether a service is currently running
+    input: "systemctl status nginx"
+    output: "● nginx.service - A high performance web server\n   Active: active (running)"
+  - description: Restart a service after a config change
+    input: "sudo systemctl restart nginx"
+    output: ""
+shortcuts: []
+tips:
+  - "systemctl status is almost always the first command to run when something isn't working as expected — it shows both current state and the most recent log lines in one view."
+related: ["journalctl", "ps", "kill"]
+pitfalls:
+  - "systemctl is specific to systemd-based Linux distributions — it doesn't exist on macOS, and older or minimal Linux systems using a different init system won't have it either."
+---
+
+`systemctl` controls services managed by `systemd`, the service manager used by most modern Linux distributions — starting, stopping, restarting, and checking the status of background services like web servers, databases, and daemons.
+
+`systemctl status SERVICE` is the command worth knowing best: it shows whether a service is active, when it last started or stopped, and a few of its most recent log lines, all in one view — usually the fastest way to begin diagnosing why something isn't behaving as expected. `enable` is the separate step that makes a service start automatically on boot, distinct from just starting it for the current session.

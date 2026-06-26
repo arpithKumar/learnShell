@@ -1,0 +1,29 @@
+---
+slug: redirection
+title: Redirection
+category: io-and-pipelines
+difficulty: beginner
+summary: Send a command's output to a file, or feed a file in as its input, instead of the terminal.
+examples:
+  - description: Overwrite a file with a command's output
+    input: "echo hello > greeting.txt"
+    output: ""
+  - description: Append instead of overwriting
+    input: "echo world >> greeting.txt"
+    output: ""
+  - description: Redirect stderr separately from stdout
+    input: "ls missing-file 2> errors.log"
+    output: ""
+tips:
+  - "2>&1 means 'send stream 2 (stderr) to wherever stream 1 (stdout) currently goes' — command > file.log 2>&1 captures both into one file, but the order matters: 2>&1 > file.log would not work the same way."
+pitfalls:
+  - "> always overwrites the target file's entire contents with no warning — using it where you meant >> (append) is a common and sometimes destructive mistake, especially when redirecting into a file you meant to only add to."
+funFacts:
+  - "File descriptors 0, 1, and 2 for stdin/stdout/stderr aren't a shell invention at all — they're part of the underlying Unix kernel's I/O model, which is why the convention is identical across every shell and even most non-shell programs."
+relatedConcepts: ["pipes", "here-docs", "file-descriptors", "noclobber"]
+relatedCommands: ["tee", "cat", "echo"]
+---
+
+Redirection changes where a command's input or output goes, instead of the default terminal. `>` sends standard output (stream 1) to a file, overwriting it entirely; `>>` does the same but appends to the end instead. `<` does the reverse, feeding a file's contents in as a command's standard input.
+
+Errors are a separate stream, standard error (stream 2), which is why a failing command's error message still shows up on your terminal even when you've redirected its normal output to a file with `>` — you'd need `2>` to redirect just the errors, or `2>&1` to merge them into the same destination as standard output. Mixing up `>` and `>>` is a common, occasionally destructive mistake, since `>` silently replaces a file's entire contents with no confirmation.

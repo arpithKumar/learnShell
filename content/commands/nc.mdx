@@ -1,0 +1,36 @@
+---
+slug: nc
+name: nc
+category: ["networking"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Read and write raw data over a network connection — a flexible, low-level networking tool.
+syntax: "nc [OPTIONS] HOST PORT"
+flags:
+  - flag: "-l"
+    description: Listen for an incoming connection instead of making one.
+    example: "nc -l 8080"
+  - flag: "-v"
+    description: Print connection details (verbose).
+    example: "nc -v example.com 80"
+  - flag: "-z"
+    description: Scan for an open port without sending any data.
+    example: "nc -z example.com 443"
+examples:
+  - description: Check whether a port is open
+    input: "nc -zv example.com 443"
+    output: "Connection to example.com port 443 [tcp/https] succeeded!"
+  - description: Start a simple listener to test sending data to a port
+    input: "nc -l 8080"
+    output: ""
+shortcuts: []
+tips:
+  - "nc -zv host port is a quick, no-frills alternative to lsof or netstat when you just want to know 'is anything listening here.'"
+related: ["netstat", "ping", "curl"]
+pitfalls:
+  - "nc is genuinely low-level — it sends and receives raw bytes with no protocol awareness, so testing an HTTP server with it means typing the raw HTTP request yourself, unlike curl which handles that for you."
+---
+
+`nc` ("netcat," sometimes nicknamed the network Swiss Army knife) reads and writes raw data directly over network connections, with no specific protocol baked in. That low-level flexibility makes it useful for quick connectivity tests, simple data transfer between two machines, and debugging exactly what a server actually sends back.
+
+The most common everyday use is a quick port check: `nc -zv host port` reports whether a connection to that port succeeds, without sending or expecting any particular protocol's data — a lighter alternative to firing up `curl` just to confirm something is listening. For anything involving an actual protocol like HTTP, a purpose-built tool like `curl` is almost always the more practical choice, since it handles the protocol details `nc` deliberately leaves up to you.

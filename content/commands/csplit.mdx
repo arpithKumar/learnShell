@@ -1,0 +1,24 @@
+---
+slug: csplit
+name: csplit
+category: ["text-processing"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Split a file into pieces based on matching patterns, instead of a fixed line count.
+syntax: "csplit FILE PATTERN..."
+flags: []
+examples:
+  - description: Split a file every time a line starting with 'Chapter' appears
+    input: "csplit book.txt '/^Chapter/' '{*}'"
+    output: "xx00  xx01  xx02"
+shortcuts: []
+tips:
+  - "csplit is the content-aware sibling of split — reach for it specifically when the natural breakpoints in a file are marked by a pattern (a header line, a delimiter) rather than a fixed line count or size."
+related: ["split", "grep"]
+pitfalls:
+  - "csplit's pattern syntax and repeat-count arguments are fiddly enough that it's worth testing on a copy of the file first — a slightly wrong pattern can split in unexpected places."
+---
+
+`csplit` splits a file into separate pieces at points matched by a pattern, rather than `split`'s fixed line count or byte size. It's the right tool when a file has natural, content-based breakpoints — chapter headings, record delimiters, a recurring marker line — and you want each section as its own file.
+
+The syntax takes some getting used to, especially the repeat-count notation for "keep splitting on this pattern as many times as it matches." It's worth a test run against a copy of the file first, since a pattern that's slightly off can produce splits in places you didn't intend.

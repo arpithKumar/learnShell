@@ -1,0 +1,37 @@
+---
+slug: parameter-expansion
+title: Parameter Expansion
+category: expansions-and-substitution
+difficulty: intermediate
+summary: Transform a variable's value inline — defaults, substring removal, length, and substitution — without calling a separate command.
+examples:
+  - description: Fall back to a default if the variable is unset or empty
+    input: 'echo "${name:-Guest}"'
+    output: "Guest"
+  - description: Strip a file extension using suffix removal
+    input: 'file="report.txt"; echo "${file%.txt}"'
+    output: "report"
+  - description: Get the length of a string
+    input: 'word="shell"; echo "${#word}"'
+    output: "5"
+tips:
+  - "${var%pattern} strips the shortest match from the end, ${var%%pattern} strips the longest match from the end — the doubled character is a consistent convention across these operators for 'greedy' matching."
+pitfalls:
+  - "${var:-default} (use default, don't change var) and ${var:=default} (use default AND assign it to var) look almost identical but behave differently — mixing them up means a variable that should have stayed empty actually gets permanently set."
+funFacts:
+  - "Bash 4.0 (2009) added ${var^^} and ${var,,} for uppercasing and lowercasing a string inline — decades after the rest of parameter expansion's core syntax had already settled."
+relatedConcepts:
+  [
+    "variables",
+    "quoting",
+    "globbing",
+    "string-manipulation",
+    "default-and-error-operators",
+    "case-conversion",
+  ]
+relatedCommands: ["declare", "expr", "test"]
+---
+
+Parameter expansion is the shell's built-in syntax for transforming a variable's value as part of expanding it — applying a default, removing a prefix or suffix, or measuring its length — all inline with `${...}`, without needing to pipe the value through a separate command like `sed` or `cut`.
+
+The most commonly reached-for forms are `${var:-default}` (use a fallback value if `var` is unset or empty, without changing `var` itself) and suffix/prefix removal like `${file%.txt}` (strip `.txt` from the end) or `${file#prefix}` (strip a prefix from the start). These read awkwardly at first compared to a more verbose explicit script, but they're standard, portable, and avoid spawning an extra process just to manipulate a string.

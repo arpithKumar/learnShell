@@ -1,0 +1,42 @@
+---
+slug: head
+name: head
+category: ["text-processing"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Print the first lines of a file or input stream.
+syntax: "head [OPTIONS] [FILE...]"
+flags:
+  - flag: "-n"
+    description: Print a specific number of lines (default is 10).
+    example: "head -n 5 app.log"
+  - flag: "-c"
+    description: Print a specific number of bytes instead of lines.
+    example: "head -c 100 file.bin"
+examples:
+  - description: See the first 10 lines of a log file
+    input: "head app.log"
+    output: "2024-01-01 INFO: server started\n2024-01-01 INFO: listening on :3000"
+  - description: See just the first 3 lines
+    input: "head -n 3 app.log"
+    output: "2024-01-01 INFO: server started"
+shortcuts: []
+tips:
+  - "ls -lt | head -n 5 is a common combo for seeing just the 5 most recently modified files, without scrolling through a full listing."
+  - "head works on standard input too, so it chains naturally at the end of any pipeline, not just on files directly."
+related: ["tail", "cat", "wc"]
+pitfalls:
+  - "Beginners often expect head to default to a small number like 3 or 5 — it's actually 10 lines unless you explicitly pass -n."
+---
+
+When a file is too long to comfortably read all at once, `head` lets
+you peek at just the beginning — by default, the first 10 lines. It's
+a quick sanity check: confirming a CSV's header row looks right, or
+seeing the start of a log file without scrolling through everything
+that follows.
+
+`head` is especially useful piped after another command rather than
+used on a file directly. `ls -lt | head -n 5` lists files sorted by
+modification time and then trims that down to just the 5 most recent —
+a pattern that generalizes to almost any command that produces more
+output than you actually want to look at.

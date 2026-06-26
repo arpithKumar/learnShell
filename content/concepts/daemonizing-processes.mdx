@@ -1,0 +1,23 @@
+---
+slug: daemonizing-processes
+title: Daemonizing a Process
+category: process-control
+difficulty: advanced
+summary: Fully detach a process from the terminal that started it, so it keeps running independently in the background even after that terminal closes.
+examples:
+  - description: A common shorthand for fully detaching a background process
+    input: "nohup ./long-task.sh > output.log 2>&1 < /dev/null &\ndisown"
+    output: ""
+tips:
+  - "Detaching all three standard streams matters, not just stdout — leaving stdin attached to a closed terminal can make a daemonized process hang waiting for input that will never arrive, and leaving stderr attached can cause it to receive a signal when the terminal goes away."
+pitfalls:
+  - "nohup and & alone reduce a process's ties to the terminal, but don't fully detach it the way a real daemon (started via systemd, or using setsid) does — for anything that genuinely needs to survive as a proper background service, a process manager is the more correct, more robust tool than ad hoc detaching."
+funFacts:
+  - "True Unix daemonization classically involves a 'double fork' — forking once, then having that child fork again and exit immediately, leaving the grandchild orphaned and adopted by init, fully severing any connection to the original terminal-attached process."
+relatedConcepts: ["job-control", "process-groups-and-sessions", "signals"]
+relatedCommands: ["nohup", "disown"]
+---
+
+Daemonizing means fully detaching a process from the terminal session that started it, so it survives that terminal closing, the SSH connection dropping, or the user logging out entirely — running on indefinitely as an independent background process. The basic shell-level recipe combines `nohup` (insulating the process from `SIGHUP`, the signal normally sent when a terminal closes), redirecting all three standard streams away from the terminal, backgrounding with `&`, and `disown` (removing it from the shell's own job table).
+
+This ad hoc combination gets a process most of the way to behaving like a real daemon, but a genuine system daemon (managed by `systemd`, for instance) goes further still, classically using a "double fork" so the final process is orphaned and adopted by `init`, completely severing any remaining connection to where it started. For anything that truly needs to run as a persistent background service rather than just surviving one terminal closing, a real process manager is the more robust tool.

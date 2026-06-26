@@ -1,0 +1,65 @@
+---
+slug: find
+name: find
+category: ["filesystem", "search"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Search for files and directories in a directory tree.
+syntax: "find [PATH...] [EXPRESSION]"
+flags:
+  - flag: "-name"
+    description: Match files by name pattern (case-sensitive).
+    example: "find . -name '*.ts'"
+  - flag: "-iname"
+    description: Match files by name pattern, case-insensitive.
+    example: "find . -iname '*.TXT'"
+  - flag: "-type"
+    description: "Filter by type: f (file), d (directory), l (symlink)."
+    example: "find . -type d"
+  - flag: "-mtime"
+    description: Filter by modification time in days.
+    example: "find . -mtime -7"
+  - flag: "-exec"
+    description: Run a command on each matching result.
+    example: "find . -name '*.log' -exec rm {} \\;"
+  - flag: "-size"
+    description: Filter by file size.
+    example: "find . -size +10M"
+examples:
+  - description: Find all TypeScript files under the current directory
+    input: "find . -name '*.ts'"
+    output: "./src/index.ts"
+  - description: Delete all .log files found
+    input: "find . -name '*.log' -delete"
+    output: ""
+shortcuts: []
+tips:
+  - "Always run a find command without -delete or -exec rm first, by itself, to confirm exactly which files it matches before anything gets removed."
+  - "find . -type f -mtime -1 is a quick way to see everything changed in the last day — handy when retracing what you (or a build process) just touched."
+  - "Prefer -exec ... {} + (plus) over -exec ... {} \\; (semicolon) when you can — it batches matched files into fewer command invocations and runs noticeably faster on large result sets."
+related: ["grep", "rm", "tree"]
+pitfalls:
+  - "Unquoted glob patterns get expanded by the shell before find ever sees them — always quote -name patterns (find . -name '*.ts', not find . -name *.ts)."
+  - "-exec with {} \\; runs the given command once per matched file, which can be slow for thousands of results; {} + batches arguments together instead."
+---
+
+`find` walks a directory tree and filters what it finds by name, type,
+size, age, permissions, and more — it's the general-purpose answer to
+"where is this file" or "which files match this condition," when a
+simple `ls` isn't precise enough.
+
+The expression syntax takes some getting used to: instead of flags
+controlling *how* find behaves, most of them are filters that combine
+together, left to right, like a sentence. `find . -name '*.ts' -type f`
+reads almost literally as "starting here, find things named *.ts that
+are regular files." Quoting the pattern matters — without quotes, your
+shell would try to expand `*.ts` itself before `find` ever sees it,
+which usually isn't what you want.
+
+`find`'s real power shows up when you act on the results, either by
+piping into another command (often via `xargs`) or using `-exec`
+directly. Both let you run a command against every match — deleting old
+log files, batch-renaming, or running a script against a filtered set
+of files. Because that action can be destructive, the safe workflow is
+always: run the `find` expression alone first, confirm the matches look
+right, *then* add the `-delete` or `-exec` part.

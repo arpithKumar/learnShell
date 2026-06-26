@@ -1,0 +1,36 @@
+---
+slug: bzip2
+name: bzip2
+category: ["archives"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Compress a single file using the bzip2 algorithm, typically tighter but slower than gzip.
+syntax: "bzip2 [OPTIONS] FILE"
+flags:
+  - flag: "-d"
+    description: Decompress instead of compress.
+    example: "bzip2 -d file.txt.bz2"
+  - flag: "-k"
+    description: Keep the original file instead of deleting it after compressing.
+    example: "bzip2 -k file.txt"
+  - flag: "-9"
+    description: Use the highest (slowest) compression level.
+    example: "bzip2 -9 file.txt"
+examples:
+  - description: Compress a file
+    input: "bzip2 file.txt"
+    output: "file.txt.bz2"
+  - description: Decompress it back
+    input: "bzip2 -d file.txt.bz2"
+    output: "file.txt"
+shortcuts: []
+tips:
+  - "tar -cjf archive.tar.bz2 ./folder uses bzip2 (-j) instead of gzip (-z) for the same bundle-and-compress workflow, usually producing a smaller file at the cost of more CPU time."
+related: ["gzip", "tar", "xz"]
+pitfalls:
+  - "Like gzip, bzip2 deletes the original file after compressing unless you pass -k — and it only compresses one file at a time, same as gzip."
+---
+
+`bzip2` does the same basic job as `gzip` — compress a single file — but using a different algorithm that generally produces smaller files at the cost of being noticeably slower, both to compress and decompress. It's the right choice when file size matters more than speed, like archiving something for long-term storage.
+
+The command shape mirrors `gzip` almost exactly: compress in place, `-d` to decompress, `-k` to keep the original. Paired with `tar`, it's invoked via the `-j` flag (`tar -cjf archive.tar.bz2 ./folder`) instead of `tar`'s `-z` for gzip.

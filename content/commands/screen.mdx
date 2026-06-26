@@ -1,0 +1,30 @@
+---
+slug: screen
+name: screen
+category: ["system"]
+difficulty: advanced
+shells: ["bash", "zsh"]
+summary: Run a terminal session that keeps going even if you disconnect, and reattach to it later.
+syntax: "screen [OPTIONS]"
+flags:
+  - flag: "-S"
+    description: Name the session, making it easy to identify and reattach to later.
+    example: "screen -S build"
+  - flag: "-r"
+    description: Reattach to a previously detached session.
+    example: "screen -r build"
+examples:
+  - description: Start a named session, detach with Ctrl-A then D, and reattach later
+    input: "screen -S build"
+    output: ""
+shortcuts: []
+tips:
+  - "Starting a long-running process inside screen (or tmux) and detaching means it keeps running even if your SSH connection drops or you close your laptop — the classic use case is a remote server task that takes hours."
+related: ["tmux", "nohup", "disown"]
+pitfalls:
+  - "screen's default keybindings all start with Ctrl-A, which conflicts with the 'move to start of line' shortcut many people use in bash — this trips up new users specifically inside a screen session."
+---
+
+`screen` creates a terminal session that survives even after you disconnect — closing the SSH connection or terminal window doesn't kill the process running inside, since it keeps going in the background on the remote machine. Reattaching later with `screen -r` picks up exactly where you left off, scrollback and all.
+
+This solves a real, common problem: starting a long build, download, or script on a remote server and not wanting it to die the moment a network connection drops. `tmux` is the more modern alternative with similar goals, often preferred for richer pane and window splitting, but `screen` remains widely available and simple for the core detach-and-reattach use case.

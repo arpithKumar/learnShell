@@ -1,0 +1,39 @@
+---
+slug: read
+name: read
+category: ["scripting"]
+difficulty: intermediate
+shells: ["bash", "zsh"]
+summary: Read a line of input into a shell variable.
+syntax: "read [OPTIONS] VARNAME"
+flags:
+  - flag: "-p"
+    description: Show a prompt before reading input.
+    example: "read -p 'Enter your name: ' name"
+  - flag: "-s"
+    description: Don't echo input back to the terminal (useful for passwords).
+    example: "read -s -p 'Password: ' pass"
+  - flag: "-a"
+    description: Read words into an array instead of a single variable.
+    example: "read -a words"
+examples:
+  - description: Prompt for and store a name
+    input: "read -p 'Enter your name: ' name"
+    output: ""
+  - description: Read a value and print it back
+    input: "echo $name"
+    output: "Alice"
+shortcuts: []
+tips:
+  - "read is the standard way scripts get interactive input from a user — combine with -p for a clean inline prompt instead of a separate echo statement."
+  - "Piping input into read (echo 'a b c' | read x y z) runs read in a subshell, so the variables won't be visible afterward — this trips people up often enough to be worth remembering explicitly."
+related: ["printf", "echo"]
+pitfalls:
+  - "read without -r treats a backslash in the input as an escape character (e.g., line continuation), which can silently mangle input containing backslashes — using read -r is generally the safer default."
+---
+
+`read` pulls in a line of input — typically from the user, but it can also read from a file or a pipe — and stores it into one or more shell variables. It's the basic building block for any script that needs to ask a question and act on the answer.
+
+The most common pattern is `read -p "Prompt: " variable`, which shows a prompt and waits for input in one line. With `-s`, the typed characters aren't echoed back, which is the standard way scripts collect a password without displaying it on screen.
+
+`read` can also split input across multiple variables: `read first last` on a line containing "Alice Smith" puts "Alice" into `first` and "Smith" into `last`, splitting on whitespace the same way the shell does everywhere else.

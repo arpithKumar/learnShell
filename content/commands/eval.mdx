@@ -1,0 +1,24 @@
+---
+slug: eval
+name: eval
+category: ["scripting"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Build a command as a string, then execute that string as if it had been typed directly.
+syntax: "eval STRING"
+flags: []
+examples:
+  - description: Construct a command dynamically and run it
+    input: 'cmd="echo hello"; eval $cmd'
+    output: "hello"
+shortcuts: []
+tips:
+  - "eval is genuinely useful for a narrow set of cases, like re-parsing the quoted output of another command — but it's worth specifically pausing on whether a simpler, more direct approach (a function, an array, a case statement) would work instead before reaching for it."
+related: ["exec", "source"]
+pitfalls:
+  - "eval running a string built even partly from user input is a classic shell injection vulnerability — if any part of the evaluated string comes from outside the script's own control, a malicious value can run arbitrary commands."
+---
+
+`eval` takes a string and executes it as a shell command, as though that string had been typed directly at the prompt. This allows building up commands dynamically and running the result, which is occasionally genuinely necessary — but it comes with real risk attached.
+
+The risk is that `eval` runs whatever text it's given with no inherent distinction between "code" and "data" — if any part of the string being evaluated traces back to user input or an untrusted source, it opens a straightforward shell injection vulnerability, where a crafted value runs commands the script never intended. It's worth treating `eval` as a tool of last resort, reaching for a function, array, or `case` statement first whenever one of those can do the same job more safely.

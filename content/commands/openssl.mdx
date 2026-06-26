@@ -1,0 +1,38 @@
+---
+slug: openssl
+name: openssl
+category: ["security", "networking"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: A toolkit for cryptography — generating keys and certificates, hashing, and inspecting TLS connections.
+syntax: "openssl COMMAND [OPTIONS]"
+flags:
+  - flag: "genrsa"
+    description: Generate a new RSA private key.
+    example: "openssl genrsa -out key.pem 2048"
+  - flag: "s_client"
+    description: Connect to a server and inspect its TLS/SSL certificate.
+    example: "openssl s_client -connect example.com:443"
+  - flag: "dgst"
+    description: Compute a cryptographic hash of a file.
+    example: "openssl dgst -sha256 file.txt"
+examples:
+  - description: Inspect a website's TLS certificate
+    input: "openssl s_client -connect example.com:443"
+    output: "Certificate chain\n 0 s:CN = example.com\n   i:C = US, O = Let's Encrypt"
+  - description: Generate a self-signed certificate for local development
+    input: "openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365"
+    output: ""
+shortcuts: []
+tips:
+  - "openssl s_client -connect host:443 is a genuinely useful debugging step when a site's TLS certificate seems wrong — it shows the full certificate chain the server actually presents."
+related: ["ssh-keygen", "base64", "curl"]
+pitfalls:
+  - "openssl's command surface is enormous and its subcommand syntax has accumulated inconsistencies over decades — looking up the exact flags for the specific task at hand is normal, even for people who use it regularly."
+---
+
+`openssl` is a large toolkit covering most everyday cryptography needs from the command line: generating private keys and certificates, computing hashes, encrypting and decrypting data, and inspecting live TLS connections to diagnose certificate problems.
+
+For local development, `openssl req -x509 ...` generates a self-signed certificate, letting you test HTTPS locally without a real certificate authority. For debugging a production site, `openssl s_client -connect host:443` connects directly and prints the full certificate chain the server presents, which is often the fastest way to see exactly why a browser is complaining about a certificate.
+
+Given how much ground it covers, nobody reasonably memorizes all of `openssl`'s subcommands and flags — looking up the exact syntax for whatever specific task is in front of you is the normal way to use it, not a sign of unfamiliarity.

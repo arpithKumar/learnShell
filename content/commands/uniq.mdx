@@ -1,0 +1,47 @@
+---
+slug: uniq
+name: uniq
+category: ["text-processing"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Filter out or count adjacent duplicate lines.
+syntax: "uniq [OPTIONS] [FILE...]"
+flags:
+  - flag: "-c"
+    description: Prefix each line with the number of times it occurred.
+    example: "uniq -c visits.txt"
+  - flag: "-d"
+    description: Print only lines that appeared more than once.
+    example: "uniq -d visits.txt"
+examples:
+  - description: Count how often each line appears (after sorting)
+    input: "sort visits.txt | uniq -c"
+    output: "   3 /home\n   1 /about"
+  - description: Find only the duplicated lines
+    input: "sort emails.txt | uniq -d"
+    output: "duplicate@example.com"
+shortcuts: []
+tips:
+  - "sort file | uniq -c | sort -rn is a classic three-stage combo: count how often each line appears, then rank those counts from most to least frequent."
+  - "uniq -i ignores case when comparing lines, which helps with messy real-world data where the same value shows up capitalized inconsistently."
+related: ["sort", "wc", "grep"]
+pitfalls:
+  - "uniq only catches duplicates that are directly adjacent to each other in the input — it almost always needs to be piped after sort first, since unsorted duplicates scattered through a file simply won't be detected."
+---
+
+`uniq` removes or counts repeated lines, but with one important catch:
+it only looks at lines that are sitting right next to each other. Two
+identical lines separated by something different in between are
+treated as unrelated, not duplicates.
+
+That's why `uniq` is almost always seen written as `sort file | uniq` —
+sorting first guarantees that any duplicate lines end up adjacent to
+one another, so `uniq` actually has a chance to catch them. Used on its
+own, without a preceding sort, it's easy to get misleadingly "clean"
+output that still has duplicates the command never had a chance to see.
+
+Its `-c` flag turns it from a simple deduplicator into a basic counting
+tool — prefixing each unique line with how many times it occurred. This
+combination, `sort | uniq -c`, is one of the most useful one-liners in
+shell scripting for quick frequency analysis: how many times does each
+URL, status code, or username show up in a log file?

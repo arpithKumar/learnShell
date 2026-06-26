@@ -1,0 +1,31 @@
+---
+slug: pipes
+title: Pipes
+category: io-and-pipelines
+difficulty: beginner
+summary: Feed one command's output directly into another command's input, chaining simple tools into a pipeline.
+examples:
+  - description: Chain three commands into one pipeline
+    input: "cat access.log | grep ERROR | wc -l"
+    output: "42"
+tips:
+  - "Each side of a | runs as its own separate process, often concurrently — grep doesn't wait for cat to fully finish before starting, it processes data as it streams in, which is part of why pipelines can handle very large inputs efficiently."
+pitfalls:
+  - "A pipeline's overall exit status, by default, is just the exit status of its last command — if an earlier command in the chain fails silently, the pipeline can still report success. set -o pipefail (bash/zsh) changes this so the pipeline fails if any stage does."
+funFacts:
+  - "Pipes were invented by Doug McIlroy and added to Unix in 1973 — he's often quoted pushing for exactly this 'small tools, composed together' philosophy that pipelines still embody today."
+relatedConcepts:
+  [
+    "redirection",
+    "process-substitution",
+    "named-pipes",
+    "command-grouping",
+    "pipe-buffering",
+    "argument-batching",
+  ]
+relatedCommands: ["grep", "sort", "xargs"]
+---
+
+A pipe (`|`) connects one command's standard output directly to the next command's standard input, without an intermediate file. This is the core idea behind Unix's "small tools, composed together" philosophy — `cat access.log | grep ERROR | wc -l` chains three simple, single-purpose commands into one pipeline that counts error lines, none of which individually needs to know how to do the others' job.
+
+Each stage of a pipeline runs as its own process, and they generally run concurrently — data streams through as it's produced, rather than each command needing to finish completely before the next one starts. One subtlety worth knowing: by default, a pipeline's exit status is just the last command's, so a failure partway through (like `cat` failing to open a missing file) can go unnoticed unless `set -o pipefail` is enabled to make a failure anywhere in the chain count as a failure overall.

@@ -1,0 +1,29 @@
+---
+slug: reading-input
+title: Reading Input
+category: io-and-pipelines
+difficulty: beginner
+summary: Capture a line of user input (or piped data) into a variable with read, plus its most useful options for prompts, arrays, and timeouts.
+examples:
+  - description: Prompt for input and store it in a variable
+    input: 'read -p "Enter your name: " name; echo "Hi, $name"'
+    output: "Enter your name: Alice\nHi, Alice"
+  - description: Read input without echoing it (for a password)
+    input: "read -s -p \"Password: \" pass; echo"
+    output: "Password: "
+  - description: Read several values into separate variables at once
+    input: "read -r first last <<< \"Alice Smith\"; echo \"$last, $first\""
+    output: "Smith, Alice"
+tips:
+  - "Always pass -r to read unless you specifically want backslash escapes interpreted — without it, a backslash in the input can swallow the following character or even a literal newline, surprising behavior most scripts don't actually want."
+pitfalls:
+  - "read's default field separator is whitespace, same as word splitting elsewhere — read name given the input \"Alice Smith\" puts the whole string \"Alice Smith\" into one variable only if you give it just one variable name; with two variable names it splits across them instead."
+funFacts:
+  - "read -t lets you give it a timeout in seconds, after which it gives up and returns a nonzero exit status — a handy way to write a script that waits for input but doesn't hang forever if none arrives."
+relatedConcepts: ["variables", "word-splitting", "here-docs"]
+relatedCommands: ["read"]
+---
+
+`read` captures a line of input — typed interactively, or piped/redirected in — into one or more variables. Its most commonly used options are `-p "prompt"` to display a prompt before reading, `-s` to read silently without echoing characters (the standard way to prompt for a password), and `-a name` to read an entire line into an array, one word per element.
+
+`-r` is worth treating as a near-default habit: without it, `read` interprets backslashes in the input as escape sequences, which can silently eat characters or merge lines in ways that are rarely what you actually want. Like other shell input, `read`'s field-splitting behavior follows the same `IFS`-based word-splitting rules as everywhere else, which is why giving it multiple variable names splits one line of input across them.

@@ -1,0 +1,39 @@
+---
+slug: pip
+name: pip
+category: ["package-management"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Install and manage Python packages.
+syntax: "pip COMMAND [PACKAGE]"
+flags:
+  - flag: "install"
+    description: Install a package.
+    example: "pip install requests"
+  - flag: "install -r"
+    description: Install every package listed in a requirements file.
+    example: "pip install -r requirements.txt"
+  - flag: "uninstall"
+    description: Remove an installed package.
+    example: "pip uninstall requests"
+  - flag: "list"
+    description: List every currently installed package.
+    example: "pip list"
+examples:
+  - description: Install a single package
+    input: "pip install requests"
+    output: ""
+  - description: Install every dependency listed in a requirements file
+    input: "pip install -r requirements.txt"
+    output: ""
+shortcuts: []
+tips:
+  - "Running pip install outside of an active virtual environment installs into your system-wide Python, which can quietly conflict with other projects' dependency versions — most Python projects expect you to activate a virtual environment (via source venv/bin/activate) first."
+related: ["npm"]
+pitfalls:
+  - "Without a virtual environment, different projects' pip installs all compete for the same global Python environment, which is exactly the version-conflict problem virtual environments exist to solve."
+---
+
+`pip` installs and manages Python packages, the same fundamental role `npm` plays for Node.js. `pip install package-name` downloads and installs a single package; `pip install -r requirements.txt` installs everything a project lists as a dependency, which is typically the first command run after cloning a Python project.
+
+The detail that trips up a lot of newcomers is virtual environments: running `pip install` directly installs into your system-wide Python, where every project's dependencies compete in the same space. The standard practice is activating a project-specific virtual environment first (`source venv/bin/activate`), so each project's dependencies stay isolated from every other project's.

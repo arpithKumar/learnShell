@@ -1,0 +1,35 @@
+---
+slug: job-control
+title: Job Control
+category: process-control
+difficulty: intermediate
+summary: Run, pause, resume, and switch between multiple commands within one interactive shell session.
+examples:
+  - description: Start a command in the background, then list running jobs
+    input: "sleep 100 &\njobs"
+    output: "[1]+  Running                 sleep 100 &"
+  - description: Bring a background job to the foreground
+    input: "fg %1"
+    output: ""
+tips:
+  - "Ctrl-Z suspends the current foreground job (pauses it without killing it) and returns you to the prompt — bg then resumes it running in the background, or fg brings it back to the foreground."
+pitfalls:
+  - "A background job is still tied to the terminal session that started it by default — closing that terminal sends it a signal that normally kills it too, unless it was started with nohup or disowned first."
+funFacts:
+  - "Job control (Ctrl-Z, bg, fg) was a C shell (csh) innovation from the late 1970s — the Bourne shell didn't have it at all, which is part of why csh briefly dominated for interactive use despite Bourne shell being better for scripting."
+relatedConcepts:
+  [
+    "signals",
+    "subshells",
+    "special-variables",
+    "coprocesses",
+    "process-groups-and-sessions",
+    "wait-for-background-jobs",
+    "daemonizing-processes",
+  ]
+relatedCommands: ["jobs", "fg", "bg", "nohup", "disown", "kill"]
+---
+
+Job control is the set of shell features for managing multiple commands within a single interactive session: starting one in the background with a trailing `&`, listing all running and stopped jobs with `jobs`, and switching a job between foreground and background with `fg`/`bg`. `Ctrl-Z` suspends whatever's currently running in the foreground, handing control back to the prompt without killing the suspended process.
+
+By default, every job belongs to the terminal session that started it — closing that terminal sends a signal that typically terminates any jobs still running in it. `nohup command &` and `disown` are the two common ways around that: `nohup` insulates the command from that signal from the start, while `disown` removes an already-running job from the shell's job table so closing the terminal doesn't affect it.

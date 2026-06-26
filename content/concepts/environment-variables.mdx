@@ -1,0 +1,26 @@
+---
+slug: environment-variables
+title: Environment Variables
+category: fundamentals
+difficulty: beginner
+summary: The subset of variables passed down to every program a shell launches — $PATH, $HOME, $USER, and any others explicitly exported.
+examples:
+  - description: PATH controls where the shell looks for commands
+    input: "echo $PATH"
+    output: "/usr/local/bin:/usr/bin:/bin"
+  - description: A plain shell variable is invisible to a child process until exported
+    input: "greeting=hi; bash -c 'echo ${greeting:-not set}'"
+    output: "not set"
+tips:
+  - "env (with no arguments) prints every environment variable currently set — a quick way to check whether a variable you exported actually made it into the environment, versus staying a plain shell variable."
+pitfalls:
+  - "A variable only becomes part of the environment once it's been export-ed — setting x=1 without exporting it means x is visible inside your current shell, but any program or script that shell launches won't see it at all."
+funFacts:
+  - "$PATH is checked left to right, and the first matching executable wins — this is the entire mechanism behind being able to 'shadow' a system command by putting a same-named script earlier in $PATH, intentionally or by accident."
+relatedConcepts: ["variables", "dotfiles", "locale-settings"]
+relatedCommands: ["export", "env"]
+---
+
+Environment variables are the subset of a shell's variables that get passed down to every program it launches — `$PATH` (where to look for commands), `$HOME` (the current user's home directory), and `$USER` are common examples a shell sets up automatically. A plain variable assignment, by contrast, only exists inside the current shell; it has to be explicitly promoted with `export` before any child process can see it.
+
+This distinction is the source of a recurring confusion: a script that reads a variable fine when run with `source` (which runs in the current shell) can suddenly see it as empty when run as `./script.sh` (a separate child process), simply because the variable was never exported. `env` and `printenv` both print the full current environment, which is the fastest way to confirm whether a given variable actually made it across that boundary.

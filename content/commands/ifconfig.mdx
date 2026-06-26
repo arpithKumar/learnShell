@@ -1,0 +1,24 @@
+---
+slug: ifconfig
+name: ifconfig
+category: ["networking"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Show or configure network interfaces and their IP addresses.
+syntax: "ifconfig [INTERFACE]"
+flags: []
+examples:
+  - description: List every network interface and its configuration
+    input: "ifconfig"
+    output: "en0: flags=8863<UP,BROADCAST,RUNNING>  mtu 1500\n\tinet 192.168.1.42 netmask 0xffffff00"
+shortcuts: []
+tips:
+  - "ifconfig is the quickest way to find your machine's own local IP address — look for 'inet' under your active interface (often en0 or eth0)."
+related: ["ip", "ping", "netstat"]
+pitfalls:
+  - "ifconfig is considered deprecated on modern Linux distributions in favor of the ip command, though it remains the standard tool on macOS and BSD systems."
+---
+
+`ifconfig` ("interface configuration") shows every network interface on the machine — Wi-Fi, Ethernet, loopback — along with each one's current IP address, status, and other low-level configuration. The most common reason to run it is simply finding your own machine's local IP address.
+
+On modern Linux distributions, `ifconfig` has been officially superseded by the `ip` command (`ip addr` covers the same information), though `ifconfig` remains alive and well as the standard tool on macOS and BSD-derived systems, where there's no equivalent push to replace it.

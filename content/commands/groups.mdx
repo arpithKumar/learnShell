@@ -1,0 +1,24 @@
+---
+slug: groups
+name: groups
+category: ["system", "security"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Show which groups a user belongs to.
+syntax: "groups [USER]"
+flags: []
+examples:
+  - description: Show the current user's groups
+    input: "groups"
+    output: "alice staff admin"
+shortcuts: []
+tips:
+  - "Group membership controls a lot of practical permissions on a system, like whether a user can run docker or sudo without a password — groups is the quick way to check what a user can actually do before digging into specific permission errors."
+related: ["id", "whoami", "sudo"]
+pitfalls:
+  - "Adding a user to a new group with a separate command doesn't take effect in their currently open shell session — they typically need to log out and back in (or start a new session) for the new group membership to apply."
+---
+
+`groups` lists every group a user belongs to, which is often the fastest way to understand why a user can or can't do something on a system — many permissions, like running Docker or accessing certain devices, are granted through group membership rather than individual user permissions.
+
+It overlaps with the group information shown by `id`, but `groups` gives a plain list with nothing else mixed in, useful for a quick check before digging deeper into a specific permission error.

@@ -1,0 +1,30 @@
+---
+slug: fold
+name: fold
+category: ["text-processing"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Wrap long lines of text to a fixed width.
+syntax: "fold [OPTIONS] [FILE]"
+flags:
+  - flag: "-w"
+    description: Set the maximum line width (default is 80 characters).
+    example: "fold -w 60 long-line.txt"
+  - flag: "-s"
+    description: Break at word boundaries instead of mid-word.
+    example: "fold -s -w 60 long-line.txt"
+examples:
+  - description: Wrap a long line to 60 characters
+    input: "fold -w 60 long-line.txt"
+    output: ""
+shortcuts: []
+tips:
+  - "Without -s, fold breaks lines at exactly the character limit, even in the middle of a word — add -s to break at the nearest space instead, for output that reads more naturally."
+related: ["fmt", "cat"]
+pitfalls:
+  - "fold has no concept of paragraphs or sentence structure — it's a hard character-count wrap. For reflowing prose more intelligently, fmt is the better-suited tool."
+---
+
+`fold` wraps long lines of text so that none exceed a fixed width, breaking wherever necessary to stay under that limit. It's a blunt but reliable tool for fitting wide text — a long line in a log file, for instance — into a narrower terminal or printout.
+
+By default it breaks strictly at the character limit, which can land mid-word; `-s` tells it to break at the nearest preceding space instead, producing output that reads more naturally. For wrapping actual prose with attention to sentence structure rather than a hard character count, `fmt` is the more appropriate tool.

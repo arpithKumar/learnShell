@@ -1,0 +1,26 @@
+---
+slug: shebang
+title: Shebang
+category: shell-environment
+difficulty: beginner
+summary: The first line of a script, telling the system which interpreter should run the rest of the file.
+examples:
+  - description: A typical bash script shebang
+    input: "#!/bin/bash\necho \"Hello, world\""
+    output: "Hello, world"
+  - description: A more portable form using env to locate the interpreter
+    input: "#!/usr/bin/env python3"
+    output: ""
+tips:
+  - "#!/usr/bin/env bash is generally more portable than a hardcoded #!/bin/bash, since it locates bash via $PATH instead of assuming it lives at exactly /bin/bash — useful on systems where it's installed somewhere else."
+pitfalls:
+  - "A shebang only matters when the script is executed directly (./script.sh with the executable bit set) — running it as bash script.sh ignores the shebang entirely and always uses whatever interpreter you explicitly invoked."
+funFacts:
+  - "The name comes from \"sharp\" (#) and \"bang\" (!) — the two characters that make up the #! marker, a Unix convention dating back to a 1980 kernel patch."
+relatedConcepts: ["dotfiles", "builtins-vs-external", "shell-differences"]
+relatedCommands: []
+---
+
+The shebang is the literal first line of a script, starting with `#!` followed by the path to an interpreter — `#!/bin/bash`, `#!/usr/bin/env python3`, and so on. When a script is run directly as an executable file (`./script.sh`, with the executable permission bit set), the operating system reads this line first and launches that interpreter to run the rest of the file, rather than trying to execute the script's own text as a native binary.
+
+It only matters for that direct-execution path — running `bash script.sh` or `python3 script.py` explicitly bypasses the shebang entirely, since you've already told the system which interpreter to use. `#!/usr/bin/env bash` is generally preferred over a hardcoded `#!/bin/bash` for portability, since it finds the interpreter via `$PATH` instead of assuming a fixed install location.

@@ -1,0 +1,27 @@
+---
+slug: wait
+name: wait
+category: ["process-system", "scripting"]
+difficulty: advanced
+shells: ["bash", "zsh"]
+summary: Pause until a background job (or all of them) finishes.
+syntax: "wait [%JOB_ID | PID]"
+flags: []
+examples:
+  - description: Start two background jobs, then wait for both to finish
+    input: "task1 & task2 & wait"
+    output: ""
+  - description: Wait for a specific job by number
+    input: "wait %1"
+    output: ""
+shortcuts: []
+tips:
+  - "wait with no arguments waits for every background job started by the current shell — the standard way a script that kicks off several parallel tasks makes sure they've all actually finished before moving on."
+related: ["jobs", "bg"]
+pitfalls:
+  - "wait only works on jobs that belong to the current shell session — it can't wait on a process started in a completely different terminal or shell."
+---
+
+`wait` pauses script or shell execution until a background job finishes, which is exactly what you need when a script kicks off several tasks in parallel (`task1 & task2 &`) and then needs to confirm both have completed before continuing — for example, before reading the output files they each produced.
+
+Called with no arguments, it waits for every background job from the current shell to finish; given a specific job number or PID, it waits for just that one. It's the missing piece that turns "start things in parallel" from a fire-and-forget action into something a script can reliably build on.

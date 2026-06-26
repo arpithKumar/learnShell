@@ -1,0 +1,51 @@
+---
+slug: du
+name: du
+category: ["filesystem"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Report how much disk space files and directories are using.
+syntax: "du [OPTIONS] [PATH...]"
+flags:
+  - flag: "-h"
+    description: Print sizes in human-readable form (KB, MB, GB) instead of raw byte counts.
+    example: "du -h ./node_modules"
+  - flag: "-s"
+    description: Show only the total for each given path, not every subfolder.
+    example: "du -sh ./node_modules"
+  - flag: "-d"
+    description: Limit how many directory levels deep to report (depth).
+    example: "du -d 1 -h ./"
+examples:
+  - description: See the total size of a folder, human-readable
+    input: "du -sh ./node_modules"
+    output: "482M	./node_modules"
+  - description: See sizes one level deep, to find what's eating space
+    input: "du -d 1 -h ./"
+    output: "  2.1G	./node_modules\n   45M	./src"
+shortcuts: []
+tips:
+  - "du -sh * inside a folder is the fastest way to see which subfolder is taking up the most space."
+  - "Pipe through sort to rank results: du -sh * | sort -rh shows the biggest folders first."
+related: ["df", "ls", "find"]
+pitfalls:
+  - "du measures actual disk usage, which can differ slightly from a file's apparent size — especially for sparse files, or due to how a filesystem allocates space in fixed-size blocks."
+  - "Without -s, du prints a line for every single subdirectory it finds, which can be an overwhelming wall of output on a large project tree."
+---
+
+`du` ("disk usage") tells you how much space files and folders actually
+take up on disk — the classic scenario is wondering why a project's
+`node_modules` folder has suddenly ballooned, or why a drive is running
+low on space and you need to find what's responsible.
+
+The command everyone reaches for first is `du -sh ./some-folder`:
+summarized (`-s`, just the total, not every nested subfolder) and
+human-readable (`-h`, so you see "482M" instead of a raw byte count).
+Without `-s`, `du` recursively prints a size for *every* subdirectory it
+walks through, which is rarely what you want when you're just trying to
+answer "how big is this folder, total?"
+
+For hunting down what's actually using the space inside a folder, a
+common pattern is `du -sh * | sort -rh` — list each item's size, then
+sort by size descending, so the biggest offenders show up first instead
+of you scanning a long unsorted list by eye.

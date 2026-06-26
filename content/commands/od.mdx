@@ -1,0 +1,30 @@
+---
+slug: od
+name: od
+category: ["text-processing"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Dump a file's contents in octal, hex, or other formats — the POSIX-standard alternative to xxd.
+syntax: "od [OPTIONS] FILE"
+flags:
+  - flag: "-c"
+    description: Show bytes as characters, including escape sequences for non-printable ones.
+    example: "od -c file.bin"
+  - flag: "-x"
+    description: Show bytes in hexadecimal, similar to xxd's default output.
+    example: "od -x file.bin"
+examples:
+  - description: View a file's bytes in hex format
+    input: "od -x file.bin"
+    output: "0000000 4f50 4e47 0a0d 0a1a"
+shortcuts: []
+tips:
+  - "od is the older, POSIX-standard tool for this job; xxd is more common in everyday use today and generally easier to read, but od is the one guaranteed to exist on virtually any Unix-like system."
+related: ["xxd", "file"]
+pitfalls:
+  - "od's default output format is octal (hence the name, 'octal dump'), which is less intuitive to read than hex for most people — explicitly use -x for hex output if that's what you actually want."
+---
+
+`od` ("octal dump") prints a file's raw bytes in octal, hexadecimal, or several other formats, serving the same basic purpose as `xxd` — inspecting exactly what's stored in a file at the byte level, rather than how a higher-level tool interprets it.
+
+The name reflects its default behavior, showing bytes in octal, which most people find less intuitive than hexadecimal — `-x` switches to a more familiar hex view. `od` is the POSIX-standard tool for this job and guaranteed to be present even on minimal systems, while `xxd` (generally easier to read by default) is more of a GNU/common-tools convenience that isn't always preinstalled everywhere.

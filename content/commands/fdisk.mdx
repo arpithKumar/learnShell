@@ -1,0 +1,27 @@
+---
+slug: fdisk
+name: fdisk
+category: ["system"]
+difficulty: advanced
+shells: ["bash", "zsh"]
+summary: Create, delete, and inspect disk partitions on older MBR-style disks.
+syntax: "fdisk [OPTIONS] DEVICE"
+flags:
+  - flag: "-l"
+    description: List partition tables for one or all devices, without modifying anything.
+    example: "fdisk -l /dev/sda"
+examples:
+  - description: List the partition table for a disk
+    input: "sudo fdisk -l /dev/sda"
+    output: "Device     Boot   Start      End  Sectors  Size\n/dev/sda1  *       2048  1050623  1048576  512M"
+shortcuts: []
+tips:
+  - "fdisk -l alone is a safe, read-only way to inspect a disk's partition table before doing anything else — confirm the right device name first, since the interactive editing mode that follows is genuinely destructive."
+related: ["lsblk", "parted", "mount"]
+pitfalls:
+  - "Editing a partition table with fdisk and writing the changes can destroy existing data on that disk instantly and irreversibly — double-checking the target device name (e.g. /dev/sda vs /dev/sdb) before writing changes is essential."
+---
+
+`fdisk` creates, deletes, and inspects partitions on a disk, working with the traditional MBR-style partition table (and to a lesser extent GPT). Run with `-l`, it's purely informational — listing the existing partition layout without changing anything, a safe way to confirm exactly what's on a disk first.
+
+Its interactive editing mode, used to actually create or delete partitions, is genuinely destructive: writing changes can erase existing data on that device immediately. `parted` is the more modern alternative with better GPT support, but both demand carefully confirming the target device name before making any real change — partitioning the wrong disk by mistake is unrecoverable.

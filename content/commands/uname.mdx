@@ -1,0 +1,36 @@
+---
+slug: uname
+name: uname
+category: ["system"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Print basic information about the system — kernel name, version, and architecture.
+syntax: "uname [OPTIONS]"
+flags:
+  - flag: "-a"
+    description: Print all available system information at once.
+    example: "uname -a"
+  - flag: "-m"
+    description: Print just the machine hardware architecture (e.g. x86_64, arm64).
+    example: "uname -m"
+  - flag: "-r"
+    description: Print just the kernel release version.
+    example: "uname -r"
+examples:
+  - description: See everything uname knows about the system
+    input: "uname -a"
+    output: "Darwin MacBook-Pro 23.1.0 Darwin Kernel Version 23.1.0 ... x86_64"
+  - description: Check just the CPU architecture
+    input: "uname -m"
+    output: "arm64"
+shortcuts: []
+tips:
+  - "uname -m is a quick way to check whether you're on Apple Silicon (arm64) or Intel (x86_64) when a tool's installation instructions differ by architecture."
+related: ["df", "free"]
+pitfalls:
+  - "uname's output format and exact field meanings vary somewhat between Linux and macOS (BSD-derived) — a script parsing its output for one platform may need adjustment for the other."
+---
+
+`uname` ("Unix name") prints basic facts about the system it's running on: the kernel name, version, and hardware architecture. It's a quick first check when you need to know exactly what platform you're working with, especially before installing software that has architecture-specific builds.
+
+`uname -a` dumps everything at once, which is the version most people actually run. For scripts, the individual flags are more useful — `-m` for architecture (handy for distinguishing Apple Silicon from Intel Macs, or x86 from ARM Linux), `-s` for just the OS name, `-r` for the kernel version.

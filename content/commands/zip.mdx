@@ -1,0 +1,37 @@
+---
+slug: zip
+name: zip
+category: ["archives"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Bundle and compress files into a .zip archive.
+syntax: "zip [OPTIONS] ARCHIVE.zip FILE..."
+flags:
+  - flag: "-r"
+    description: Recursively include a directory's contents.
+    example: "zip -r project.zip ./project"
+  - flag: "-e"
+    description: Encrypt the archive with a password.
+    example: "zip -e secrets.zip secrets.txt"
+  - flag: "-9"
+    description: Use the highest (slowest) compression level.
+    example: "zip -9 -r project.zip ./project"
+examples:
+  - description: Zip an entire folder
+    input: "zip -r project.zip ./project"
+    output: ""
+  - description: Add a single file to an existing zip
+    input: "zip project.zip notes.txt"
+    output: ""
+shortcuts: []
+tips:
+  - "Unlike tar, zip both bundles and compresses in one step by default — no separate flag needed for compression."
+  - "Because .zip is natively supported by Windows, macOS, and most file managers with no extra tools, it's often the more portable choice when sharing an archive with non-technical recipients, compared to .tar.gz."
+related: ["unzip", "tar", "gzip"]
+pitfalls:
+  - "Forgetting -r when zipping a directory only adds the directory entry itself, not its contents — always include -r for folders."
+---
+
+`zip` creates `.zip` archives, the same cross-platform format that's built into Windows Explorer, macOS Finder, and most file managers — making it the more universally shareable option compared to `.tar.gz`, which assumes the recipient has Unix tools available.
+
+Unlike `tar`, which needs a separate flag to add compression, `zip` compresses by default as part of bundling. The flag to remember is `-r` (recursive) — without it, zipping a folder only captures the folder entry itself, not the files inside it, which is a common first surprise.

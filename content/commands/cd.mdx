@@ -1,0 +1,50 @@
+---
+slug: cd
+name: cd
+category: ["filesystem", "navigation"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Change the shell's current working directory.
+syntax: "cd [DIRECTORY]"
+flags:
+  - flag: "-"
+    description: Switch back to the previous directory you were in.
+    example: "cd -"
+  - flag: "~"
+    description: Not a flag, but typing ~ alone takes you to your home directory.
+    example: "cd ~"
+examples:
+  - description: Move into a subdirectory
+    input: "cd projects/learn-shell"
+    output: ""
+  - description: Jump back to wherever you just came from
+    input: "cd -"
+    output: "/Users/you/projects/learn-shell"
+shortcuts: []
+tips:
+  - "Combine with pushd/popd (bash/zsh) to jump between several directories and back without losing your place."
+  - "Tab-completion works after cd — start typing a folder name and press Tab instead of typing the whole thing."
+  - "CDPATH (bash/zsh) lets you cd into frequently used directories from anywhere, without typing the full path."
+related: ["pwd", "ls", "mkdir"]
+pitfalls:
+  - "cd with no arguments takes you home — typing it by accident is a common way to 'lose' your place."
+  - "cd only affects the current shell session; it can't change the directory of a script's parent shell once the script exits."
+---
+
+Every terminal session has a concept of a "current working directory" —
+the folder you're conceptually standing in right now. Most commands that
+take a file path, like `ls` or `cat`, resolve relative paths (ones that
+don't start with `/`) against this location. `cd` (change directory) is
+how you move that pointer around.
+
+The simplest form, `cd foldername`, moves into a subfolder of where you
+already are. You can also jump to an absolute path from anywhere
+(`cd /var/log`), or use `~` as a shortcut for your home directory
+(`cd ~/Documents`). Running `cd` with zero arguments is itself a
+shortcut — it always takes you home, which is convenient until you do it
+by accident mid-task.
+
+One small but genuinely useful trick: `cd -` toggles back to whichever
+directory you were in immediately before your last `cd`. That makes it
+easy to bounce between two folders — like a project's `src` and its
+`tests` — without retyping either path.

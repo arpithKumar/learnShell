@@ -1,0 +1,30 @@
+---
+slug: type
+name: type
+category: ["scripting"]
+difficulty: beginner
+shells: ["bash", "zsh"]
+summary: Show what a command name actually refers to — a builtin, an alias, or a file on disk.
+syntax: "type NAME"
+flags:
+  - flag: "-a"
+    description: Show every matching definition, not just the first one found.
+    example: "type -a ls"
+examples:
+  - description: Check what 'll' actually is
+    input: "type ll"
+    output: "ll is aliased to `ls -lah'"
+  - description: Check a built-in shell keyword
+    input: "type cd"
+    output: "cd is a shell builtin"
+shortcuts: []
+tips:
+  - "type is the most reliable way to answer 'what actually runs when I type this name' — more informative than which, since it also recognizes aliases, functions, and shell builtins, not just files on disk."
+related: ["which", "alias"]
+pitfalls:
+  - "A name can be an alias, a function, and an executable file all at once — type -a reveals every one of them and which takes priority, which a quick which alone won't show."
+---
+
+`type` tells you what a given command name actually resolves to: a shell builtin like `cd`, an alias you defined, a function, or an executable file somewhere on your `PATH`. It's the most complete answer to "what actually happens when I run this," more thorough than `which`, which only checks for files on disk.
+
+This matters because the same name can mean different things depending on what's defined where — `ls` might be a plain binary on one system and an alias adding color flags on another. `type -a` shows every definition that exists for a name, in the order the shell would actually try them, which is the real answer when more than one thing could match.

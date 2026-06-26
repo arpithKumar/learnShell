@@ -1,0 +1,27 @@
+---
+slug: fzf
+name: fzf
+category: ["files-and-navigation"]
+difficulty: intermediate
+shells: ["bash", "zsh", "fish"]
+summary: An interactive fuzzy finder for filtering any list of lines as you type.
+syntax: "COMMAND | fzf"
+flags: []
+examples:
+  - description: Fuzzy-search through all files in the current directory tree
+    input: "find . -type f | fzf"
+    output: ""
+  - description: Fuzzy-search shell history interactively
+    input: "history | fzf"
+    output: ""
+shortcuts: []
+tips:
+  - "fzf shines most when wired into shell integrations — many setups bind Ctrl-R to fzf-powered history search, replacing the default reverse search with a much more flexible fuzzy one."
+related: ["grep", "find", "history"]
+pitfalls:
+  - "fzf is not installed by default on most systems — it needs to be installed separately through a package manager before any of its keybindings or pipe-based usage will work."
+---
+
+`fzf` is a general-purpose fuzzy finder: pipe any list of lines into it, and it opens an interactive, type-to-filter interface for picking one (or more) of them, narrowing the list in real time as you type partial, even out-of-order characters. It works on anything line-based — file paths, command history, git branches, process lists.
+
+Beyond piping commands into it directly, `fzf` is most commonly set up as a shell integration that replaces specific built-in behaviors, like binding `Ctrl-R` to a fuzzy history search instead of bash's default reverse search. That integration step usually requires running its install script once, separate from just having the binary on the system.

@@ -1,0 +1,42 @@
+---
+slug: less
+name: less
+category: ["text-processing"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: View a file one screen at a time, with scrolling and search.
+syntax: "less FILE"
+flags:
+  - flag: "-N"
+    description: Show line numbers.
+    example: "less -N app.log"
+  - flag: "-S"
+    description: Don't wrap long lines — scroll horizontally instead.
+    example: "less -S wide-data.csv"
+examples:
+  - description: Browse a long file interactively
+    input: "less app.log"
+    output: ""
+shortcuts:
+  - keys: "/pattern"
+    description: Search forward for a pattern.
+    context: readline
+  - keys: "n"
+    description: Jump to the next search match.
+    context: readline
+  - keys: "q"
+    description: Quit and return to the shell.
+    context: readline
+tips:
+  - "less loads a file incrementally, so it opens large files instantly even when cat would dump a huge wall of text — that's the actual meaning behind the 'less is more' naming joke (it's an improved version of an older pager called 'more')."
+  - "Press / followed by a search term, then n to jump between matches — this makes less double as a quick way to find something in a big file without leaving it."
+related: ["cat", "grep", "tail"]
+pitfalls:
+  - "less doesn't print anything to your scrollback once you quit — if you need the content to stay visible or get piped elsewhere, cat or grep are the better tools, not less."
+---
+
+`less` displays a file's contents one screen at a time, letting you scroll up and down and search through it interactively — a far better way to read a long file than `cat`, which just dumps everything at once and scrolls past.
+
+Once inside `less`, the controls are simple: arrow keys or space to scroll, `/` followed by a search term to find something, `n` to jump to the next match, and `q` to quit. Because `less` loads content incrementally rather than reading the whole file upfront, it opens instantly even on files too large to comfortably `cat`.
+
+A good mental rule: reach for `cat` when you want to *use* a file's content (pipe it, combine it), and `less` when you actually want to *read* it.

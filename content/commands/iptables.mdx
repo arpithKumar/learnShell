@@ -1,0 +1,33 @@
+---
+slug: iptables
+name: iptables
+category: ["networking", "security"]
+difficulty: advanced
+shells: ["bash", "zsh"]
+summary: Configure Linux's kernel-level firewall rules for filtering and routing network traffic.
+syntax: "iptables [OPTIONS]"
+flags:
+  - flag: "-L"
+    description: List all current firewall rules.
+    example: "sudo iptables -L"
+  - flag: "-A"
+    description: Append a new rule to a chain.
+    example: "sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT"
+examples:
+  - description: List the current firewall rules
+    input: "sudo iptables -L"
+    output: "Chain INPUT (policy ACCEPT)\ntarget  prot  source  destination"
+  - description: Allow incoming SSH traffic
+    input: "sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT"
+    output: ""
+shortcuts: []
+tips:
+  - "iptables rules don't persist across a reboot by default on most systems — saving them with a tool like iptables-save (or a distribution-specific service) is a separate, necessary step for permanent rules."
+related: ["netstat", "ip"]
+pitfalls:
+  - "A misconfigured iptables rule can lock you out of a remote server entirely, including over SSH — testing changes on a console you can't be locked out of, or being very careful with the order of rules, is genuinely important here."
+---
+
+`iptables` configures the Linux kernel's built-in firewall, controlling which network traffic is allowed in, out, or forwarded through the machine. It's powerful and precise, but also unforgiving — rules are evaluated in order, and a wrong one can block traffic you didn't intend to, including the very SSH connection you're using to manage the server.
+
+The mental model is "chains" of rules: `INPUT` for incoming traffic, `OUTPUT` for outgoing, `FORWARD` for traffic passing through. Each rule specifies what to match (a protocol, a port, a source) and what to do when it matches (`ACCEPT`, `DROP`, `REJECT`). Newer tools like `nftables` and `ufw` (a simpler front-end) have become more common on recent distributions, but `iptables` remains widely deployed and worth understanding directly.

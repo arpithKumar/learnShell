@@ -1,0 +1,27 @@
+---
+slug: realpath
+name: realpath
+category: ["filesystem", "scripting"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Resolve a relative or symlinked path to its full, absolute, canonical form.
+syntax: "realpath PATH"
+flags: []
+examples:
+  - description: Resolve a relative path to its absolute form
+    input: "realpath ./src/../README.md"
+    output: "/Users/you/projects/learn-shell/README.md"
+  - description: Resolve a symlink to the real file it points to
+    input: "realpath shortcut"
+    output: "/Users/you/projects/learn-shell"
+shortcuts: []
+tips:
+  - "realpath is the tool to use inside a script when you need a guaranteed absolute path, regardless of what directory the script happens to be run from."
+related: ["pwd", "ln", "dirname"]
+pitfalls:
+  - "realpath fails with an error if the path doesn't actually exist — for resolving a path that might not exist yet, basename/dirname's purely textual approach is more appropriate."
+---
+
+`realpath` takes any path — relative, containing `..` segments, or pointing through a symlink — and resolves it down to the one canonical, absolute path that actually identifies that file or directory on disk. It removes all the ambiguity a path can otherwise have.
+
+This matters most inside scripts: a relative path's meaning depends entirely on the current working directory when the script runs, which isn't always predictable. Converting it with `realpath` upfront gives you a fixed, unambiguous path to work with for the rest of the script, regardless of where it was launched from.

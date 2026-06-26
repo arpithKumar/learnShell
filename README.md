@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# learnshell
 
-## Getting Started
+An interactive, visually rich catalogue for shell scripting — every command, every flag, and the concepts behind them, explained and explorable.
 
-First, run the development server:
+Built with Next.js 16 (App Router), this is a fast, static-first reference site: search, browse, and learn shell scripting without leaving the page.
+
+## What's in here
+
+- **154 commands** — full reference entries with syntax, flags, runnable examples, tips, common pitfalls, and related commands. Browse and filter by category and difficulty at `/catalogue`.
+- **77 shell-programming concepts** — variables, quoting, expansions, control flow, pipelines, process control, and shell-environment topics, each with examples and a genuine history/trivia fact. Browse at `/concepts`.
+- **Concept graph** — every command plotted as an explorable, zoomable graph, connected by its related commands (`/catalogue/graph`).
+- **12 guided learning tracks** — sequential, unlock-gated paths through the catalogue, from Bash Basics to Security & Crypto (`/learn`).
+- **In-browser playground** — a simulated shell (real pipes, redirects, tab autocomplete) running against a fake filesystem, persisted in your browser (`/playground`).
+- **Keyboard shortcuts explorer** — readline/Emacs bindings, vi mode, and tmux shortcuts (`/shortcuts`).
+- **⌘K command palette** — instant fuzzy search across every command and concept.
+- **Bookmarks & recents** — saved locally, exportable as a Markdown cheat sheet.
+
+## Tech stack
+
+| Layer               | Choice                                                                     |
+| ------------------- | -------------------------------------------------------------------------- |
+| Framework           | Next.js 16 (App Router, Turbopack) + React 19                              |
+| Language            | TypeScript (strict)                                                        |
+| Styling             | Tailwind CSS v4                                                            |
+| Components          | shadcn/ui on Base UI                                                       |
+| Animation           | Framer Motion                                                              |
+| Content             | MDX + Zod-validated frontmatter (`content/commands/`, `content/concepts/`) |
+| Search              | Fuse.js + cmdk                                                             |
+| State               | Zustand (persisted)                                                        |
+| Concept graph       | `@xyflow/react`                                                            |
+| Playground terminal | `xterm.js`                                                                 |
+| Package manager     | bun                                                                        |
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun install
+bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+bun run dev            # start the dev server
+bun run build          # production build
+bun run start           # serve the production build
+bun run lint            # eslint
+bun run format          # prettier --write
+bun run format:check    # prettier --check
+bun run new-command <slug>   # scaffold a new content/commands/<slug>.mdx
+bun run new-concept <slug>   # scaffold a new content/concepts/<slug>.mdx
+```
 
-## Learn More
+## Content model
 
-To learn more about Next.js, take a look at the following resources:
+Each command and concept is a single MDX file with Zod-validated frontmatter — one file per entry, no separate database. Cross-references (`related`, `relatedConcepts`, `relatedCommands`) are validated at build time, so a broken link fails the build instead of 404ing silently.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```text
+content/
+  commands/   # one .mdx file per command (slug, flags, examples, tips, pitfalls, related)
+  concepts/   # one .mdx file per concept (category, examples, tips, pitfalls, funFacts)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deployment
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This is a static-first Next.js app — fully compatible with Vercel's zero-config deploy. Set `NEXT_PUBLIC_SITE_URL` to your production domain (used for the sitemap, robots.txt, OG images, and canonical metadata).

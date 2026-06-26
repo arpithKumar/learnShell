@@ -1,0 +1,27 @@
+---
+slug: stat
+name: stat
+category: ["filesystem"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Show detailed metadata about a file — size, permissions, timestamps, and more.
+syntax: "stat PATH"
+flags:
+  - flag: "-f"
+    description: Print a specific field using a custom format string (GNU stat).
+    example: "stat -c '%s' file.txt"
+examples:
+  - description: See full metadata for a file
+    input: "stat notes.txt"
+    output: "  File: notes.txt\n  Size: 1234        Blocks: 8\nModify: 2024-01-01 10:00:00"
+shortcuts: []
+tips:
+  - "stat shows the exact permission bits, owner, and group for a file in one place — useful for confirming a chmod or chown actually took effect as expected."
+related: ["ls", "file", "du"]
+pitfalls:
+  - "stat's output format and available flags differ noticeably between GNU stat (Linux) and BSD stat (macOS) — a script relying on a specific format flag may need platform-specific handling."
+---
+
+`stat` prints detailed metadata about a file that `ls -l` only partially shows: exact size in bytes, precise modification and access timestamps, the underlying inode number, and full permission and ownership details, all in one structured report.
+
+It's the tool to reach for when you need to confirm something precise — did a `chmod` or `chown` actually apply correctly, exactly when was a file last modified down to the second, how many disk blocks does it actually occupy. `ls -l` is fine for a quick glance; `stat` is for when you need the exact answer.

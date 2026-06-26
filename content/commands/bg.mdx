@@ -1,0 +1,38 @@
+---
+slug: bg
+name: bg
+category: ["process-system"]
+difficulty: intermediate
+shells: ["bash", "zsh", "fish"]
+summary: Resume a stopped job and continue running it in the background.
+syntax: "bg [%JOB_ID]"
+flags: []
+examples:
+  - description: Resume the most recently stopped job in the background
+    input: "bg"
+    output: "[1]+ npm run dev &"
+  - description: Resume a specific job by its number
+    input: "bg %2"
+    output: "[2]+ ./long-script.sh &"
+shortcuts:
+  - keys: "Ctrl+Z"
+    description: Pause (suspend) the current foreground job, so it can be resumed with bg or fg.
+    context: readline
+tips:
+  - "You can chain Ctrl+Z immediately followed by bg if you realize mid-task that a command you started in the foreground should really have been backgrounded with & from the start."
+related: ["fg", "jobs", "kill"]
+pitfalls:
+  - "bg resumes the job in the background, but it still writes its output to your terminal — if that turns out to be noisy, it's worth redirecting its output (or restarting it with output redirected) instead."
+---
+
+If you've paused a running program with `Ctrl+Z`, it's now "stopped" —
+not actively running, but not gone either, just frozen in place. `bg`
+resumes it, letting it continue execution but in the background, which
+hands your terminal prompt back to you in the same way starting a
+command with a trailing `&` would have done from the start.
+
+This is genuinely useful as a recovery move: you start something in the
+foreground, realize partway through that it's going to take a while and
+you want your terminal back, hit `Ctrl+Z` to pause it, then `bg` to let
+it keep going without giving up your prompt. Check `jobs` afterward to
+confirm it picked back up and is running as expected.

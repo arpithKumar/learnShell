@@ -1,0 +1,33 @@
+---
+slug: seq
+name: seq
+category: ["scripting"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Print a sequence of numbers.
+syntax: "seq [OPTIONS] [START] [STEP] END"
+flags:
+  - flag: "-s"
+    description: Use a custom separator between numbers instead of a newline.
+    example: "seq -s ',' 1 5"
+  - flag: "-w"
+    description: Pad numbers with leading zeros so they're all the same width.
+    example: "seq -w 1 10"
+examples:
+  - description: Print numbers 1 through 5
+    input: "seq 5"
+    output: "1\n2\n3\n4\n5"
+  - description: Count from 0 to 10 in steps of 2
+    input: "seq 0 2 10"
+    output: "0\n2\n4\n6\n8\n10"
+shortcuts: []
+tips:
+  - "for i in $(seq 1 10); do ... done is a common pattern for a numeric loop, though bash's native for ((i=1; i<=10; i++)) avoids spawning a subprocess and is slightly more idiomatic in pure bash scripts."
+related: ["echo"]
+pitfalls:
+  - "seq's argument order changes meaning depending on how many you give it — one argument is just the end, three arguments are start, step, end. Misreading which is which is an easy mistake."
+---
+
+`seq` prints a sequence of numbers, one common use being to drive a loop a fixed number of times: `seq 1 10` prints 1 through 10, one per line, ready to feed into a `for` loop or anything else that wants a list of numbers.
+
+With one argument it counts up to that number starting from 1; with two, it's start and end; with three, it's start, step, and end — `seq 0 2 10` counts from 0 to 10 in steps of 2. `-w` is a small but genuinely useful touch: it pads every number to the same width with leading zeros, which keeps output aligned when numbers range from single to double digits.

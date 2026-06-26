@@ -1,0 +1,27 @@
+---
+slug: nice
+name: nice
+category: ["system", "process-system"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Start a command with an adjusted CPU scheduling priority.
+syntax: "nice [-n PRIORITY] COMMAND"
+flags:
+  - flag: "-n"
+    description: Set the niceness value (-20 highest priority, 19 lowest; default offset is +10).
+    example: "nice -n 19 ./long-batch-job.sh"
+examples:
+  - description: Run a CPU-heavy job at low priority so it doesn't slow down everything else
+    input: "nice -n 19 ./long-batch-job.sh"
+    output: ""
+shortcuts: []
+tips:
+  - "Higher niceness numbers mean LOWER priority — a process being 'nicer' yields more CPU time to others, which is the opposite of how priority numbers work in some other systems."
+related: ["renice", "top", "kill"]
+pitfalls:
+  - "Only the root user can set a negative niceness (higher priority than normal) — regular users can only make a process nicer (lower priority), not more aggressive."
+---
+
+`nice` starts a command with an adjusted scheduling priority, letting it yield more or less CPU time to other processes than it would by default. It's the tool for running something CPU-intensive — a batch job, a large compile — without it competing aggressively for resources against everything else on the machine.
+
+The niceness scale runs from -20 (highest priority) to 19 (lowest), and the naming is intentionally backwards from what "priority" might suggest: a "nicer" process (higher number) is more considerate, giving up CPU time more readily. `nice -n 19 ./job.sh` runs a job at the lowest priority, so it only uses spare CPU cycles instead of competing with anything else actively running.

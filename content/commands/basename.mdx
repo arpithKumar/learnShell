@@ -1,0 +1,27 @@
+---
+slug: basename
+name: basename
+category: ["filesystem", "scripting"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Strip the directory portion of a path, leaving just the filename.
+syntax: "basename PATH [SUFFIX]"
+flags: []
+examples:
+  - description: Get just the filename from a full path
+    input: "basename /Users/you/projects/notes.txt"
+    output: "notes.txt"
+  - description: Strip the extension too, by passing it as a suffix
+    input: "basename /Users/you/projects/notes.txt .txt"
+    output: "notes"
+shortcuts: []
+tips:
+  - "basename is most useful inside scripts that receive a full file path as input but only need the filename for a message, a new path, or a comparison."
+related: ["dirname", "realpath"]
+pitfalls:
+  - "basename only manipulates the path string itself — it doesn't check whether the file actually exists, so it works fine (and is sometimes used deliberately) on paths that don't exist yet."
+---
+
+`basename` takes a full file path and strips away everything except the final component — the filename itself, without any of the directories leading up to it. It's a small, purely textual operation: `basename /a/b/c.txt` returns `c.txt`, regardless of whether that file actually exists.
+
+This is mostly useful inside scripts, where a variable might hold a full path but the script only needs the filename — for a log message, a renamed copy, or a comparison. Passing a second argument as a suffix strips that exact suffix too, which is a quick way to get a filename without its extension.

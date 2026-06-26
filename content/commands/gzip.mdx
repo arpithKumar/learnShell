@@ -1,0 +1,39 @@
+---
+slug: gzip
+name: gzip
+category: ["archives"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Compress a single file using the gzip algorithm.
+syntax: "gzip [OPTIONS] FILE"
+flags:
+  - flag: "-d"
+    description: Decompress instead of compress (same as gunzip).
+    example: "gzip -d file.txt.gz"
+  - flag: "-k"
+    description: Keep the original file instead of deleting it after compressing.
+    example: "gzip -k file.txt"
+  - flag: "-9"
+    description: Use the highest (slowest) compression level.
+    example: "gzip -9 file.txt"
+examples:
+  - description: Compress a file in place
+    input: "gzip file.txt"
+    output: "file.txt.gz"
+  - description: Compress but keep the original too
+    input: "gzip -k file.txt"
+    output: ""
+shortcuts: []
+tips:
+  - "By default gzip replaces the original file with the compressed .gz version — use -k if you want to keep both."
+  - "gzip only compresses a single file at a time; to compress a whole folder, combine it with tar first (tar -czf), which is exactly what that -z flag does under the hood."
+related: ["gunzip", "tar", "bzip2"]
+pitfalls:
+  - "Running gzip on a file deletes the original by default — there's no separate 'keep' step unless you pass -k upfront."
+---
+
+`gzip` compresses a single file, replacing it with a `.gz` version and removing the original — it's a one-file-at-a-time tool, unlike `tar`, which bundles many files together first. That's exactly why the two are so often combined: `tar` collects multiple files into one, and `gzip` (via `tar`'s `-z` flag) shrinks the result.
+
+Used standalone, `gzip somefile.txt` compresses it into `somefile.txt.gz` and deletes the plain version — if you want to keep both, pass `-k`. Decompressing is the mirror image, either with `gzip -d` or its dedicated counterpart, `gunzip`.
+
+Compression level is adjustable from `-1` (fastest, larger output) to `-9` (slowest, smallest output), though the default usually strikes a reasonable balance without needing to think about it.

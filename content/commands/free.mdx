@@ -1,0 +1,30 @@
+---
+slug: free
+name: free
+category: ["system"]
+difficulty: beginner
+shells: ["bash", "zsh"]
+summary: Show how much RAM and swap space is being used and available.
+syntax: "free [OPTIONS]"
+flags:
+  - flag: "-h"
+    description: Print sizes in human-readable form (KB, MB, GB).
+    example: "free -h"
+  - flag: "-s"
+    description: Repeat the report every N seconds, like a simple live monitor.
+    example: "free -s 2"
+examples:
+  - description: Check current memory usage, human-readable
+    input: "free -h"
+    output: "              total  used  free  shared  buff/cache  available\nMem:           16Gi  9.2Gi  1.1Gi   412Mi       5.7Gi      6.3Gi"
+shortcuts: []
+tips:
+  - "The 'available' column is usually the most useful single number — it accounts for memory the kernel can reclaim from cache if needed, which 'free' alone doesn't reflect."
+related: ["top", "uptime"]
+pitfalls:
+  - "free is a Linux-specific tool — on macOS, the equivalent information comes from vm_stat or Activity Monitor instead, since macOS doesn't have a built-in free command."
+---
+
+`free` reports how much physical RAM and swap space your system has, how much is in use, and how much is genuinely available for new processes. It's a quick way to check whether memory pressure is contributing to a system feeling slow.
+
+`free -h` is the version almost everyone actually types — human-readable sizes instead of raw byte counts. The column worth paying attention to is "available," not "free": modern Linux systems use otherwise-idle memory for disk caching, which shows up as "used" but is actually reclaimable on demand, so "available" is the more accurate picture of what's really left to work with.

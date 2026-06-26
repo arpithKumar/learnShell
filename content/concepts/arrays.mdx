@@ -1,0 +1,26 @@
+---
+slug: arrays
+title: Arrays
+category: fundamentals
+difficulty: intermediate
+summary: Store an ordered list of values in a single variable, indexed from zero.
+examples:
+  - description: Declare an array and access an element by index
+    input: 'fruits=(apple banana cherry); echo "${fruits[1]}"'
+    output: "banana"
+  - description: Expand every element, and count them
+    input: 'fruits=(apple banana cherry); echo "${fruits[@]}"; echo "${#fruits[@]}"'
+    output: "apple banana cherry\n3"
+tips:
+  - "${array[@]} expands each element as a separate, properly-quoted word (safe even if an element contains spaces) — while ${array[*]} joins everything into one single string. Almost always reach for [@] inside double quotes."
+pitfalls:
+  - "Arrays are a bash/zsh extension, not POSIX sh — a script that needs to run under a strict POSIX shell can't rely on them and has to fall back to space-separated strings or positional parameters instead."
+funFacts:
+  - "Bash didn't get arrays until version 2.0 in 1996 — for years, scripts simulated lists with plain space-separated strings, which is part of why so many older shell scripts handle multi-word values awkwardly."
+relatedConcepts: ["variables", "loops", "parameter-expansion", "associative-arrays"]
+relatedCommands: ["declare", "read", "seq"]
+---
+
+An array holds an ordered list of values under one variable name, declared with `name=(value1 value2 value3)` and indexed from zero. A single element is accessed with `${name[1]}`, while `${name[@]}` expands every element as its own separate word — the form you almost always want when looping over an array's contents, especially when an element might contain spaces.
+
+Arrays are a bash/zsh feature rather than part of the strict POSIX shell standard, so a script that needs maximum portability (declared `#!/bin/sh`) generally can't assume they're available. Within bash or zsh scripts specifically, though, they're the standard way to collect a list of items — file paths, arguments, lines read from a command — before iterating over them with a `for` loop.

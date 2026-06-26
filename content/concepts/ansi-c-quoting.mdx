@@ -1,0 +1,26 @@
+---
+slug: ansi-c-quoting
+title: ANSI-C Quoting
+category: expansions-and-substitution
+difficulty: intermediate
+summary: A $'...' string where backslash escapes like \n and \t are interpreted literally, unlike normal single or double quotes.
+examples:
+  - description: Insert an actual newline and tab via escape sequences
+    input: "printf $'Line one\\nLine two\\tindented'"
+    output: "Line one\nLine two    indented"
+  - description: Compare to a plain single-quoted string, where \\n stays literal
+    input: "echo 'a\\nb'"
+    output: "a\\nb"
+tips:
+  - "$'...' is the standard way to put a real tab, newline, or other control character directly into a string literal without relying on a separate printf call or an actual embedded newline in your script's source."
+pitfalls:
+  - "Plain single quotes ('...') and double quotes (\"...\") do NOT interpret backslash escapes like \\n at all — only the $'...' form does. Mixing this up is a common reason a \\n shows up literally instead of producing a newline."
+funFacts:
+  - "The $'...' syntax originated in ksh93 and was adopted by bash and zsh afterward — it's not part of the original Bourne shell or strict POSIX sh."
+relatedConcepts: ["quoting"]
+relatedCommands: ["printf", "echo"]
+---
+
+`$'...'` is a special quoting form where backslash escape sequences — `\n` for newline, `\t` for tab, `\\` for a literal backslash, and others borrowed from C string literals — are actually interpreted, unlike plain single or double quotes, which leave a literal backslash-n as two literal characters with no special meaning.
+
+It's most useful when you need a real control character embedded directly in a string, such as a newline inside a single-line variable assignment, without resorting to an actual line break in the script's source or a separate `printf` call. Like several other shell quality-of-life features, it originated in ksh93 before bash and zsh both adopted it — it's not available in strict POSIX `sh`.

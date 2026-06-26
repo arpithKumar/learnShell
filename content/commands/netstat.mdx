@@ -1,0 +1,48 @@
+---
+slug: netstat
+name: netstat
+category: ["networking"]
+difficulty: advanced
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Show active network connections and listening ports.
+syntax: "netstat [OPTIONS]"
+flags:
+  - flag: "-a"
+    description: Show all connections and listening ports.
+    example: "netstat -a"
+  - flag: "-n"
+    description: Show numeric addresses and ports instead of resolving hostnames.
+    example: "netstat -an"
+  - flag: "-p"
+    description: Show the process that owns each connection (Linux; needs sudo).
+    example: "sudo netstat -anp"
+examples:
+  - description: See every active connection with numeric addresses
+    input: "netstat -an"
+    output: "tcp4  0  0  127.0.0.1.3000  *.*  LISTEN"
+shortcuts: []
+tips:
+  - "On modern Linux distributions, try ss -tulpn as a faster, more detailed alternative if netstat feels slow, limited, or isn't installed at all."
+  - "Combine with grep to find a specific port quickly: netstat -an | grep 3000 narrows a long connection list down to just what you care about."
+related: ["ping", "curl"]
+pitfalls:
+  - "netstat is considered legacy on modern Linux — tools like ss are the recommended modern replacement there, though netstat remains common and built-in by default on macOS."
+---
+
+`netstat` shows you what's currently listening on which network ports,
+and what active connections exist to and from your machine. The
+classic use case is finding out "what's already using port 3000" right
+before starting a dev server, or confirming a service is actually
+listening where you expect it to be after starting it.
+
+The `-an` combination — all connections, numeric addresses instead of
+resolved hostnames — is the version most people reach for, since
+hostname resolution can be slow and isn't usually necessary just to
+check whether something is listening on a given port. Piping that
+through `grep` for a specific port number turns a long, noisy table
+into a single relevant line.
+
+On Linux specifically, `netstat` has been gradually superseded by the
+`ss` command, which is generally faster and provides more detail; on
+macOS, `netstat` remains the standard built-in tool with no real
+push toward a replacement.

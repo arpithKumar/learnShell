@@ -1,0 +1,24 @@
+---
+slug: tac
+name: tac
+category: ["text-processing"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Print a file's lines in reverse order — the last line first.
+syntax: "tac [FILE]"
+flags: []
+examples:
+  - description: Print a log file with the newest line first
+    input: "tac app.log"
+    output: ""
+shortcuts: []
+tips:
+  - "tac is literally 'cat' spelled backwards, and does the conceptually opposite-feeling job: same idea as cat, but reversing line order on the way out."
+related: ["rev", "cat", "tail"]
+pitfalls:
+  - "tac reverses the order of whole lines, not the characters within them — for reversing individual characters on a line, rev is the tool you want instead."
+---
+
+`tac` prints a file's lines in reverse order, so the last line appears first. It's `cat`'s name spelled backwards, and fittingly does almost the opposite-feeling transformation: same basic job of printing a file, but flipping the order top to bottom.
+
+A practical use is viewing a log file with the most recent entries at the top instead of having to scroll to the bottom — `tac app.log` does that in one step. Don't confuse it with `rev`, which reverses the characters *within* each line rather than the order of the lines themselves.

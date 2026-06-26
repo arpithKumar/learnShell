@@ -1,0 +1,24 @@
+---
+slug: last
+name: last
+category: ["system", "security"]
+difficulty: intermediate
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Show a history of recent logins to the system.
+syntax: "last [USER]"
+flags: []
+examples:
+  - description: See recent login history
+    input: "last"
+    output: "alice  ttys001  Mon Jan  1 09:00  still logged in\nbob    console  Mon Jan  1 08:15 - 08:45  (00:30)"
+shortcuts: []
+tips:
+  - "last is a useful first check on a server when something seems off — confirming who's actually logged in (and when) recently, distinct from who which only shows who's logged in right now."
+related: ["who", "w"]
+pitfalls:
+  - "last reads from a system log file that has a finite size and rotates — very old login history may no longer be available by the time you go looking for it."
+---
+
+`last` shows a history of logins to the system — who logged in, from where, when, and for how long — going back further than `who` or `w`, which only show who's currently connected right now. It's the tool for "who has been using this machine recently," not just "who's on it at this exact moment."
+
+This makes it a useful basic security check on a shared or server system: reviewing recent login activity for anything unexpected, like a login at an unusual time or from an unfamiliar session. The history is limited by how far back the underlying log file goes, since it rotates and doesn't keep records indefinitely.

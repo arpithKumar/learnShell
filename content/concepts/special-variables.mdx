@@ -1,0 +1,29 @@
+---
+slug: special-variables
+title: Special Variables
+category: fundamentals
+difficulty: intermediate
+summary: A handful of variables the shell maintains automatically — process IDs, the last exit status, random numbers — without you ever assigning them.
+examples:
+  - description: The current shell's own process ID
+    input: "echo $$"
+    output: "48213"
+  - description: The PID of the most recently backgrounded job
+    input: "sleep 100 &\necho $!"
+    output: "48220"
+  - description: A random integer between 0 and 32767
+    input: "echo $RANDOM"
+    output: "17042"
+tips:
+  - "$! combined with kill is a common pattern for managing a background process you just started — pid=$!; sleep 5; kill $pid stops it after a fixed wait without needing jobs or fg/bg."
+pitfalls:
+  - "$$ inside a subshell or a piped command can be surprising — in some shells it still reports the PARENT shell's PID rather than the subshell's own, which trips people up when using it to generate a supposedly unique temp filename."
+funFacts:
+  - "$RANDOM isn't cryptographically random at all — it's a simple pseudo-random generator built into bash, fine for scripting tricks like jitter or sampling, but never appropriate for anything security-related."
+relatedConcepts: ["variables", "exit-status", "job-control"]
+relatedCommands: ["kill", "trap"]
+---
+
+Beyond variables you set yourself, the shell maintains a handful of special ones automatically: `$$` is the current shell's process ID, `$!` is the process ID of the most recently started background job, `$0` is the script's own name, and `$RANDOM` (a bash/zsh extension) produces a new pseudo-random integer each time it's read.
+
+These show up constantly in real scripts — `$!` paired with `kill` is the standard way to manage a background process you just launched, and `$$` is a common ingredient in generating a temp filename that won't collide with another running instance of the same script. None of these need to be declared; the shell populates them on its own as a normal part of running.

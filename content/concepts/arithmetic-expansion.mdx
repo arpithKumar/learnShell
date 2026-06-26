@@ -1,0 +1,26 @@
+---
+slug: arithmetic-expansion
+title: Arithmetic Expansion
+category: expansions-and-substitution
+difficulty: beginner
+summary: Evaluate an integer math expression inline with $((...)), since the shell otherwise treats everything as text.
+examples:
+  - description: Basic arithmetic
+    input: 'echo $((4 + 5 * 2))'
+    output: "14"
+  - description: Increment a variable in place
+    input: 'count=0; count=$((count + 1)); echo $count'
+    output: "1"
+tips:
+  - "Inside $((...)), you can reference variables without the leading $ — $((count + 1)) and $(($count + 1)) both work, though dropping the $ is the more common style."
+pitfalls:
+  - "Shell arithmetic is integer-only — $((7 / 2)) gives 3, not 3.5, with no error or warning. Anything needing real decimal math has to reach for a separate tool like bc or awk."
+funFacts:
+  - "$((...)) syntax was only standardized in POSIX in 1992 — older Bourne shell scripts had to call out to the separate expr command for every single arithmetic operation, which is why expr still exists and shows up in old scripts."
+relatedConcepts: ["variables", "parameter-expansion"]
+relatedCommands: ["expr", "seq"]
+---
+
+Arithmetic expansion evaluates an integer math expression and substitutes the result, written as `$((expression))`. Without it, the shell has no concept of numbers at all — `$x + $y` where both hold digits is just string concatenation with literal `+` characters in the middle, not addition, which is exactly why this special syntax exists.
+
+It supports the usual operators (`+ - * / %`), comparison, and even basic bitwise operations, but strictly as integers — there's no floating-point support built into the shell itself. Before `$((...))` was standardized, scripts had to call the external `expr` command for every calculation, which is slower (a whole extra process per operation) and part of why `expr` is now considered legacy outside a few specific use cases.

@@ -1,0 +1,36 @@
+---
+slug: journalctl
+name: journalctl
+category: ["system", "process-system"]
+difficulty: advanced
+shells: ["bash", "zsh"]
+summary: Query and view logs collected by systemd, the standard log viewer on modern Linux.
+syntax: "journalctl [OPTIONS]"
+flags:
+  - flag: "-u"
+    description: Show logs for a specific service only.
+    example: "journalctl -u nginx"
+  - flag: "-f"
+    description: Follow the log live, printing new entries as they arrive (like tail -f).
+    example: "journalctl -f"
+  - flag: "--since"
+    description: Show only entries since a given time.
+    example: "journalctl --since '1 hour ago'"
+examples:
+  - description: View recent logs for a specific service
+    input: "journalctl -u nginx"
+    output: ""
+  - description: Follow a service's logs live
+    input: "journalctl -u nginx -f"
+    output: ""
+shortcuts: []
+tips:
+  - "journalctl -u SERVICE is usually the natural next step right after systemctl status SERVICE shows something's wrong — status gives a summary, journalctl gives the full log."
+related: ["systemctl", "dmesg", "tail"]
+pitfalls:
+  - "journalctl is specific to systemd-based Linux systems — it has no equivalent on macOS, and older or non-systemd Linux distributions typically rely on plain log files in /var/log instead."
+---
+
+`journalctl` queries the centralized log that `systemd` collects from every service it manages, giving you one consistent tool for reading logs instead of hunting through separate files for each service. It's the standard companion to `systemctl` — `status` tells you a service's current state, `journalctl` shows the full history of what it's logged.
+
+`-u SERVICE` filters to just one service's entries, and `-f` follows the log live, the same idea as `tail -f` but for the structured systemd journal instead of a plain text file. `--since` narrows results to a time window, which matters once a service has been running long enough to accumulate a large amount of log history.

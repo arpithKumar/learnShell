@@ -1,0 +1,27 @@
+---
+slug: lsblk
+name: lsblk
+category: ["system"]
+difficulty: intermediate
+shells: ["bash", "zsh"]
+summary: List block devices — disks and their partitions — in a readable tree.
+syntax: "lsblk [OPTIONS]"
+flags:
+  - flag: "-f"
+    description: Include filesystem type and label information for each device.
+    example: "lsblk -f"
+examples:
+  - description: View attached disks and partitions
+    input: "lsblk"
+    output: "NAME   SIZE TYPE MOUNTPOINT\nsda    500G disk\n├─sda1 512M part /boot\n└─sda2 499G part /"
+shortcuts: []
+tips:
+  - "lsblk is the safe, read-only way to see what disks and partitions exist before doing anything destructive like partitioning or formatting with tools like fdisk or parted."
+related: ["df", "mount", "fdisk", "parted"]
+pitfalls:
+  - "lsblk shows block devices as the kernel sees them, not free disk space within a filesystem — for actual used/available space on a mounted filesystem, df is the right tool instead."
+---
+
+`lsblk` lists the block devices attached to a system — physical disks and the partitions on them — in a readable tree showing how they nest, along with their size and where each is mounted, if at all. It's purely read-only and informational, making it a safe first step before any disk operation.
+
+Before partitioning a drive with `fdisk` or `parted`, or troubleshooting a mount issue, `lsblk` is the standard way to get oriented: confirming exactly which device name corresponds to which physical disk, since getting that wrong before a destructive operation can affect the wrong drive entirely.

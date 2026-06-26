@@ -1,0 +1,26 @@
+---
+slug: command-grouping
+title: Command Grouping
+category: io-and-pipelines
+difficulty: intermediate
+summary: Group several commands to treat them as one unit for redirection or piping — { ; } runs them in the current shell, ( ) runs them in a subshell.
+examples:
+  - description: Redirect the combined output of several commands to one file
+    input: "{ echo \"start\"; date; echo \"end\"; } > log.txt"
+    output: ""
+  - description: Parentheses isolate the group in a subshell instead
+    input: '(cd /tmp && ls) ; pwd'
+    output: "/tmp listing here\n/original/directory"
+tips:
+  - "Curly-brace grouping { ...; } needs spaces after { and before }, and a trailing semicolon before the closing brace — it's pickier about whitespace than parentheses grouping, which is a common source of syntax errors when first using it."
+pitfalls:
+  - "{ ...; } and ( ... ) look similar but behave differently — braces run the commands in the CURRENT shell (variable changes persist), while parentheses run them in a SUBSHELL (variable changes don't persist once it closes). Picking the wrong one is an easy, quiet mistake."
+funFacts:
+  - "Curly-brace grouping has effectively zero overhead since it doesn't fork a new process at all — parenthesized grouping always forks a subshell, even for something as simple as (echo hi), which is measurably (if usually negligibly) slower."
+relatedConcepts: ["subshells", "redirection", "pipes"]
+relatedCommands: []
+---
+
+Both `{ command1; command2; }` and `(command1; command2)` group multiple commands so they can be treated as a single unit — redirected to one file together, or piped into another command as a combined stream — but they differ in an important way: curly braces run the group in the *current* shell, so any variables it sets or directory changes it makes persist afterward, while parentheses run the group in a *subshell*, where those same changes disappear once it closes.
+
+This makes parentheses the right choice when you specifically want isolation — `(cd /tmp && ls)` looks around in `/tmp` without permanently changing your actual current directory — and curly braces the right choice when you want the grouped commands to share state with the rest of the script, like redirecting several `echo` statements to one log file together.

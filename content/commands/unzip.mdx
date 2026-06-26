@@ -1,0 +1,36 @@
+---
+slug: unzip
+name: unzip
+category: ["archives"]
+difficulty: beginner
+shells: ["posix", "bash", "zsh", "fish"]
+summary: Extract files from a .zip archive.
+syntax: "unzip [OPTIONS] ARCHIVE.zip"
+flags:
+  - flag: "-l"
+    description: List the archive's contents without extracting.
+    example: "unzip -l project.zip"
+  - flag: "-d"
+    description: Extract into a specific directory instead of the current one.
+    example: "unzip project.zip -d ./extracted"
+  - flag: "-o"
+    description: Overwrite existing files without prompting.
+    example: "unzip -o project.zip"
+examples:
+  - description: Extract a zip into the current directory
+    input: "unzip project.zip"
+    output: ""
+  - description: Extract into a specific folder
+    input: "unzip project.zip -d ./extracted"
+    output: ""
+shortcuts: []
+tips:
+  - "unzip -l shows what's inside an archive without extracting anything — worth doing before unzipping something from an untrusted source."
+related: ["zip", "tar"]
+pitfalls:
+  - "By default unzip asks before overwriting an existing file with the same name — this is a real safety prompt, not just noise, since unlike tar there's no silent overwrite by default."
+---
+
+`unzip` extracts the contents of a `.zip` archive, the counterpart to `zip`. Run with no flags, it unpacks everything into the current directory and asks before overwriting anything that already exists — a small but genuinely useful safety net that `tar` doesn't offer by default.
+
+`-l` lists an archive's contents without touching the filesystem at all, which is the safe way to check what you're about to extract. `-d` lets you choose a destination folder instead of dumping files into wherever you happen to be standing.

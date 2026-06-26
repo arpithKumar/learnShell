@@ -1,0 +1,33 @@
+---
+slug: dmesg
+name: dmesg
+category: ["system"]
+difficulty: advanced
+shells: ["bash", "zsh"]
+summary: Print kernel-level log messages, useful for diagnosing hardware and driver issues.
+syntax: "dmesg [OPTIONS]"
+flags:
+  - flag: "-T"
+    description: Show human-readable timestamps instead of raw seconds-since-boot.
+    example: "dmesg -T"
+  - flag: "-w"
+    description: Follow the log live, printing new messages as they appear (like tail -f).
+    example: "dmesg -w"
+examples:
+  - description: View the kernel log with readable timestamps
+    input: "dmesg -T"
+    output: "[Mon Jan  1 10:02:13 2024] usb 1-1: new high-speed USB device"
+  - description: Search the kernel log for a specific keyword
+    input: "dmesg | grep -i error"
+    output: ""
+shortcuts: []
+tips:
+  - "dmesg is usually the right place to look when a USB device, disk, or other piece of hardware isn't being recognized — the kernel logs the attempt and any errors there, often before anything else does."
+related: ["journalctl", "grep"]
+pitfalls:
+  - "dmesg's buffer has a limited size and rolls over — on a long-running system, very old messages may already be gone by the time you go looking for them."
+---
+
+`dmesg` prints messages from the kernel's own internal log — hardware being detected, drivers loading, low-level errors that happen below the level most application logs ever see. It's the first place to check when something hardware-related (a USB device, a disk, a network interface) isn't behaving correctly.
+
+`-T` converts the default raw "seconds since boot" timestamps into actual human-readable dates, which makes the output far easier to correlate with when something actually happened. Piped into `grep`, it's a quick way to search for a specific kind of error across the whole kernel log.

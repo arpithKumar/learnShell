@@ -1,0 +1,36 @@
+---
+slug: ip
+name: ip
+category: ["networking"]
+difficulty: advanced
+shells: ["bash", "zsh"]
+summary: Show and configure network interfaces, routes, and addresses — the modern Linux successor to ifconfig.
+syntax: "ip OBJECT COMMAND"
+flags:
+  - flag: "addr"
+    description: Show or manage IP addresses on interfaces.
+    example: "ip addr show"
+  - flag: "route"
+    description: Show or manage the routing table.
+    example: "ip route show"
+  - flag: "link"
+    description: Show or manage network interfaces themselves.
+    example: "ip link show"
+examples:
+  - description: List every network interface and its IP address
+    input: "ip addr show"
+    output: "2: eth0: <BROADCAST,MULTICAST,UP>\n    inet 192.168.1.42/24"
+  - description: See the current routing table
+    input: "ip route show"
+    output: "default via 192.168.1.1 dev eth0"
+shortcuts: []
+tips:
+  - "ip addr show is the direct modern-Linux replacement for ifconfig's primary use — finding your machine's network interfaces and IP addresses."
+related: ["ifconfig", "ping", "netstat"]
+pitfalls:
+  - "ip's command structure (object then sub-command, like 'ip addr show') is genuinely different from ifconfig's flatter syntax — it takes some adjustment if you're used to the older tool."
+---
+
+`ip` is the modern Linux tool for inspecting and configuring networking — interfaces, IP addresses, and routing tables — and is the officially recommended replacement for `ifconfig` (interfaces/addresses) and `route` (routing) on current distributions, both of which it supersedes with a more structured command set.
+
+The structure follows an "object then action" pattern: `ip addr show` lists addresses, `ip link show` lists interfaces themselves, `ip route show` shows the routing table. It takes a little adjustment coming from `ifconfig`'s flatter style, but covers the same ground with a more consistent design across the different things it manages.

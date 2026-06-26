@@ -1,0 +1,23 @@
+---
+slug: system-wide-vs-user-config
+title: System-Wide vs User Config
+category: shell-environment
+difficulty: advanced
+summary: Shell startup files exist at two separate levels — system-wide defaults everyone gets, and per-user files that layer on top — read in a specific, fixed order.
+examples:
+  - description: Typical system-wide and per-user files involved for a login shell
+    input: "/etc/profile\n~/.bash_profile (or ~/.profile)"
+    output: ""
+tips:
+  - "When a setting behaves correctly for one user but not another on the same machine, checking the system-wide files (/etc/profile, /etc/bash.bashrc) for something being overridden — or not being set at all — in one user's personal files is a good first move."
+pitfalls:
+  - "A system-wide file applies to every user on the machine by default, including ones that might not expect or want that change — editing /etc/profile carelessly can affect every account on a shared system, not just your own."
+funFacts:
+  - "On a typical Linux distribution, a single login shell session can read FOUR separate startup files in sequence (/etc/profile, then ~/.bash_profile, which often itself sources ~/.bashrc, which often itself sources /etc/bash.bashrc) — far more layering than most users realize is happening."
+relatedConcepts: ["dotfiles", "login-vs-interactive-shells"]
+relatedCommands: []
+---
+
+Shell configuration exists at two layered levels: system-wide files (`/etc/profile`, `/etc/bash.bashrc`) that apply to every user on a machine by default, and per-user files (`~/.bash_profile`, `~/.bashrc`) that apply only to one account, typically read afterward so personal settings can override the system defaults. Both layers get combined with the login-vs-interactive distinction, which determines which specific file in each layer actually gets read for a given session.
+
+In practice, a single login shell on a typical Linux system can chain through several files in sequence — the system-wide profile, then a personal profile, which commonly sources the personal `.bashrc` itself, which may in turn source a system-wide `.bashrc` too. This layering is invisible day to day, but it's exactly why "this setting works for me but not for a coworker on the same shared server" so often traces back to a difference somewhere in this chain rather than the setting itself being wrong.
