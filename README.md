@@ -2,6 +2,8 @@
 
 An interactive, visually rich catalogue for shell scripting — every command, every flag, and the concepts behind them, explained and explorable.
 
+**Live at [learn-shell-kappa.vercel.app](https://learn-shell-kappa.vercel.app)**
+
 Built with Next.js 16 (App Router), this is a fast, static-first reference site: search, browse, and learn shell scripting without leaving the page.
 
 ## What's in here
