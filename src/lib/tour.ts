@@ -3,16 +3,34 @@ import "driver.js/dist/driver.css";
 
 let activeDriver: Driver | null = null;
 
+// getClientRects() is empty for an element that isn't actually rendered
+// (display: none on itself or an ancestor — e.g. SiteNav's links, which
+// exist in the DOM but are hidden below the md breakpoint) — more reliable
+// than offsetParent, which has its own quirks with fixed-position elements.
+function isStepTargetVisible(element: DriveStep["element"]): boolean {
+  if (typeof element !== "string") return true;
+  const target = document.querySelector(element);
+  return target !== null && target.getClientRects().length > 0;
+}
+
 function runTour(steps: DriveStep[], storageKey: string) {
   // Two tours can independently decide to fire on the same cold pageview
   // (e.g. landing directly on a command page before ever seeing the
   // homepage tour). Only one driver.js overlay can sanely exist at once.
   if (activeDriver?.isActive()) return;
 
+  // Some steps target elements that only exist in the desktop layout (e.g.
+  // SiteNav, hidden below md) — skip those rather than showing a popover
+  // pointed at nothing, or doing the same diff check per call site.
+  const visibleSteps = steps.filter((step) =>
+    isStepTargetVisible(step.element),
+  );
+  if (visibleSteps.length === 0) return;
+
   activeDriver = driver({
     showProgress: true,
     overlayOpacity: 0.6,
-    steps,
+    steps: visibleSteps,
     onDestroyed: () => {
       // Mark "seen" only once the tour actually ran and was closed/finished
       // — never before. Setting this preemptively (e.g. right when the

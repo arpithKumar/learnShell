@@ -18,7 +18,20 @@ import type { SearchableEntry } from "@/lib/content/search-index";
 export function CommandPalette({ entries }: { entries: SearchableEntry[] }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  // Default to "Ctrl+K" (the SSR/first-paint value, so there's no hydration
+  // mismatch) and correct it after mount once navigator.userAgent is
+  // actually available — only macOS uses the ⌘ symbol.
+  const [shortcutLabel, setShortcutLabel] = useState("Ctrl+K");
   const router = useRouter();
+
+  useEffect(() => {
+    // One-time client-only correction, not a subscription — navigator isn't
+    // available during SSR, so this can't be computed any earlier without
+    // causing a hydration mismatch between server and client markup.
+    const isMac = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setShortcutLabel(isMac ? "⌘K" : "Ctrl+K");
+  }, []);
 
   const fuse = useMemo(
     () =>
@@ -61,19 +74,23 @@ export function CommandPalette({ entries }: { entries: SearchableEntry[] }) {
     <>
       <Button
         id="tour-search"
-        variant="outline"
-        size="sm"
-        className="text-muted-foreground gap-2"
+        variant="ghost"
+        size="icon"
+        className="text-muted-foreground gap-2 sm:h-7 sm:w-64 sm:justify-start sm:rounded-lg sm:border sm:border-border sm:bg-background sm:px-2.5 dark:sm:border-input dark:sm:bg-input/30"
         onClick={() => setOpen(true)}
         aria-label="Search commands and concepts"
       >
-        <Search className="size-3.5" aria-hidden="true" />
+        <Search className="size-4 shrink-0 sm:size-3.5" aria-hidden="true" />
         <span className="hidden sm:inline">Search…</span>
-        <kbd className="bg-muted ml-2 hidden rounded px-1.5 py-0.5 text-xs sm:inline">
-          ⌘K
+        <kbd className="bg-muted ml-auto hidden rounded px-1.5 py-0.5 text-xs sm:inline">
+          {shortcutLabel}
         </kbd>
       </Button>
-      <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandDialog
+        open={open}
+        onOpenChange={setOpen}
+        className="sm:max-w-xl"
+      >
         <CommandInput
           placeholder="Search commands, flags, concepts…"
           value={query}
