@@ -22,7 +22,7 @@ import { SITE_URL } from "@/lib/site";
 import type { Difficulty } from "@/lib/content/schema";
 
 const TAB_TRIGGER_CLASS =
-  "rounded-full border border-foreground/15 px-3.5 py-1.5 hover:border-foreground/30 data-active:border-primary data-active:bg-primary data-active:text-primary-foreground data-active:shadow-none dark:data-active:border-primary dark:data-active:bg-primary";
+  "flex-none rounded-full border border-foreground/15 px-3.5 py-1.5 hover:border-foreground/30 data-active:border-primary data-active:bg-primary data-active:text-primary-foreground data-active:shadow-none dark:data-active:border-primary dark:data-active:bg-primary";
 
 const DIFFICULTY_STYLES: Record<Difficulty, string> = {
   beginner:
@@ -128,7 +128,7 @@ export default async function CommandPage({
           <Tabs defaultValue="overview" className="mt-8">
             <TabsList
               id="tour-tabs"
-              className="h-auto w-full justify-start gap-2 rounded-none bg-transparent p-0"
+              className="h-auto w-full justify-start gap-2 overflow-x-auto rounded-none bg-transparent p-0"
             >
               <TabsTrigger value="overview" className={TAB_TRIGGER_CLASS}>
                 Overview

@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { OnboardingTour } from "@/components/onboarding-tour";
+import { CursorTrail } from "@/components/cursor-trail";
 import { buildSearchIndex } from "@/lib/content/search-index";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -81,6 +82,7 @@ export default function RootLayout({
               </main>
               <SiteFooter />
               <OnboardingTour />
+              <CursorTrail />
             </TooltipProvider>
           </MotionConfig>
         </ThemeProvider>

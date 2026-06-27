@@ -16,20 +16,8 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { cn } from "@/lib/utils";
+import { DIFFICULTY_DOT_CLASS, DIFFICULTY_DOT_HEX } from "@/lib/difficulty";
 import type { CategoryLabel, GraphEdge, GraphNode } from "@/lib/concept-graph";
-import type { Difficulty } from "@/lib/content/schema";
-
-const DIFFICULTY_DOT: Record<Difficulty, string> = {
-  beginner: "bg-emerald-500",
-  intermediate: "bg-amber-500",
-  advanced: "bg-rose-500",
-};
-
-const DIFFICULTY_HEX: Record<Difficulty, string> = {
-  beginner: "#10b981",
-  intermediate: "#f59e0b",
-  advanced: "#f43f5e",
-};
 
 type NodeData = GraphNode["data"] & { dimmed: boolean; active: boolean };
 
@@ -59,7 +47,7 @@ function CommandNode({ id, data }: NodeProps & { data: NodeData }) {
       <span
         className={cn(
           "mr-1.5 inline-block size-1.5 rounded-full",
-          DIFFICULTY_DOT[data.difficulty],
+          DIFFICULTY_DOT_CLASS[data.difficulty],
         )}
       />
       {data.name}
@@ -186,7 +174,7 @@ export function ConceptGraph({
           zoomable
           nodeColor={(node) =>
             node.type === "command"
-              ? DIFFICULTY_HEX[(node.data as NodeData).difficulty]
+              ? DIFFICULTY_DOT_HEX[(node.data as NodeData).difficulty]
               : "transparent"
           }
         />

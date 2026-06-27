@@ -5,7 +5,9 @@ import { motion } from "framer-motion";
 import { ConceptCard } from "@/components/concept-card";
 import { FilterRow } from "@/components/filter-row";
 import { useQueryFilter } from "@/lib/use-query-filter";
+import { DIFFICULTY_DOT_HEX } from "@/lib/difficulty";
 import type { ConceptEntry } from "@/lib/content/concept-schema";
+import type { Difficulty } from "@/lib/content/schema";
 
 export function ConceptGrid({
   concepts,
@@ -64,6 +66,7 @@ export function ConceptGrid({
     return difficulties.map(({ difficulty }) => ({
       value: difficulty,
       count: counts.get(difficulty) ?? 0,
+      dotColor: DIFFICULTY_DOT_HEX[difficulty as Difficulty],
     }));
   }, [difficulties, matchingCategory]);
 

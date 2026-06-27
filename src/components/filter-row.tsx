@@ -14,7 +14,7 @@ export function FilterRow({
   totalCount,
 }: {
   label: string;
-  options: { value: string; count: number }[];
+  options: { value: string; count: number; dotColor?: string }[];
   active: string | null;
   onSelect: (value: string | null) => void;
   totalCount: number;
@@ -47,19 +47,26 @@ export function FilterRow({
           {totalCount}
         </Badge>
       </button>
-      {options.map(({ value, count }) => (
+      {options.map(({ value, count, dotColor }) => (
         <button
           key={value}
           type="button"
           onClick={() => onSelect(value)}
           className={cn(
-            "rounded-full border border-foreground/15 px-3 py-1 text-sm font-medium capitalize transition-colors",
+            "inline-flex items-center rounded-full border border-foreground/15 px-3 py-1 text-sm font-medium capitalize transition-colors",
             FOCUS_RING,
             active === value
               ? "border-primary bg-primary text-primary-foreground"
               : "hover:border-primary/50 hover:bg-accent/30",
           )}
         >
+          {dotColor && (
+            <span
+              className="mr-1.5 inline-block size-1.5 shrink-0 rounded-full"
+              style={{ backgroundColor: dotColor }}
+              aria-hidden="true"
+            />
+          )}
           {value.replace(/-/g, " ")}
           <Badge
             variant="secondary"

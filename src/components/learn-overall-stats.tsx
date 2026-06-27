@@ -1,6 +1,13 @@
 "use client";
 
+import { useRef } from "react";
 import Link from "next/link";
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useSpring,
+} from "framer-motion";
 import { ArrowRight, BookOpen, CheckCircle2, Compass } from "lucide-react";
 import { useLibraryStore } from "@/lib/library-store";
 import { LEARN_TRACKS } from "@/lib/learn-tracks";
@@ -16,6 +23,30 @@ export function LearnOverallStats({
   const tracksCompleted = LEARN_TRACKS.filter((t) =>
     t.steps.every((s) => visitedSet.has(s)),
   ).length;
+
+  const ref = useRef<HTMLDivElement>(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const rotateX = useSpring(0, { stiffness: 300, damping: 25 });
+  const rotateY = useSpring(0, { stiffness: 300, damping: 25 });
+
+  const spotlight = useMotionTemplate`radial-gradient(280px circle at ${mouseX}px ${mouseY}px, color-mix(in oklch, var(--primary) 18%, transparent), transparent 80%)`;
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    mouseX.set(x);
+    mouseY.set(y);
+    rotateY.set(((x - rect.width / 2) / rect.width) * 6);
+    rotateX.set(-((y - rect.height / 2) / rect.height) * 6);
+  }
+
+  function handleMouseLeave() {
+    rotateX.set(0);
+    rotateY.set(0);
+  }
 
   const stats = [
     {
@@ -49,18 +80,30 @@ export function LearnOverallStats({
 
       <Link
         href="/catalogue"
-        className="group mt-4 flex items-center justify-between gap-4 rounded-xl border p-5 transition-colors hover:border-primary/50"
+        className="group block rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
       >
-        <div>
-          <p className="font-medium">Looking for something specific?</p>
-          <p className="text-muted-foreground mt-1 text-sm">
-            Browse the full catalogue, filterable by category and difficulty.
-          </p>
-        </div>
-        <ArrowRight
-          className="text-muted-foreground size-5 shrink-0 transition-transform group-hover:translate-x-1 group-hover:text-primary"
-          aria-hidden="true"
-        />
+        <motion.div
+          ref={ref}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          style={{ rotateX, rotateY, transformPerspective: 800 }}
+          className="relative mt-4 flex items-center justify-between gap-4 overflow-hidden rounded-xl border p-5 transition-colors hover:border-primary/50 group-focus-visible:border-primary/50"
+        >
+          <motion.div
+            className="pointer-events-none absolute inset-0"
+            style={{ background: spotlight }}
+          />
+          <div className="relative">
+            <p className="font-medium">Looking for something specific?</p>
+            <p className="text-muted-foreground mt-1 text-sm">
+              Browse the full catalogue, filterable by category and difficulty.
+            </p>
+          </div>
+          <ArrowRight
+            className="text-muted-foreground relative size-5 shrink-0 transition-transform group-hover:translate-x-1 group-focus-visible:translate-x-1 group-hover:text-primary group-focus-visible:text-primary"
+            aria-hidden="true"
+          />
+        </motion.div>
       </Link>
     </div>
   );

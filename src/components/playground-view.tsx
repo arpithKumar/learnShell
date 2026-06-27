@@ -1,10 +1,13 @@
 "use client";
 
+import { useRef } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { motion, useSpring } from "framer-motion";
 import { FolderTree, GitMerge, Keyboard, Save, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlaygroundTerminal } from "@/components/playground-terminal";
+import { SupportedCommandTile } from "@/components/supported-command-tile";
 import { usePlaygroundStore } from "@/lib/playground/store";
 import {
   QUICKSTART_COMMANDS_EMPTY,
@@ -52,6 +55,24 @@ export function PlaygroundView({
     ? QUICKSTART_COMMANDS_SAMPLE
     : QUICKSTART_COMMANDS_EMPTY;
 
+  const demoRef = useRef<HTMLDivElement>(null);
+  const rotateX = useSpring(0, { stiffness: 200, damping: 20 });
+  const rotateY = useSpring(0, { stiffness: 200, damping: 20 });
+
+  function handleDemoMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const rect = demoRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    rotateY.set(((x - rect.width / 2) / rect.width) * 10);
+    rotateX.set(-((y - rect.height / 2) / rect.height) * 10);
+  }
+
+  function handleDemoMouseLeave() {
+    rotateX.set(0);
+    rotateY.set(0);
+  }
+
   if (!initialized) {
     return (
       <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
@@ -94,7 +115,13 @@ export function PlaygroundView({
           </p>
         </div>
 
-        <div className="overflow-hidden rounded-xl border bg-card shadow-2xl shadow-primary/10">
+        <motion.div
+          ref={demoRef}
+          onMouseMove={handleDemoMouseMove}
+          onMouseLeave={handleDemoMouseLeave}
+          style={{ rotateX, rotateY, transformPerspective: 800 }}
+          className="overflow-hidden rounded-xl border bg-card shadow-2xl shadow-primary/10"
+        >
           <div className="bg-muted/40 flex items-center gap-2 border-b px-4 py-2.5">
             <span className="size-2.5 rounded-full bg-red-400/70" />
             <span className="size-2.5 rounded-full bg-yellow-400/70" />
@@ -124,7 +151,7 @@ export function PlaygroundView({
               <span className="bg-foreground/80 inline-block h-4 w-1.5 animate-pulse" />
             </p>
           </div>
-        </div>
+        </motion.div>
 
         <div className="col-span-full mt-4 border-t pt-10">
           <h2 className="text-sm font-semibold">Supported commands</h2>
@@ -134,25 +161,12 @@ export function PlaygroundView({
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {supportedCommands.map((cmd) => (
-              <div key={cmd.name} className="rounded-lg border p-3.5">
-                {cmd.hasEntry ? (
-                  <Link
-                    href={`/command/${cmd.name}`}
-                    className="font-mono text-sm font-medium hover:text-primary"
-                  >
-                    {cmd.name}
-                  </Link>
-                ) : (
-                  <span className="font-mono text-sm font-medium">
-                    {cmd.name}
-                  </span>
-                )}
-                {cmd.description && (
-                  <p className="text-muted-foreground mt-1 text-xs">
-                    {cmd.description}
-                  </p>
-                )}
-              </div>
+              <SupportedCommandTile
+                key={cmd.name}
+                name={cmd.name}
+                description={cmd.description}
+                hasEntry={cmd.hasEntry}
+              />
             ))}
           </div>
         </div>
@@ -206,34 +220,14 @@ export function PlaygroundView({
           catalogue entry.
         </p>
         <div className="mt-3 space-y-2.5">
-          {supportedCommands.map((cmd) =>
-            cmd.hasEntry ? (
-              <div key={cmd.name}>
-                <Link
-                  href={`/command/${cmd.name}`}
-                  className="font-mono text-sm font-medium hover:text-primary"
-                >
-                  {cmd.name}
-                </Link>
-                {cmd.description && (
-                  <p className="text-muted-foreground mt-0.5 text-xs">
-                    {cmd.description}
-                  </p>
-                )}
-              </div>
-            ) : (
-              <div key={cmd.name}>
-                <span className="font-mono text-sm font-medium">
-                  {cmd.name}
-                </span>
-                {cmd.description && (
-                  <p className="text-muted-foreground mt-0.5 text-xs">
-                    {cmd.description}
-                  </p>
-                )}
-              </div>
-            ),
-          )}
+          {supportedCommands.map((cmd) => (
+            <SupportedCommandTile
+              key={cmd.name}
+              name={cmd.name}
+              description={cmd.description}
+              hasEntry={cmd.hasEntry}
+            />
+          ))}
         </div>
       </aside>
     </div>

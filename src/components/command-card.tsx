@@ -11,22 +11,8 @@ import {
 import { ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import type { CommandEntry, Difficulty } from "@/lib/content/schema";
-
-const DIFFICULTY_ACCENT: Record<Difficulty, string> = {
-  beginner: "bg-emerald-500",
-  intermediate: "bg-amber-500",
-  advanced: "bg-rose-500",
-};
-
-const DIFFICULTY_BADGE: Record<Difficulty, string> = {
-  beginner:
-    "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
-  intermediate:
-    "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
-  advanced:
-    "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
-};
+import { DIFFICULTY_DOT_CLASS } from "@/lib/difficulty";
+import type { CommandEntry } from "@/lib/content/schema";
 
 export function CommandCard({
   command,
@@ -77,34 +63,33 @@ export function CommandCard({
         <span
           className={cn(
             "absolute inset-y-0 left-0 w-1",
-            DIFFICULTY_ACCENT[command.difficulty],
+            DIFFICULTY_DOT_CLASS[command.difficulty],
           )}
+          aria-hidden="true"
         />
+        <span
+          className={cn(
+            "absolute right-3 top-3 size-2 rounded-full",
+            DIFFICULTY_DOT_CLASS[command.difficulty],
+          )}
+          title={`${command.difficulty} difficulty`}
+        >
+          <span className="sr-only">{command.difficulty} difficulty</span>
+        </span>
         <motion.div
           className="pointer-events-none absolute inset-0"
           style={{ background: spotlight }}
         />
 
         <div className={cn("relative px-5", featured ? "py-5" : "py-4")}>
-          <div className="flex items-center justify-between gap-2">
-            <span
-              className={cn(
-                "font-mono font-semibold",
-                featured ? "text-2xl" : "text-lg",
-              )}
-            >
-              {command.name}
-            </span>
-            <Badge
-              variant="outline"
-              className={cn(
-                "text-xs capitalize",
-                DIFFICULTY_BADGE[command.difficulty],
-              )}
-            >
-              {command.difficulty}
-            </Badge>
-          </div>
+          <span
+            className={cn(
+              "font-mono font-semibold",
+              featured ? "text-2xl" : "text-lg",
+            )}
+          >
+            {command.name}
+          </span>
 
           <p
             className={cn(

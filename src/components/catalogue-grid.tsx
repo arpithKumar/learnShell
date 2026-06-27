@@ -7,7 +7,8 @@ import { CommandCard } from "@/components/command-card";
 import { FilterRow } from "@/components/filter-row";
 import { isFeatured } from "@/lib/bento";
 import { useQueryFilter } from "@/lib/use-query-filter";
-import type { CommandEntry } from "@/lib/content/schema";
+import { DIFFICULTY_DOT_HEX } from "@/lib/difficulty";
+import type { CommandEntry, Difficulty } from "@/lib/content/schema";
 
 const MASONRY_BREAKPOINTS = { default: 4, 1024: 3, 640: 2, 0: 1 };
 
@@ -77,6 +78,7 @@ export function CatalogueGrid({
     return difficulties.map(({ difficulty }) => ({
       value: difficulty,
       count: counts.get(difficulty) ?? 0,
+      dotColor: DIFFICULTY_DOT_HEX[difficulty as Difficulty],
     }));
   }, [difficulties, matchingCategory]);
 
