@@ -21,6 +21,14 @@ export function CursorTrail() {
   const disabledRef = useRef(false);
 
   useEffect(() => {
+    // iOS Safari only reliably triggers :active (tap press-states) if a
+    // touchstart listener exists somewhere in the document — without one,
+    // taps can show zero visual feedback sitewide, not just no :hover
+    // (which is expected on touch). Unrelated to the sparkle trail itself,
+    // but this is the one component guaranteed to mount on every page.
+    const noop = () => {};
+    document.addEventListener("touchstart", noop, { passive: true });
+
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const finePointer = window.matchMedia("(pointer: fine)");
 
@@ -59,6 +67,7 @@ export function CursorTrail() {
       window.removeEventListener("mousemove", handleMouseMove);
       reducedMotion.removeEventListener("change", syncDisabled);
       finePointer.removeEventListener("change", syncDisabled);
+      document.removeEventListener("touchstart", noop);
     };
   }, []);
 

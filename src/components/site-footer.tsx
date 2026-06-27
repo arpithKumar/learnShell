@@ -17,9 +17,9 @@ export function SiteFooter() {
           href="/"
           className="flex items-center gap-2 text-sm font-semibold"
         >
-          <Terminal className="size-4" aria-hidden="true" />
-          <span>
-            learn<span className="text-muted-foreground">shell</span>
+          <Terminal className="brand-glow-icon size-4" aria-hidden="true" />
+          <span className="brand-glow-text">
+            learn<span className="brand-glow-text-dim">shell</span>
           </span>
         </Link>
 

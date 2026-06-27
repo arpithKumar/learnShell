@@ -14,9 +14,9 @@ export function SiteHeader({ entries }: { entries: SearchableEntry[] }) {
         <div className="flex items-center gap-2">
           <MobileNav />
           <Link href="/" className="flex items-center gap-2 font-semibold">
-            <Terminal className="size-5" aria-hidden="true" />
-            <span>
-              learn<span className="text-muted-foreground">shell</span>
+            <Terminal className="brand-glow-icon size-5" aria-hidden="true" />
+            <span className="brand-glow-text">
+              learn<span className="brand-glow-text-dim">shell</span>
             </span>
           </Link>
         </div>

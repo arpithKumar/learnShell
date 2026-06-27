@@ -229,3 +229,33 @@
     transform: translate(-50%, -50%) rotate(var(--sparkle-rotate)) scale(1.5);
   }
 }
+
+/* Neon-sign glow that hugs the actual letter/icon outlines, rather than a
+   soft blur behind the whole logo block. The glyph/icon itself is lit in
+   the brand color (a colored shadow behind gray text just looks like fog,
+   not neon) — text-shadow traces glyph contours, drop-shadow does the same
+   for the SVG icon since text-shadow doesn't apply to SVGs. */
+.brand-glow-icon {
+  color: var(--primary);
+  filter: drop-shadow(
+      0 0 2px color-mix(in oklch, var(--primary) 100%, transparent)
+    )
+    drop-shadow(0 0 6px color-mix(in oklch, var(--primary) 90%, transparent))
+    drop-shadow(0 0 14px color-mix(in oklch, var(--primary) 65%, transparent))
+    drop-shadow(0 0 26px color-mix(in oklch, var(--primary) 40%, transparent));
+}
+
+.brand-glow-text {
+  color: var(--primary);
+  font-weight: 700;
+  text-shadow:
+    0 0 1px color-mix(in oklch, var(--primary) 100%, transparent),
+    0 0 4px color-mix(in oklch, var(--primary) 95%, transparent),
+    0 0 10px color-mix(in oklch, var(--primary) 80%, transparent),
+    0 0 20px color-mix(in oklch, var(--primary) 60%, transparent),
+    0 0 38px color-mix(in oklch, var(--primary) 35%, transparent);
+}
+
+.brand-glow-text-dim {
+  color: color-mix(in oklch, var(--primary) 55%, var(--muted-foreground) 45%);
+}
