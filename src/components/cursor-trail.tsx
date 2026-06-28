@@ -14,6 +14,8 @@ let nextSparkleId = 0;
 const SPAWN_INTERVAL_MS = 25;
 const LIFESPAN_MS = 850;
 const MAX_ON_SCREEN = 40;
+const INTERACTIVE_SELECTOR =
+  'a, button, [role="button"], input, select, textarea, label, summary, [data-slot="button"]';
 
 export function CursorTrail() {
   const [sparkles, setSparkles] = useState<Sparkle[]>([]);
@@ -41,6 +43,13 @@ export function CursorTrail() {
 
     function handleMouseMove(e: MouseEvent) {
       if (disabledRef.current) return;
+
+      // Don't trail over anything clickable — sparkles spawning right where
+      // someone's about to click reads as noisy/distracting, not delightful.
+      const target = e.target;
+      if (target instanceof Element && target.closest(INTERACTIVE_SELECTOR)) {
+        return;
+      }
 
       const now = performance.now();
       if (now - lastSpawnRef.current < SPAWN_INTERVAL_MS) return;

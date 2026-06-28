@@ -50,8 +50,12 @@ export function TrackCard({ track }: { track: LearnTrack }) {
   const Icon = TRACK_ICONS[track.slug as keyof typeof TRACK_ICONS] ?? Terminal;
 
   const ref = useRef<HTMLDivElement>(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  // Off-canvas default — at (0, 0) the spotlight's radial gradient sits
+  // anchored in the corner before any hover, showing as a static blotch on
+  // every card. Parking it far outside the card's bounds keeps it invisible
+  // until the cursor actually moves over the card.
+  const mouseX = useMotionValue(-1000);
+  const mouseY = useMotionValue(-1000);
   const rotateX = useSpring(0, { stiffness: 300, damping: 25 });
   const rotateY = useSpring(0, { stiffness: 300, damping: 25 });
 
@@ -71,6 +75,11 @@ export function TrackCard({ track }: { track: LearnTrack }) {
   function handleMouseLeave() {
     rotateX.set(0);
     rotateY.set(0);
+    // Without this, the spotlight gradient stays frozen wherever the cursor
+    // last was inside this card, instead of disappearing when the cursor
+    // moves to a different card.
+    mouseX.set(-1000);
+    mouseY.set(-1000);
   }
 
   return (
@@ -83,7 +92,7 @@ export function TrackCard({ track }: { track: LearnTrack }) {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         style={{ rotateX, rotateY, transformPerspective: 800 }}
-        className="relative flex items-center gap-4 overflow-hidden rounded-xl border p-5 transition-colors hover:border-primary/50 group-focus-visible:border-primary/50"
+        className="bg-card relative flex items-center gap-4 overflow-hidden rounded-xl border p-5 transition-colors hover:border-primary/50 group-focus-visible:border-primary/50"
       >
         <motion.div
           className="pointer-events-none absolute inset-0"

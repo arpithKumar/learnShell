@@ -1,21 +1,49 @@
 export type VFile = {
   type: "file";
   content: string;
+  mode: string;
+  owner: string;
+  group: string;
 };
 
 export type VDir = {
   type: "dir";
   children: Record<string, VNode>;
+  mode: string;
+  owner: string;
+  group: string;
 };
 
 export type VNode = VFile | VDir;
 
-export function makeDir(children: Record<string, VNode> = {}): VDir {
-  return { type: "dir", children };
+export function makeDir(
+  children: Record<string, VNode> = {},
+  mode = "755",
+  owner = "you",
+  group = "staff",
+): VDir {
+  return { type: "dir", children, mode, owner, group };
 }
 
-export function makeFile(content = ""): VFile {
-  return { type: "file", content };
+export function makeFile(
+  content = "",
+  mode = "644",
+  owner = "you",
+  group = "staff",
+): VFile {
+  return { type: "file", content, mode, owner, group };
+}
+
+// Renders a 3-digit octal mode the way `ls -l`/`stat` would — e.g. "755" for
+// a dir becomes "drwxr-xr-x". Invalid/partial input falls back to "-" per
+// missing permission bit, same as a real shell would on a degenerate mode.
+export function formatMode(mode: string, isDir: boolean): string {
+  const digits = mode.padStart(3, "0").slice(-3);
+  const triplet = (digit: string) => {
+    const n = Number(digit);
+    return (n & 4 ? "r" : "-") + (n & 2 ? "w" : "-") + (n & 1 ? "x" : "-");
+  };
+  return (isDir ? "d" : "-") + [...digits].map(triplet).join("");
 }
 
 function normalizeSegments(path: string, cwd: string): string[] {
@@ -118,10 +146,10 @@ export function listDir(dir: VDir): string[] {
 }
 
 export function cloneTree(node: VNode): VNode {
-  if (node.type === "file") return { type: "file", content: node.content };
+  if (node.type === "file") return { ...node };
   const children: Record<string, VNode> = {};
   for (const [name, child] of Object.entries(node.children)) {
     children[name] = cloneTree(child);
   }
-  return { type: "dir", children };
+  return { ...node, children };
 }

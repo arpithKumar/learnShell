@@ -4,7 +4,7 @@ import { ArrowRight, Compass } from "lucide-react";
 export default function NotFound() {
   return (
     <div className="mx-auto flex max-w-3xl flex-col items-center px-4 py-24 text-center">
-      <div className="w-full max-w-md overflow-hidden rounded-lg border text-left shadow-sm">
+      <div className="bg-card w-full max-w-md overflow-hidden rounded-lg border text-left shadow-sm">
         <div className="bg-muted/40 flex items-center gap-2 border-b px-3 py-2">
           <span className="size-2 rounded-full bg-red-400/70" />
           <span className="size-2 rounded-full bg-yellow-400/70" />
@@ -41,7 +41,7 @@ export default function NotFound() {
         </Link>
         <Link
           href="/"
-          className="text-muted-foreground hover:border-primary/50 hover:text-foreground inline-flex items-center gap-1.5 rounded-full border border-foreground/15 px-4 py-2 text-sm font-medium outline-none transition-colors focus-visible:border-primary/50 focus-visible:ring-3 focus-visible:ring-ring/50"
+          className="bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground inline-flex items-center gap-1.5 rounded-full border border-foreground/15 px-4 py-2 text-sm font-medium outline-none transition-colors focus-visible:border-primary/50 focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           Back home
           <ArrowRight className="size-3.5" aria-hidden="true" />

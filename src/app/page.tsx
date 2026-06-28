@@ -90,7 +90,7 @@ export default function Home() {
       <section className="mx-auto max-w-6xl px-4 py-16">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {FEATURES.map((feature) => (
-            <div key={feature.title} className="rounded-lg border p-5">
+            <div key={feature.title} className="bg-card rounded-lg border p-5">
               <feature.icon
                 className="text-primary size-5"
                 aria-hidden="true"
@@ -121,7 +121,7 @@ export default function Home() {
                 key={category}
                 href={`/catalogue/${category}`}
                 className={cn(
-                  "flex items-center gap-2 rounded-full border border-foreground/15 px-4 py-2 text-sm transition-colors",
+                  "bg-card flex items-center gap-2 rounded-full border border-foreground/15 px-4 py-2 text-sm transition-colors",
                   "hover:border-primary/50 hover:bg-accent/30",
                 )}
               >

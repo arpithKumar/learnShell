@@ -198,6 +198,18 @@
   vector-effect: non-scaling-stroke;
 }
 
+/* Edges are decorative only — nothing here responds to hovering or clicking
+   an edge directly. React Flow's default `pointer-events: visibleStroke` on
+   .react-flow__edge meant a thickened, highlighted edge (drawn when its
+   connected node is hovered) could itself catch the cursor right where it
+   touches that node, flipping the hover target back and forth between the
+   node and its own edge — visible as rapid blinking on heavily-connected
+   nodes (e.g. ls, nc). Disabling pointer events on edges removes them from
+   hit-testing entirely, so only nodes can ever receive hover/click. */
+.concept-graph .react-flow__edge {
+  pointer-events: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

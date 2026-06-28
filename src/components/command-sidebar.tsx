@@ -21,7 +21,7 @@ export function CommandSidebar({
 }) {
   return (
     <aside id="tour-sidebar" className="space-y-6">
-      <div className="rounded-xl border p-5">
+      <div className="bg-card rounded-xl border p-5">
         <h2 className="text-sm font-semibold">At a glance</h2>
         <div className="mt-3 space-y-2.5">
           <StatRow label="Flags documented" value={command.flags.length} />
@@ -42,7 +42,7 @@ export function CommandSidebar({
       </div>
 
       {relatedCommands.length > 0 && (
-        <div className="rounded-xl border p-5">
+        <div className="bg-card rounded-xl border p-5">
           <h2 className="text-sm font-semibold">Related commands</h2>
           <div className="mt-3 space-y-1">
             {relatedCommands.map((related) => (

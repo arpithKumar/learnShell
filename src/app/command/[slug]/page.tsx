@@ -120,8 +120,10 @@ export default async function CommandPage({
             {command.summary}
           </p>
 
-          <div className="mt-6 flex items-center justify-between gap-3 rounded-lg border bg-muted/40 px-4 py-3">
-            <code className="font-mono text-sm">{command.syntax}</code>
+          <div className="mt-6 flex items-start justify-between gap-3 rounded-lg border bg-muted/40 px-4 py-3">
+            <code className="min-w-0 break-all font-mono text-sm">
+              {command.syntax}
+            </code>
             <CopyButton text={command.syntax} />
           </div>
 
@@ -206,7 +208,7 @@ export default async function CommandPage({
                     {command.tips.map((tip, i) => (
                       <div
                         key={i}
-                        className="flex items-start gap-3 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3"
+                        className="flex items-start gap-3 rounded-lg border border-primary/20 bg-[color-mix(in_oklch,var(--primary)_5%,var(--card))] px-4 py-3"
                       >
                         <span className="bg-primary/15 flex size-6 shrink-0 items-center justify-center rounded-full">
                           <Lightbulb
@@ -232,7 +234,7 @@ export default async function CommandPage({
                     {command.shortcuts.map((s, i) => (
                       <div
                         key={i}
-                        className="flex items-center gap-3 rounded-lg border px-4 py-2.5"
+                        className="bg-card flex items-center gap-3 rounded-lg border px-4 py-2.5"
                       >
                         <kbd className="rounded bg-muted px-2.5 py-1 font-mono text-xs font-medium">
                           {s.keys}
@@ -256,7 +258,7 @@ export default async function CommandPage({
                     {command.pitfalls.map((p, i) => (
                       <div
                         key={i}
-                        className="flex items-start gap-3 rounded-lg border border-amber-500/25 bg-amber-500/[0.07] px-4 py-3"
+                        className="flex items-start gap-3 rounded-lg border border-amber-500/25 bg-[color-mix(in_oklch,var(--color-amber-500)_7%,var(--card))] px-4 py-3"
                       >
                         <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-amber-500/15">
                           <TriangleAlert

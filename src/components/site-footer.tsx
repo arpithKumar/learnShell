@@ -2,14 +2,9 @@ import Link from "next/link";
 import { Terminal } from "lucide-react";
 import { TourReplayButton } from "@/components/tour-replay-button";
 
-const FOOTER_LINKS = [
-  { href: "/catalogue", label: "Catalogue" },
-  { href: "/shortcuts", label: "Shortcuts" },
-  { href: "/playground", label: "Playground" },
-  { href: "/learn", label: "Learn" },
-];
-
 export function SiteFooter() {
+  const year = new Date().getFullYear();
+
   return (
     <footer className="border-t">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 py-6 sm:flex-row sm:justify-between">
@@ -23,18 +18,12 @@ export function SiteFooter() {
           </span>
         </Link>
 
-        <nav className="flex items-center gap-5">
-          {FOOTER_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-muted-foreground text-sm transition-colors hover:text-foreground"
-            >
-              {link.label}
-            </Link>
-          ))}
+        <div className="flex items-center gap-5">
+          <p className="text-muted-foreground text-sm">
+            © {year} learnshell. All rights reserved.
+          </p>
           <TourReplayButton />
-        </nav>
+        </div>
       </div>
     </footer>
   );

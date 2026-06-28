@@ -15,7 +15,7 @@ export function ExampleTerminal({
   const runnable = isPlaygroundSupported(input);
 
   return (
-    <div className="overflow-hidden rounded-lg border">
+    <div className="bg-card overflow-hidden rounded-lg border">
       <div className="bg-muted/40 flex items-center gap-2 border-b px-3 py-2">
         <span className="size-2 rounded-full bg-red-400/70" />
         <span className="size-2 rounded-full bg-yellow-400/70" />
@@ -34,8 +34,8 @@ export function ExampleTerminal({
         )}
       </div>
       <div className="bg-card px-4 py-3 font-mono text-sm">
-        <div className="flex items-center justify-between gap-2">
-          <p>
+        <div className="flex items-start justify-between gap-2">
+          <p className="min-w-0 break-all">
             <span className="text-primary">$</span> {input}
           </p>
           <CopyButton text={input} />

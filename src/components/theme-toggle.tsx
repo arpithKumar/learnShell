@@ -22,9 +22,6 @@ export function ThemeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        openOnHover
-        delay={150}
-        closeDelay={150}
         render={
           <Button
             id="tour-theme"

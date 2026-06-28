@@ -130,7 +130,7 @@ export default async function ConceptPage({
             {concept.tips.map((tip, i) => (
               <div
                 key={i}
-                className="flex items-start gap-3 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3"
+                className="flex items-start gap-3 rounded-lg border border-primary/20 bg-[color-mix(in_oklch,var(--primary)_5%,var(--card))] px-4 py-3"
               >
                 <span className="bg-primary/15 flex size-6 shrink-0 items-center justify-center rounded-full">
                   <Lightbulb
@@ -154,7 +154,7 @@ export default async function ConceptPage({
             {concept.pitfalls.map((p, i) => (
               <div
                 key={i}
-                className="flex items-start gap-3 rounded-lg border border-amber-500/25 bg-amber-500/[0.07] px-4 py-3"
+                className="flex items-start gap-3 rounded-lg border border-amber-500/25 bg-[color-mix(in_oklch,var(--color-amber-500)_7%,var(--card))] px-4 py-3"
               >
                 <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-amber-500/15">
                   <TriangleAlert

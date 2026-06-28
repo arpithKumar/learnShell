@@ -20,8 +20,12 @@ export function SupportedCommandTile({
   hasEntry: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  // Off-canvas default — at (0, 0) the spotlight's radial gradient sits
+  // anchored in the corner before any hover, showing as a static blotch on
+  // every card. Parking it far outside the card's bounds keeps it invisible
+  // until the cursor actually moves over the card.
+  const mouseX = useMotionValue(-1000);
+  const mouseY = useMotionValue(-1000);
   const rotateX = useSpring(0, { stiffness: 300, damping: 25 });
   const rotateY = useSpring(0, { stiffness: 300, damping: 25 });
 
@@ -41,6 +45,11 @@ export function SupportedCommandTile({
   function handleMouseLeave() {
     rotateX.set(0);
     rotateY.set(0);
+    // Without this, the spotlight gradient stays frozen wherever the cursor
+    // last was inside this card, instead of disappearing when the cursor
+    // moves to a different card.
+    mouseX.set(-1000);
+    mouseY.set(-1000);
   }
 
   const tile = (
@@ -52,7 +61,7 @@ export function SupportedCommandTile({
         hasEntry ? { rotateX, rotateY, transformPerspective: 800 } : undefined
       }
       className={cn(
-        "relative overflow-hidden rounded-lg border p-3.5 transition-colors",
+        "bg-card relative overflow-hidden rounded-lg border p-3.5 transition-colors",
         hasEntry &&
           "group-hover:border-primary/40 group-focus-visible:border-primary/40",
       )}

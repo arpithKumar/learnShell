@@ -71,10 +71,11 @@ export function ConceptGrid({
   }, [difficulties, matchingCategory]);
 
   return (
-    <div>
-      <div className="mb-8 space-y-3">
+    <div className="lg:grid lg:grid-cols-[220px_1fr] lg:items-start lg:gap-8">
+      <aside className="bg-background hidden lg:sticky lg:top-[4.5rem] lg:block lg:max-h-[calc(100vh-5.5rem)] lg:space-y-6 lg:overflow-y-auto lg:pb-8">
         <FilterRow
           label="Category"
+          orientation="vertical"
           options={categoryOptions}
           active={activeCategory}
           onSelect={setActiveCategory}
@@ -82,32 +83,52 @@ export function ConceptGrid({
         />
         <FilterRow
           label="Level"
+          orientation="vertical"
           options={difficultyOptions}
           active={activeDifficulty}
           onSelect={setActiveDifficulty}
           totalCount={matchingCategory.length}
         />
-      </div>
+      </aside>
 
-      {filtered.length === 0 ? (
-        <p className="text-muted-foreground text-sm">
-          No concepts match these filters yet.
-        </p>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((concept, i) => (
-            <motion.div
-              key={concept.slug}
-              layout
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2, delay: i * 0.02 }}
-            >
-              <ConceptCard concept={concept} />
-            </motion.div>
-          ))}
+      <div>
+        <div className="mb-8 space-y-3 lg:hidden">
+          <FilterRow
+            label="Category"
+            options={categoryOptions}
+            active={activeCategory}
+            onSelect={setActiveCategory}
+            totalCount={matchingDifficulty.length}
+          />
+          <FilterRow
+            label="Level"
+            options={difficultyOptions}
+            active={activeDifficulty}
+            onSelect={setActiveDifficulty}
+            totalCount={matchingCategory.length}
+          />
         </div>
-      )}
+
+        {filtered.length === 0 ? (
+          <p className="text-muted-foreground text-sm">
+            No concepts match these filters yet.
+          </p>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+            {filtered.map((concept, i) => (
+              <motion.div
+                key={concept.slug}
+                layout
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, delay: i * 0.02 }}
+              >
+                <ConceptCard concept={concept} />
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

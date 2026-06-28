@@ -50,7 +50,7 @@ export function FlagExplorer({
 
   return (
     <div>
-      <div className="rounded-xl border p-5">
+      <div className="bg-card rounded-xl border p-5">
         <h2 className="text-sm font-semibold">Build a command</h2>
         <p className="text-muted-foreground mt-1 text-sm">
           Click flags to add them and watch the command update live.
@@ -77,8 +77,8 @@ export function FlagExplorer({
           })}
         </div>
 
-        <div className="mt-4 flex items-center justify-between gap-3 rounded-lg border bg-muted/40 px-4 py-3">
-          <code className="font-mono text-sm">
+        <div className="mt-4 flex items-start justify-between gap-3 rounded-lg border bg-muted/40 px-4 py-3">
+          <code className="min-w-0 break-all font-mono text-sm">
             <span className="text-primary">$</span> {preview}
           </code>
           <CopyButton text={preview} />
@@ -90,9 +90,13 @@ export function FlagExplorer({
           <div
             key={flag.flag}
             className={cn(
-              "rounded-lg border px-4 py-3 transition-colors",
+              "bg-card rounded-lg border px-4 py-3 transition-colors",
+              // An alpha-blended bg-primary/[x] here would let the page's dot
+              // pattern show through, since this div has no opaque ancestor
+              // of its own — color-mix against the (opaque) card color keeps
+              // the tint fully solid instead.
               selectedFlags.includes(flag.flag) &&
-                "border-primary/50 bg-primary/[0.03]",
+                "border-primary/50 bg-[color-mix(in_oklch,var(--primary)_3%,var(--card))]",
             )}
           >
             <code className="font-mono font-semibold text-primary">

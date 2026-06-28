@@ -156,8 +156,9 @@ export function PlaygroundView({
         <div className="col-span-full mt-4 border-t pt-10">
           <h2 className="text-sm font-semibold">Supported commands</h2>
           <p className="text-muted-foreground mt-1 text-sm">
-            A deliberately small subset — each one links back to its full
-            catalogue entry.
+            Filesystem and text-processing commands run for real against the
+            virtual filesystem below; each one links back to its full catalogue
+            entry.
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {supportedCommands.map((cmd) => (
@@ -204,7 +205,7 @@ export function PlaygroundView({
               <Link
                 key={suggestion.cmd}
                 href={`/playground?cmd=${encodeURIComponent(suggestion.cmd)}`}
-                className="hover:border-primary/50 hover:bg-accent/30 rounded-full border border-foreground/15 px-3.5 py-1.5 text-sm transition-colors"
+                className="bg-card hover:border-primary/50 hover:bg-accent/30 rounded-full border border-foreground/15 px-3.5 py-1.5 text-sm transition-colors"
               >
                 {suggestion.label}
               </Link>
@@ -213,11 +214,11 @@ export function PlaygroundView({
         </div>
       </div>
 
-      <aside className="rounded-xl border p-5">
+      <aside className="bg-card rounded-xl border p-5 lg:sticky lg:top-[4.5rem] lg:max-h-[calc(100vh-5.5rem)] lg:overflow-y-auto">
         <h2 className="text-sm font-semibold">Supported commands</h2>
         <p className="text-muted-foreground mt-1 text-xs">
-          A deliberately small subset — these all link back to the full
-          catalogue entry.
+          Filesystem and text-processing commands — networking, process, and
+          system commands aren&apos;t simulated and link out instead.
         </p>
         <div className="mt-3 space-y-2.5">
           {supportedCommands.map((cmd) => (

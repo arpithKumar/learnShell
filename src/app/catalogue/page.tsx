@@ -32,7 +32,7 @@ export default function CataloguePage() {
         </div>
         <Link
           href="/catalogue/graph"
-          className="text-muted-foreground hover:border-primary/50 hover:text-foreground flex shrink-0 items-center gap-1.5 rounded-full border border-foreground/15 px-3.5 py-1.5 text-sm transition-colors"
+          className="bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground flex shrink-0 items-center gap-1.5 rounded-full border border-foreground/15 px-3.5 py-1.5 text-sm transition-colors"
         >
           <Share2 className="size-3.5" aria-hidden="true" />
           View as graph

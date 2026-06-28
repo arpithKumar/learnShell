@@ -54,7 +54,7 @@ export function LearningPath({ steps }: { steps: StepEntry[] }) {
 
             <div
               className={cn(
-                "flex-1 rounded-lg border p-4 pb-6 transition-colors",
+                "bg-card flex-1 rounded-lg border p-4 pb-6 transition-colors",
                 unlocked && "hover:border-primary/50",
                 !unlocked && "opacity-60",
               )}

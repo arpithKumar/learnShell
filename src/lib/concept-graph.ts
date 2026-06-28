@@ -3,7 +3,13 @@ import type { CommandEntry, Difficulty } from "@/lib/content/schema";
 export type GraphNode = {
   id: string;
   position: { x: number; y: number };
-  data: { name: string; category: string; difficulty: Difficulty };
+  data: {
+    name: string;
+    category: string;
+    difficulty: Difficulty;
+    summary: string;
+    syntax: string;
+  };
 };
 
 export type GraphEdge = {
@@ -85,6 +91,8 @@ export function buildConceptGraph(commands: CommandEntry[]): {
           name: command.name,
           category: region.category,
           difficulty: command.difficulty,
+          summary: command.summary,
+          syntax: command.syntax,
         },
       });
     });

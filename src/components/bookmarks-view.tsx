@@ -27,7 +27,7 @@ export function BookmarksView({ commands }: { commands: CommandEntry[] }) {
 
   if (bookmarkedCommands.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-xl border py-20 text-center">
+      <div className="bg-card flex flex-col items-center gap-3 rounded-xl border py-20 text-center">
         <Bookmark className="text-muted-foreground size-8" aria-hidden="true" />
         <p className="text-muted-foreground max-w-sm text-sm">
           You haven&apos;t bookmarked anything yet. Browse the{" "}

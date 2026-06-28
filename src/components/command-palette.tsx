@@ -13,6 +13,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { useLibraryStore } from "@/lib/library-store";
 import type { SearchableEntry } from "@/lib/content/search-index";
 
 export function CommandPalette({ entries }: { entries: SearchableEntry[] }) {
@@ -33,6 +34,9 @@ export function CommandPalette({ entries }: { entries: SearchableEntry[] }) {
     setShortcutLabel(isMac ? "⌘K" : "Ctrl+K");
   }, []);
 
+  const recents = useLibraryStore((s) => s.recents);
+  const viewCounts = useLibraryStore((s) => s.viewCounts);
+
   const fuse = useMemo(
     () =>
       new Fuse(entries, {
@@ -42,10 +46,15 @@ export function CommandPalette({ entries }: { entries: SearchableEntry[] }) {
     [entries],
   );
 
-  const results = query
-    ? fuse.search(query).map((r) => r.item)
-    : entries.slice(0, 8);
+  const recentEntries = useMemo(
+    () =>
+      recents
+        .map((slug) => entries.find((e) => e.slug === slug))
+        .filter((e): e is SearchableEntry => e !== undefined),
+    [recents, entries],
+  );
 
+  const results = query ? fuse.search(query).map((r) => r.item) : [];
   const commandResults = results.filter((e) => e.type === "command");
   const conceptResults = results.filter((e) => e.type === "concept");
 
@@ -86,18 +95,53 @@ export function CommandPalette({ entries }: { entries: SearchableEntry[] }) {
           {shortcutLabel}
         </kbd>
       </Button>
-      <CommandDialog
-        open={open}
-        onOpenChange={setOpen}
-        className="sm:max-w-xl"
-      >
+      <CommandDialog open={open} onOpenChange={setOpen} className="sm:max-w-xl">
         <CommandInput
           placeholder="Search commands, flags, concepts…"
           value={query}
           onValueChange={setQuery}
         />
         <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
+          {query ? (
+            <CommandEmpty>No results found.</CommandEmpty>
+          ) : (
+            recentEntries.length === 0 && (
+              <p className="text-muted-foreground px-3 py-6 text-center text-sm">
+                Start typing to search, or open a command to see it here next
+                time.
+              </p>
+            )
+          )}
+          {!query && recentEntries.length > 0 && (
+            <CommandGroup heading="Recently viewed">
+              {recentEntries.map((entry) => {
+                const count = viewCounts[entry.slug] ?? 0;
+                return (
+                  <CommandItem
+                    key={entry.slug}
+                    value={entry.slug}
+                    onSelect={() => select(entry)}
+                  >
+                    <span
+                      className={
+                        entry.type === "command" ? "font-mono" : undefined
+                      }
+                    >
+                      {entry.name}
+                    </span>
+                    <span className="text-muted-foreground ml-2 truncate text-sm">
+                      {entry.summary}
+                    </span>
+                    {count > 1 && (
+                      <span className="text-muted-foreground ml-auto shrink-0 text-xs">
+                        Viewed {count} times
+                      </span>
+                    )}
+                  </CommandItem>
+                );
+              })}
+            </CommandGroup>
+          )}
           {commandResults.length > 0 && (
             <CommandGroup heading="Commands">
               {commandResults.map((entry) => (

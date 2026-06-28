@@ -28,12 +28,15 @@ export function ShortcutsExplorer() {
 
   return (
     <div>
-      <div id="tour-shortcuts-filter" className="flex flex-wrap gap-2">
+      <div
+        id="tour-shortcuts-filter"
+        className="bg-background sticky top-14 z-20 flex flex-wrap gap-2 py-3"
+      >
         <button
           type="button"
           onClick={() => setActive(null)}
           className={cn(
-            "rounded-full border border-foreground/15 px-3.5 py-1.5 text-sm font-medium transition-colors",
+            "bg-card rounded-full border border-foreground/15 px-3.5 py-1.5 text-sm font-medium transition-colors",
             FOCUS_RING,
             active === null
               ? "border-primary bg-primary text-primary-foreground"
@@ -48,7 +51,7 @@ export function ShortcutsExplorer() {
             type="button"
             onClick={() => setActive(context)}
             className={cn(
-              "rounded-full border border-foreground/15 px-3.5 py-1.5 text-sm font-medium transition-colors",
+              "bg-card rounded-full border border-foreground/15 px-3.5 py-1.5 text-sm font-medium transition-colors",
               FOCUS_RING,
               active === context
                 ? "border-primary bg-primary text-primary-foreground"
@@ -64,7 +67,7 @@ export function ShortcutsExplorer() {
         {filtered.map((shortcut, i) => (
           <div
             key={`${shortcut.context}-${i}`}
-            className="flex items-start gap-3 rounded-lg border px-4 py-3"
+            className="bg-card flex items-start gap-3 rounded-lg border px-4 py-3"
           >
             <kbd className="bg-muted shrink-0 rounded px-2 py-1 font-mono text-xs font-medium">
               {shortcut.keys}

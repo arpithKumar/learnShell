@@ -7,6 +7,7 @@ type LibraryState = {
   bookmarks: string[];
   recents: string[];
   visited: string[];
+  viewCounts: Record<string, number>;
   toggleBookmark: (slug: string) => void;
   addRecent: (slug: string) => void;
 };
@@ -17,6 +18,7 @@ export const useLibraryStore = create<LibraryState>()(
       bookmarks: [],
       recents: [],
       visited: [],
+      viewCounts: {},
       toggleBookmark: (slug) =>
         set((state) => ({
           bookmarks: state.bookmarks.includes(slug)
@@ -32,6 +34,10 @@ export const useLibraryStore = create<LibraryState>()(
           visited: state.visited.includes(slug)
             ? state.visited
             : [...state.visited, slug],
+          viewCounts: {
+            ...state.viewCounts,
+            [slug]: (state.viewCounts[slug] ?? 0) + 1,
+          },
         })),
     }),
     { name: "learnshell-library" },

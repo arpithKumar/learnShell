@@ -9,7 +9,7 @@ import type { SearchableEntry } from "@/lib/content/search-index";
 
 export function SiteHeader({ entries }: { entries: SearchableEntry[] }) {
   return (
-    <header className="border-border/60 bg-background/80 sticky top-0 z-50 border-b backdrop-blur">
+    <header className="border-border/60 bg-background sticky top-0 z-50 border-b">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <MobileNav />

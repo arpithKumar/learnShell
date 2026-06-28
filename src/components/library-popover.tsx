@@ -47,28 +47,22 @@ function EntryList({
 
 export function LibraryPopover({ entries }: { entries: SearchableEntry[] }) {
   const bookmarks = useLibraryStore((s) => s.bookmarks);
-  const recents = useLibraryStore((s) => s.recents);
 
   return (
     <Popover>
       <PopoverTrigger
-        openOnHover
-        delay={150}
-        closeDelay={150}
         render={
           <Button
             id="tour-library"
             variant="ghost"
             size="icon"
-            aria-label="Bookmarks and recently viewed"
+            aria-label="Bookmarks"
             suppressHydrationWarning
           />
         }
       >
         <Bookmark
-          className={
-            bookmarks.length > 0 ? "fill-primary text-primary size-4" : "size-4"
-          }
+          className={bookmarks.length > 0 ? "text-primary size-4" : "size-4"}
           aria-hidden="true"
         />
       </PopoverTrigger>
@@ -82,18 +76,6 @@ export function LibraryPopover({ entries }: { entries: SearchableEntry[] }) {
               slugs={bookmarks}
               entries={entries}
               emptyText="Nothing bookmarked yet."
-            />
-          </div>
-        </div>
-        <div className="mt-2 border-t pt-2">
-          <h3 className="px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Recently viewed
-          </h3>
-          <div className="mt-1">
-            <EntryList
-              slugs={recents}
-              entries={entries}
-              emptyText="Nothing viewed yet."
             />
           </div>
         </div>
