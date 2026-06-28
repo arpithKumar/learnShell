@@ -121,6 +121,14 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    /* Scrolling still works everywhere (overflow-auto/scroll containers,
+       the page itself) — this only hides the visual scrollbar track/thumb,
+       sitewide, in every browser engine. */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  *::-webkit-scrollbar {
+    display: none;
   }
   body {
     @apply bg-background text-foreground;
