@@ -24,8 +24,8 @@ export type CategoryLabel = {
   name: string;
 };
 
-const NODE_W = 150;
-const NODE_H = 64;
+const NODE_W = 180;
+const NODE_H = 76;
 const REGION_PADDING = 90;
 const LABEL_OFFSET = 40;
 const MAX_ROW_WIDTH = 1700;

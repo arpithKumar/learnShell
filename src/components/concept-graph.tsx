@@ -69,7 +69,7 @@ function CommandNode({ id, data }: NodeProps & { data: GraphNode["data"] }) {
               }
             }}
             className={cn(
-              "rounded-full border border-foreground/15 bg-card px-3 py-1.5 font-mono text-xs font-medium shadow-sm transition-all duration-150 hover:border-primary/50",
+              "rounded-full border border-foreground/15 bg-card px-3.5 py-2 font-mono text-sm font-medium shadow-sm transition-all duration-150 hover:border-primary/50",
               dimmed && "opacity-20",
               isHovered && "border-primary ring-2 ring-primary/40",
             )}
@@ -152,7 +152,7 @@ function ResetViewButton() {
 
   return (
     <ControlButton
-      onClick={() => fitView()}
+      onClick={() => fitView({ minZoom: 0.6 })}
       title="Reset view"
       aria-label="Reset view to the original zoom and position"
     >
@@ -264,6 +264,14 @@ export function ConceptGraph({
             if (node.type === "command") router.push(`/command/${node.id}`);
           }}
           fitView
+          // With ~150 nodes spread across many categories, fitting the
+          // *entire* graph into view by default zooms out far enough that
+          // node text becomes unreadable. Clamping the initial fit keeps
+          // nodes legible — not everything is visible at once, but the
+          // minimap and manual zoom-out (still allowed down to 0.2) cover
+          // exploring the rest.
+          fitViewOptions={{ minZoom: 0.6 }}
+          minZoom={0.2}
           proOptions={{ hideAttribution: true }}
         >
           <Background />
