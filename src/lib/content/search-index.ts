@@ -1,12 +1,13 @@
 import { getAllCommands } from "./loader";
 import { getAllConcepts } from "./concept-loader";
+import { AI_TOOLS } from "@/lib/content/ai-tools";
 
 export type SearchableEntry = {
   slug: string;
   name: string;
   summary: string;
   category: string[];
-  type: "command" | "concept";
+  type: "command" | "concept" | "ai-tool";
 };
 
 export function buildSearchIndex(): SearchableEntry[] {
@@ -30,5 +31,15 @@ export function buildSearchIndex(): SearchableEntry[] {
     }),
   );
 
-  return [...commands, ...concepts];
+  const aiTools: SearchableEntry[] = AI_TOOLS.map(
+    ({ slug, name, summary, category }) => ({
+      slug,
+      name,
+      summary,
+      category: [category],
+      type: "ai-tool",
+    }),
+  );
+
+  return [...commands, ...concepts, ...aiTools];
 }

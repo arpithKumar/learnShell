@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { href: "/shortcuts", label: "Shortcuts", id: "tour-nav-shortcuts" },
   { href: "/playground", label: "Playground" },
   { href: "/learn", label: "Learn" },
+  { href: "/ai-tools", label: "AI Tools" },
 ];
 
 export function SiteNav() {

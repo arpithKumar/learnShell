@@ -57,6 +57,7 @@ export function CommandPalette({ entries }: { entries: SearchableEntry[] }) {
   const results = query ? fuse.search(query).map((r) => r.item) : [];
   const commandResults = results.filter((e) => e.type === "command");
   const conceptResults = results.filter((e) => e.type === "concept");
+  const aiToolResults = results.filter((e) => e.type === "ai-tool");
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -75,7 +76,9 @@ export function CommandPalette({ entries }: { entries: SearchableEntry[] }) {
     router.push(
       entry.type === "concept"
         ? `/concepts/${entry.slug}`
-        : `/command/${entry.slug}`,
+        : entry.type === "ai-tool"
+          ? `/ai-tools?tool=${entry.slug}#full-reference`
+          : `/command/${entry.slug}`,
     );
   }
 
@@ -87,7 +90,7 @@ export function CommandPalette({ entries }: { entries: SearchableEntry[] }) {
         size="icon"
         className="text-muted-foreground gap-2 sm:h-7 sm:w-64 sm:justify-start sm:rounded-lg sm:border sm:border-border sm:bg-background sm:px-2.5 dark:sm:border-input dark:sm:bg-input/30"
         onClick={() => setOpen(true)}
-        aria-label="Search commands and concepts"
+        aria-label="Search commands, concepts, and AI tools"
       >
         <Search className="size-4 shrink-0 sm:size-3.5" aria-hidden="true" />
         <span className="hidden sm:inline">Search…</span>
@@ -97,7 +100,7 @@ export function CommandPalette({ entries }: { entries: SearchableEntry[] }) {
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen} className="sm:max-w-xl">
         <CommandInput
-          placeholder="Search commands, flags, concepts…"
+          placeholder="Search commands, flags, concepts, AI tools…"
           value={query}
           onValueChange={setQuery}
         />
@@ -161,6 +164,22 @@ export function CommandPalette({ entries }: { entries: SearchableEntry[] }) {
           {conceptResults.length > 0 && (
             <CommandGroup heading="Concepts">
               {conceptResults.map((entry) => (
+                <CommandItem
+                  key={entry.slug}
+                  value={entry.slug}
+                  onSelect={() => select(entry)}
+                >
+                  <span>{entry.name}</span>
+                  <span className="text-muted-foreground ml-2 truncate text-sm">
+                    {entry.summary}
+                  </span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          )}
+          {aiToolResults.length > 0 && (
+            <CommandGroup heading="AI Tools">
+              {aiToolResults.map((entry) => (
                 <CommandItem
                   key={entry.slug}
                   value={entry.slug}

@@ -16,6 +16,7 @@ Built with Next.js 16 (App Router), this is a fast, static-first reference site:
 - **Keyboard shortcuts explorer** — readline/Emacs bindings, vi mode, and tmux shortcuts (`/shortcuts`).
 - **⌘K command palette** — instant fuzzy search across every command and concept.
 - **Bookmarks & recents** — saved locally, exportable as a Markdown cheat sheet.
+- **AI Tools reference** — config files and recommended folder structure for 9 AI tools (Claude Code, Gemini CLI, Cursor, GitHub Copilot, ChatGPT, Grok, OpenClaw, Hermes Agent, Ollama), a "which tool for which task" recommendation section, a cross-tool comparison table, and a tool-agnostic prompt-engineering guide (`/ai-tools`, `/prompt-engineering`).
 
 ## Tech stack
 
